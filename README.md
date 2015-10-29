@@ -1,3 +1,5 @@
+[ ![Download](https://api.bintray.com/packages/pageseeder/maven/xmlwriter/images/download.svg) ](https://bintray.com/pageseeder/maven/xmlwriter/_latestVersion)
+
 # XML Writer
 
 The XML Writer defines an API and implementations to write XML out to a reading, DOM or SAX.
