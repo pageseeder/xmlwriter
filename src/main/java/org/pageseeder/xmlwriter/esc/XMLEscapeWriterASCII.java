@@ -86,10 +86,9 @@ public final class XMLEscapeWriterASCII extends XMLEscapeWriterBase implements X
     char c;
     for (int i = off; i < off+len; i++) {
       c = ch[i];
-      // '<' always replace with '&lt;'
-      if      (c == '<') {
+      if (c == '<') {
         super.w.write("&lt;");
-      } else if (c == '>' && i > 0 && ch[i-1] == ']') {
+      } else if (c == '>') {
         super.w.write("&gt;");
       } else if (c == '&') {
         super.w.write("&amp;");

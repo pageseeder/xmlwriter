@@ -90,7 +90,7 @@ public final class XMLEscapeWriterUTF8 extends XMLEscapeWriterBase implements XM
       // '<' always replace with '&lt;'
       if (c == '<') {
         super.w.write("&lt;");
-      } else if (c == '>' && i > 0 && ch[i-1] == ']') {
+      } else if (c == '>') {
         super.w.write("&gt;");
       } else if (c == '&') {
         super.w.write("&amp;");
