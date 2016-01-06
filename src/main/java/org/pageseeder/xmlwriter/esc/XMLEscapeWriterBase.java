@@ -20,10 +20,6 @@ import java.io.Writer;
 
 /**
  * A base implementation for the XML writer escape classes.
- *
- * @author Christophe Lauret
- *
- * @version 14 May 2005
  */
 abstract class XMLEscapeWriterBase implements XMLEscapeWriter {
 

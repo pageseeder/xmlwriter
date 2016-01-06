@@ -20,9 +20,6 @@ package org.pageseeder.xmlwriter.esc;
  *
  * <p>Any character that isn't part of the ASCI range is going to be replaced
  * by a character entity.
- *
- * @author  Christophe Lauret
- * @version 0.7.7
  */
 public final class XMLEscapeASCII extends XMLEscapeBase implements XMLEscape {
 

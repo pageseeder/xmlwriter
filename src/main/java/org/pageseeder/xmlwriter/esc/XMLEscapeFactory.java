@@ -17,9 +17,6 @@ package org.pageseeder.xmlwriter.esc;
 
 /**
  * Factory for XML escape classes.
- *
- * @author Christophe Lauret
- * @version 7 March 2005
  */
 public final class XMLEscapeFactory {
 

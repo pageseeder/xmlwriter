@@ -35,9 +35,6 @@ import org.xml.sax.InputSource;
  * @see org.xml.sax.InputSource
  * @see org.pageseeder.xmlwriter.XMLWritable
  * @see org.pageseeder.xmlwriter.sax.XMLWritableReader
- *
- * @author  Christophe Lauret
- * @version 26 May 2005
  */
 public final class XMLWritableInputSource extends InputSource {
 

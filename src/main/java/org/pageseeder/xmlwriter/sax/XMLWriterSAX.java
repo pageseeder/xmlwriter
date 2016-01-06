@@ -63,9 +63,6 @@ import org.xml.sax.SAXException;
  * methods or at least they may not be invoked at the same time. For example, the
  * <code>attribute</code> methods will not generate any event until it is possible to
  * invoke the <code>ContentHandler#startElement</code> method.
- *
- * @author  Christophe Lauret
- * @version 15 January 2007
  */
 public final class XMLWriterSAX implements XMLWriter {
 

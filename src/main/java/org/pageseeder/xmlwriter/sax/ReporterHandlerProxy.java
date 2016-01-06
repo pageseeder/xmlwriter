@@ -23,9 +23,6 @@ import org.xml.sax.SAXException;
 /**
  * A content handler wrapping another content handler and reporting information about
  * what methods are being called.
- *
- * @author Christophe Lauret (Allette Systems)
- * @version 26 October 2005
  */
 public final class ReporterHandlerProxy implements ContentHandler {
 

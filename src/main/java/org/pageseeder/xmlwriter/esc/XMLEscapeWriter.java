@@ -29,9 +29,6 @@ import java.io.Writer;
  * not does attempt to produce valid data.
  *
  * @see <a href="http://www.w3.org/TR/xml/">Extensible Markup Language (XML) 1.0</a>
- *
- * @author  Christophe Lauret
- * @version 0.7.7
  */
 public interface XMLEscapeWriter {
 

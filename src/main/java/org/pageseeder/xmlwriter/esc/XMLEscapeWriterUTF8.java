@@ -27,9 +27,6 @@ import java.io.Writer;
  * <p>Escape methods in this class will escape non-BMP character for better
  * compatibility with storage mechanism which do not support them, for example
  * some databases.
- *
- * @author  Christophe Lauret
- * @version 0.7.8
  */
 public final class XMLEscapeWriterUTF8 extends XMLEscapeWriterBase implements XMLEscapeWriter {
 
