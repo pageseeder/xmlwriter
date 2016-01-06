@@ -38,9 +38,6 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * <p>Note: This implementation is not namespace aware, and will not handle entities other than
  * &amp;amp;, &amp;lt;, &amp;gt; or &amp;quot;.
- *
- * @author Christophe Lauret - Allette Systems (Australia)
- * @version 26 February 2005
  */
 public final class XMLIndenter extends DefaultHandler implements ContentHandler {
 

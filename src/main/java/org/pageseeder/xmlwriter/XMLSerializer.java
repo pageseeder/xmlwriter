@@ -32,9 +32,6 @@ import java.util.Hashtable;
  * themselves.
  *
  * <p>The underlying XML document is generated using an XML string buffer.
- *
- * @version 7 March 2005
- * @author Christophe Lauret
  */
 public final class XMLSerializer {
 

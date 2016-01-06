@@ -21,9 +21,6 @@ package org.pageseeder.xmlwriter;
  * <p>To avoid this exception being thrown, the namespace URI must be explicitely associated
  * with a prefix before a node belonging to this namespace is serialiased. Namespaces can be
  * declared using the {@link XMLWriter#setPrefixMapping(String, String)} method.
- *
- * @author Christophe Lauret (Allette Systems)
- * @version 14 May 2005
  */
 public final class UndeclaredNamespaceException extends RuntimeException {
 

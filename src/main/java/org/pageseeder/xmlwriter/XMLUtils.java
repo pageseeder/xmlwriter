@@ -19,9 +19,6 @@ import org.pageseeder.xmlwriter.esc.XMLEscapeUTF8;
 
 /**
  * A utility class for XML data.
- *
- * @version 2.0, 24 March 2004
- * @author  Christophe Lauret
  */
 public final class XMLUtils {
 

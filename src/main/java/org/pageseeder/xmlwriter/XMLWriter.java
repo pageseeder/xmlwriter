@@ -31,10 +31,6 @@ import java.io.IOException;
  * operation to a minimum.
  *
  * <p>Other implementations might want to wrap a SAX content handler.
- *
- * @author Christophe Lauret (Allette Systems)
- *
- * @version 11 December 2011
  */
 public interface XMLWriter {
 

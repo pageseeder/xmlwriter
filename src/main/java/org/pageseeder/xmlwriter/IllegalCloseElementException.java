@@ -18,9 +18,6 @@ package org.pageseeder.xmlwriter;
 /**
  * Exception thrown when attempting to close an element when there is no
  * corresponding open element.
- *
- * @author Christophe Lauret
- * @version 14 May 2005
  */
 public final class IllegalCloseElementException extends IllegalStateException {
 

@@ -36,11 +36,8 @@ import org.xml.sax.XMLReader;
  * Utility class that provides common XML operations so that the calling class uses lighter
  * code.
  *
- * <p>Most methdos in this implementation will forward the exceptions should occur, so they
+ * <p>Most methods in this implementation will forward the exceptions should occur, so they
  * will have to be handled externally.
- *
- * @author Christophe Lauret - Allette Systems (Australia)
- * @version 1.0, 6 May 2004
  */
 public final class XMLHelper {
 
