@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.pageseeder.xmlwriter</groupId>
   <artifactId>pso-xmlwriter</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2-SNAPSHOT</version>
   <name>XML Writer</name>
   <description>XML Writer API for Java</description>
 
