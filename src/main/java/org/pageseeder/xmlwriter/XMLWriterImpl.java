@@ -37,6 +37,8 @@ import java.util.List;
  *
  * <p>This class is not synchronised and does not support namespaces, and will therefore
  * throw an unsupported operation exception for each call to a method that uses namespaces.
+ *
+ * @author Christophe Lauret
  */
 public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
 

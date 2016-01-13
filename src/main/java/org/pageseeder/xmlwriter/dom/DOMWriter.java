@@ -20,6 +20,8 @@ import org.w3c.dom.Document;
 
 /**
  * An XML writer which output is a DOM tree.
+ *
+ * @author Christophe Lauret
  */
 public interface DOMWriter extends XMLWriter {
 

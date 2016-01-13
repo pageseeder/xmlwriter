@@ -41,6 +41,8 @@ import javax.xml.XMLConstants;
  * </pre>
  *
  * <p>This class is not synchronised.
+ *
+ * @author Christophe Lauret
  */
 public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
 

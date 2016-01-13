@@ -29,6 +29,8 @@ import java.io.StringWriter;
  *
  * <p>If the write is not set to support namespaces, the method which require a namespace URI will
  * throw an {@link UnsupportedOperationException}.
+ *
+ * @author Christophe Lauret
  */
 public final class XMLStringWriter implements XMLWriter {
 

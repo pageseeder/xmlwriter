@@ -34,6 +34,8 @@ import org.w3c.dom.Text;
  * A simple implementation of a DOM writer
  *
  * <p>Provides methods to generate well-formed XML data easily via DOM.
+ *
+ * @author Christophe Lauret
  */
 public final class DOMWriterImpl implements DOMWriter {
 

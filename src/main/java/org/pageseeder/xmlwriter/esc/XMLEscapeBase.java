@@ -17,6 +17,8 @@ package org.pageseeder.xmlwriter.esc;
 
 /**
  * A base implementation for the XML escape classes.
+ *
+ * @author Christophe Lauret
  */
 abstract class XMLEscapeBase implements XMLEscape {
 

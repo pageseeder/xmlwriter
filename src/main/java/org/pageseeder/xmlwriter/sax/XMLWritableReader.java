@@ -40,6 +40,8 @@ import org.xml.sax.XMLReader;
  * @see org.xml.sax.XMLReader
  * @see org.pageseeder.xmlwriter.XMLWritable
  * @see org.pageseeder.xmlwriter.sax.XMLWritableInputSource
+ *
+ * @author Christophe Lauret
  */
 public final class XMLWritableReader implements XMLReader {
 

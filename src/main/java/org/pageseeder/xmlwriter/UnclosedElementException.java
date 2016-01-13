@@ -21,6 +21,8 @@ package org.pageseeder.xmlwriter;
  *
  * <p>This exception simply notifies that the XML will not be well-formed, if
  * writer is closed before the remaining open elements are closed.
+ *
+ * @author Christophe Lauret
  */
 public final class UnclosedElementException extends IllegalStateException {
 

@@ -24,6 +24,8 @@ package org.pageseeder.xmlwriter;
  * methods to generate the XML representation of the object.
  *
  * @see XMLSerializer
+ *
+ * @author Christophe Lauret
  */
 public interface XMLSerializable {
 

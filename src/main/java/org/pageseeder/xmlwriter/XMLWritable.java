@@ -20,6 +20,8 @@ import java.io.IOException;
 /**
  * <p>An Object which implements this interface can be written as XML using a
  * {@link XMLWriter} instance.
+ *
+ * @author Christophe Lauret
  */
 public interface XMLWritable {
 

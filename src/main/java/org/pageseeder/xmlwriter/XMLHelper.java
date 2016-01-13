@@ -38,6 +38,8 @@ import org.xml.sax.XMLReader;
  *
  * <p>Most methods in this implementation will forward the exceptions should occur, so they
  * will have to be handled externally.
+ *
+ * @author Christophe Lauret
  */
 public final class XMLHelper {
 

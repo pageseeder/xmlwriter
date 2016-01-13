@@ -35,6 +35,8 @@ import org.pageseeder.xmlwriter.esc.XMLEscapeWriterUTF8;
  *  Writer writer =
  *     new BufferedWriter(new OutputStreamWriter(new FileOutputStream("foo.out"),"utf-8"));
  * </pre>
+ *
+ * @author Christophe Lauret
  */
 abstract class XMLWriterBase implements XMLWriter {
 

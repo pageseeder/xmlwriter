@@ -21,6 +21,8 @@ package org.pageseeder.xmlwriter;
  *
  * <p>This method is provided for convenience for small object to avoid the overhead in using
  * writers.
+ *
+ * @author Christophe Lauret
  */
 public interface XMLFormattable {
 

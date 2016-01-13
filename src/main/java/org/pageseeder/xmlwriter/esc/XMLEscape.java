@@ -29,6 +29,8 @@ package org.pageseeder.xmlwriter.esc;
  * not does attempt to produce valid data.
  *
  * @see <a href="http://www.w3.org/TR/xml/">Extensible Markup Language (XML) 1.0</a>
+ *
+ * @author Christophe Lauret
  */
 public interface XMLEscape {
 

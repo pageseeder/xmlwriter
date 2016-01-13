@@ -24,6 +24,9 @@ package org.pageseeder.xmlwriter.esc;
  * <p>Escape methods in this class will escape non-BMP character for better
  * compatibility with storage mechanism which do not support them, for example
  * some databases.
+ *
+ * @author Christophe Lauret
+ * @author Philip Rutherford
  */
 public final class XMLEscapeUTF8 extends XMLEscapeBase implements XMLEscape {
 
