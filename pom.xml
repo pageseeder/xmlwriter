@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.pageseeder.xmlwriter</groupId>
   <artifactId>pso-xmlwriter</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <name>XML Writer</name>
   <description>XML Writer API for Java</description>
 
@@ -78,6 +78,19 @@
       <artifactId>junit</artifactId>
       <version>4.12</version>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.pageseeder.diffx</groupId>
+      <artifactId>pso-diffx</artifactId>
+      <version>0.8.0</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.pageseeder.xmlwriter</groupId>
+          <artifactId>pso-xmlwriter</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
   </dependencies>
