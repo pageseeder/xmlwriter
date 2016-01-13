@@ -21,7 +21,7 @@ import java.io.Writer;
 /**
  * A utility class for escaping XML data when the intended encoding is ASCII or ASCII compatible.
  *
- * <p>Any unicode code point greater then (#x7E) will be encoded usnig the numeric character entity.
+ * <p>Any unicode code point greater then (#x7E) will be encoded using the numeric character entity.
  *
  * @author Christophe Lauret
  * @author Philip Rutherford
