@@ -71,11 +71,6 @@ public final class XMLWriterSAX implements XMLWriter {
   // constants ----------------------------------------------------------------------------
 
   /**
-   * Set to <code>true</code> to show debug info.
-   */
-  private static final boolean DEBUG = false;
-
-  /**
    * The default namespace mapped to the empty prefix.
    */
   private static final PrefixMapping DEFAULT_NS = new PrefixMapping("", "");
@@ -651,9 +646,6 @@ public final class XMLWriterSAX implements XMLWriter {
       // create the new prefix mapping
       PrefixMapping pm = new PrefixMapping(prefix, uri);
       this.prefixMapping.put(pm.uri, pm.prefix);
-      if (DEBUG) {
-        System.err.println(pm.prefix+" -> "+pm.uri);
-      }
       if (this.tempMapping == null) {
         this.tempMapping = new ArrayList<PrefixMapping>();
       }
@@ -696,9 +688,6 @@ public final class XMLWriterSAX implements XMLWriter {
       // for each mapping of this element
       for (int i = 0; i < elt.mappings.size(); i++) {
         PrefixMapping mpi = elt.mappings.get(i);
-        if (DEBUG) {
-          System.err.print(mpi.prefix+" -< ");
-        }
         // find the first previous namespace mapping amongst the parents
         // that defines namespace mappings
         for (int j = this.elements.size() - 1; j > 0; j--) {
@@ -711,9 +700,6 @@ public final class XMLWriterSAX implements XMLWriter {
               if (mpk.prefix.equals(mpi.prefix)) {
                 removeIfNeeded(mpk.prefix);
                 this.prefixMapping.put(mpk.uri, mpk.prefix);
-                if (DEBUG) {
-                  System.err.println(mpk.uri+" [R]");
-                }
                 j = 0; // exit from the previous loop
                 break; // exit from this one
               }
