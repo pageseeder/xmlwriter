@@ -88,7 +88,7 @@ public final class XMLEscapeUTF8 extends XMLEscapeBase implements XMLEscape {
         out.append("&lt;");
       } else if (c == '&') {
         out.append("&amp;");
-      } else if (c == '>' && i > 0 && ch[i-1] == ']' ) {
+      } else if (c == '>') {
         out.append("&gt;");
       } else if (c == '\n' || c == '\r' || c == '\t') {
         out.append(c);
