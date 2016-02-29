@@ -1,6 +1,7 @@
 package org.pageseeder.xmlwriter;
 
 import java.io.IOException;
+import java.io.Writer;
 
 import org.pageseeder.xmlwriter.esc.XMLEscapeUTF8;
 
@@ -11,6 +12,23 @@ import org.pageseeder.xmlwriter.esc.XMLEscapeUTF8;
  * @since 1.0.2
  */
 public final class XML {
+
+  /**
+   * An enumeration for namespace awareness.
+   */
+  public enum NamespaceAware {
+
+    /**
+     * The class is namespace aware.
+     */
+    Yes,
+
+    /**
+     * The class is not namespace aware.
+     */
+    No;
+
+  }
 
   private XML() {
   }
@@ -136,6 +154,25 @@ public final class XML {
       // Will never happen
     }
     return xml.toString();
+  }
+
+  /**
+   * Instantiate a new XML writer
+   *
+   * @param writer The writer to use
+   * @param aware  Whether the XMLWriter should be namespace-aware or not
+   *
+   * @return A new instance.
+   */
+  public XMLWriter newXMLWriter(Writer writer, NamespaceAware aware) {
+    switch (aware) {
+      case No:
+        return new XMLWriterImpl(writer);
+      case Yes:
+        return new XMLWriterNSImpl(writer);
+      default:
+        return new XMLWriterNSImpl(writer);
+    }
   }
 
 }
