@@ -56,7 +56,8 @@ public abstract class BaseXMLWriterTest extends TestCase {
    */
   private static final String SAMPLE_ASCII_STRING = makeSampleASCIIString();
 
-// constructors and non-test methods ----------------------------------------------------
+  // constructors and non-test methods
+  // --------------------------------------------------------------------------
 
   /**
    * Default constructor.
@@ -85,7 +86,8 @@ public abstract class BaseXMLWriterTest extends TestCase {
    */
   public abstract XMLWriter makeXMLWriter(Writer writer);
 
-// test: openElement / closeElement ---------------------------------------------------------------
+  // test: openElement / closeElement
+  // --------------------------------------------------------------------------
 
   /**
    * Checks that the XML is closed properly.
@@ -130,7 +132,8 @@ public abstract class BaseXMLWriterTest extends TestCase {
     }
   }
 
-// test: element -----------------------------------------------------------------------
+  // test: element
+  // --------------------------------------------------------------------------
 
   /**
    * Checks that the element method works
@@ -165,7 +168,8 @@ public abstract class BaseXMLWriterTest extends TestCase {
     assertEquivalent("<x/>", getXMLString());
   }
 
-// test: empty element ------------------------------------------------------------------
+  // test: empty element
+  // --------------------------------------------------------------------------
 
   /**
    * Checks that the empty element method works.
@@ -178,7 +182,8 @@ public abstract class BaseXMLWriterTest extends TestCase {
     assertEquivalent("<x/>", getXMLString());
   }
 
-// test: attributes ---------------------------------------------------------------------
+  // test: attributes
+  // --------------------------------------------------------------------------
 
   /**
    * Checks that the empty element method works.
@@ -187,8 +192,8 @@ public abstract class BaseXMLWriterTest extends TestCase {
    */
   public final void testAttributeA() throws IOException {
     this.xml.openElement("x");
-  this.xml.attribute("a", "m");
-  this.xml.closeElement();
+    this.xml.attribute("a", "m");
+    this.xml.closeElement();
     this.xml.close();
     assertEquivalent("<x a='m'/>", getXMLString());
   }
@@ -200,14 +205,15 @@ public abstract class BaseXMLWriterTest extends TestCase {
    */
   public final void testAttributeB() throws IOException {
     this.xml.openElement("x");
-  this.xml.attribute("a", "m");
-  this.xml.attribute("b", "n");
-  this.xml.closeElement();
+    this.xml.attribute("a", "m");
+    this.xml.attribute("b", "n");
+    this.xml.closeElement();
     this.xml.close();
     assertEquivalent("<x a='m' b='n'/>", getXMLString());
   }
 
-// test: escape -------------------------------------------------------------------------
+  // test: escape
+  // -------------------------------------------------------------------------
 
   /**
    *
@@ -224,12 +230,13 @@ public abstract class BaseXMLWriterTest extends TestCase {
   public final void testEscapeAttributeASCII() throws IOException {
     this.xml.openElement("root");
     this.xml.attribute("x", SAMPLE_ASCII_STRING);
-  this.xml.closeElement();
+    this.xml.closeElement();
     this.xml.close();
     assertWellFormed(getXMLString());
   }
 
-// test: comment ------------------------------------------------------------------------
+  // test: comment
+  // --------------------------------------------------------------------------
 
   /**
    * Checks that the empty element method works.
@@ -238,8 +245,8 @@ public abstract class BaseXMLWriterTest extends TestCase {
    */
   public final void testComment() throws IOException {
     this.xml.openElement("root");
-  this.xml.writeComment("comment");
-  this.xml.closeElement();
+    this.xml.writeComment("comment");
+    this.xml.closeElement();
     this.xml.close();
     assertEquivalent("<root><!-- comment --></root>", getXMLString());
     assertEquals("<root><!-- comment --></root>", getXMLString());
@@ -252,8 +259,8 @@ public abstract class BaseXMLWriterTest extends TestCase {
    */
   public final void testCommentNull() throws IOException {
     this.xml.openElement("root");
-  this.xml.writeComment(null);
-  this.xml.closeElement();
+    this.xml.writeComment(null);
+    this.xml.closeElement();
     this.xml.close();
     assertEquivalent("<root></root>", getXMLString());
   }
@@ -272,7 +279,8 @@ public abstract class BaseXMLWriterTest extends TestCase {
     }
   }
 
-// test: processing instructions --------------------------------------------------------
+  // test: processing instructions
+  // --------------------------------------------------------------------------
 
   /**
    * Checks that the empty element method works.
@@ -281,45 +289,42 @@ public abstract class BaseXMLWriterTest extends TestCase {
    */
   public final void testProcessingInstructionA() throws IOException {
     this.xml.openElement("root");
-  this.xml.writePI("x", "y");
-  this.xml.closeElement();
+    this.xml.writePI("x", "y");
+    this.xml.closeElement();
     this.xml.close();
     assertEquivalent("<root><?x y?></root>", getXMLString());
   }
 
-// test: indentation --------------------------------------------------------------------
+  // test: indentation
+  // --------------------------------------------------------------------------
 
   /**
-   *
-   *
    * @throws IOException If an I/O error occurs.
    */
-  public final void testIndentationA() throws IOException {
-  this.xml.setIndentChars("  ");
+  public final void testIndentationRootWithText() throws IOException {
+    this.xml.setIndentChars("  ");
     this.xml.openElement("root", false);
-  this.xml.writeText("text");
-  this.xml.closeElement();
+    this.xml.writeText("text");
+    this.xml.closeElement();
     this.xml.close();
     assertEquivalent("<root>text</root>", getXMLString());
     assertEquals("<root>text</root>", getXMLString());
   }
 
   /**
-   *
-   *
    * @throws IOException If an I/O error occurs.
    */
-  public final void testIndentationB() throws IOException {
-  this.xml.setIndentChars("  ");
+  public final void testIndentationSingleElement() throws IOException {
+    this.xml.setIndentChars("  ");
     this.xml.openElement("root", true);
     this.xml.openElement("a");
-  this.xml.writeText("text");
-  this.xml.closeElement();
-  this.xml.closeElement();
+    this.xml.writeText("text");
+    this.xml.closeElement();
+    this.xml.closeElement();
     this.xml.close();
-  String expected = "<root>\n"
-                + "  <a>text</a>\n"
-          + "</root>";
+    String expected = "<root>\n"
+                    + "  <a>text</a>\n"
+                    + "</root>";
     assertEquals(expected, getXMLString());
   }
 
@@ -328,17 +333,17 @@ public abstract class BaseXMLWriterTest extends TestCase {
    *
    * @throws IOException If an I/O error occurs.
    */
-  public final void testIndentationC() throws IOException {
-  this.xml.setIndentChars("  ");
+  public final void testIndentationMultipleElements() throws IOException {
+    this.xml.setIndentChars("  ");
     this.xml.openElement("root", true);
     this.xml.element("a", "one");
     this.xml.element("b", "two");
-  this.xml.closeElement();
+    this.xml.closeElement();
     this.xml.close();
-  String expected = "<root>\n"
+    String expected = "<root>\n"
                 + "  <a>one</a>\n"
                 + "  <b>two</b>\n"
-          + "</root>";
+                + "</root>";
     assertEquals(expected, getXMLString());
   }
 
@@ -347,18 +352,61 @@ public abstract class BaseXMLWriterTest extends TestCase {
    *
    * @throws IOException If an I/O error occurs.
    */
-  public final void testIndentationD() throws IOException {
-  this.xml.setIndentChars(null);
+  public final void testIndentationMixedContent() throws IOException {
+    this.xml.setIndentChars("  ");
     this.xml.openElement("root", true);
-    this.xml.element("a", "one");
-    this.xml.element("b", "two");
-  this.xml.closeElement();
+    this.xml.openElement("wrap", false);
+    this.xml.writeText("m");
+    this.xml.element("a", "i");
+    this.xml.writeText("x");
+    this.xml.element("b", "e");
+    this.xml.writeText("d");
+    this.xml.closeElement();
+    this.xml.closeElement();
     this.xml.close();
-  String expected = "<root><a>one</a><b>two</b></root>";
+    String expected = "<root>\n"
+                    + "  <wrap>m<a>i</a>x<b>e</b>d</wrap>\n"
+                    + "</root>";
     assertEquals(expected, getXMLString());
   }
 
-// test: close --------------------------------------------------------------------------
+  /**
+   *
+   *
+   * @throws IOException If an I/O error occurs.
+   */
+  public final void testIndentationMixedContent2() throws IOException {
+    this.xml.setIndentChars("  ");
+    this.xml.openElement("root", false);
+    this.xml.writeText("m");
+    this.xml.element("a", "i");
+    this.xml.writeText("x");
+    this.xml.element("b", "e");
+    this.xml.writeText("d");
+    this.xml.closeElement();
+    this.xml.close();
+    String expected = "<root>m<a>i</a>x<b>e</b>d</root>";
+    assertEquals(expected, getXMLString());
+  }
+
+  /**
+   *
+   *
+   * @throws IOException If an I/O error occurs.
+   */
+  public final void testIndentationNone() throws IOException {
+    this.xml.setIndentChars(null);
+    this.xml.openElement("root", true);
+    this.xml.element("a", "one");
+    this.xml.element("b", "two");
+    this.xml.closeElement();
+    this.xml.close();
+    String expected = "<root><a>one</a><b>two</b></root>";
+    assertEquals(expected, getXMLString());
+  }
+
+  // test: close
+  // --------------------------------------------------------------------------
 
   /**
    * Check that the XML writer throws an exception when trying to close it
@@ -379,7 +427,8 @@ public abstract class BaseXMLWriterTest extends TestCase {
     }
   }
 
-// public methods to test checks --------------------------------------------------------
+  // public methods to test checks
+  // --------------------------------------------------------------------------
 
   /**
    * Asserts that the two XML are equivalent.
@@ -430,11 +479,11 @@ public abstract class BaseXMLWriterTest extends TestCase {
    * @return a sample ASCII string.
    */
   private static String makeSampleASCIIString() {
-  StringBuffer out = new StringBuffer(255);
-  for (int i = 0; i < 255; i++) {
-      out.append((char)i);
-  }
-  return out.toString();
+    StringBuffer out = new StringBuffer(255);
+    for (int i = 0; i < 255; i++) {
+        out.append((char)i);
+    }
+    return out.toString();
   }
 
 }

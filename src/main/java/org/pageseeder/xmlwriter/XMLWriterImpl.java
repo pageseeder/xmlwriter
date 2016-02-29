@@ -139,7 +139,9 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
   @Override
   public void openElement(String name, boolean hasChildren) throws IOException {
     deNude();
-    indent();
+    if (peekElement().hasChildren) {
+      indent();
+    }
     this.elements.add(new Element(name, hasChildren));
     this.writer.write('<');
     this.writer.write(name);

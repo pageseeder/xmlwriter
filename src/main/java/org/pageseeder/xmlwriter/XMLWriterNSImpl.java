@@ -195,7 +195,9 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
   @Override
   public void openElement(String uri, String name, boolean hasChildren) throws IOException {
     deNude();
-    indent();
+    if (peekElement().hasChildren) {
+      indent();
+    }
     String qName = getQName(uri, name);
     this.elements.add(new Element(qName, hasChildren, this.tempMapping));
     this.writer.write('<');
@@ -518,16 +520,16 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
     private final String qName;
 
     /**
-     * Indicates whether the element has children.
-     */
-    private final boolean hasChildren;
-
-    /**
      * A list of prefix mappings for this element.
      *
      * <p>Can be <code>null</code>.
      */
     private final List<PrefixMapping> mappings;
+
+    /**
+     * Indicates whether the element has children.
+     */
+    private boolean hasChildren;
 
     /**
      * Creates a new Element.
