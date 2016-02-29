@@ -15,12 +15,16 @@
  */
 package org.pageseeder.xmlwriter;
 
+import java.io.IOException;
+
 import org.pageseeder.xmlwriter.esc.XMLEscapeUTF8;
 
 /**
  * A utility class for XML data.
  *
  * @author Christophe Lauret
+ *
+ * @version 1.0.3
  */
 public final class XMLUtils {
 
@@ -113,6 +117,25 @@ public final class XMLUtils {
       }
     }
     return new String(elementAsChars);
+  }
+
+  /**
+   * A convenience method to serialize an <code>XMLWritable</code> object into
+   * a string.
+   *
+   * @param o The object to serialize as XML.
+   *
+   * @return The element as a string.
+   */
+  public String toString(XMLWritable o) {
+    XMLStringWriter xml = new XMLStringWriter(false);
+    try {
+      o.toXML(xml);
+    } catch (IOException ex) {
+      // Will never happen
+    }
+    xml.flush();
+    return xml.toString();
   }
 
 }
