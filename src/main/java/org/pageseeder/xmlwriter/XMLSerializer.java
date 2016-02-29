@@ -22,8 +22,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * This class provides methods to serialize objects to XML.
@@ -33,18 +33,18 @@ import java.util.Hashtable;
  *
  * <p>The underlying XML document is generated using an XML string buffer.
  *
+ * <p>Implementation note: this class is not thread safe.
+ *
  * @author Christophe Lauret
  */
 public final class XMLSerializer {
 
   // TODO: make an interface out of this class.
 
-  // TODO: make the dateformat a class attribute.
-
   /**
-   * Date formatter.
+   * Formats dates using ISO 8601
    */
-  private static final DateFormat DF = new SimpleDateFormat("dd/MM/yyyy");
+  private final DateFormat iso8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 
   /**
    * Used to store the xml document of this class.
@@ -116,7 +116,7 @@ public final class XMLSerializer {
         // dates
       } else if (o instanceof Date) {
         this.xml.openElement(name, false);
-        this.xml.writeText(DF.format((Date)o));
+        this.xml.writeText(this.iso8601.format((Date)o));
         this.xml.closeElement();
         // collection
       } else if (o instanceof Collection<?>) {
@@ -162,11 +162,11 @@ public final class XMLSerializer {
    *
    * @throws IOException Should an I/O error occur.
    */
-  public void serializeHashtable(Hashtable<?, ?> h) throws IOException {
-    this.xml.openElement("map", !h.isEmpty());
-    for (Enumeration<?> e = h.keys(); e.hasMoreElements();) {
-      Object key = e.nextElement();
-      Object value = h.get(key);
+  public void serializeHashtable(Map<?, ?> m) throws IOException {
+    this.xml.openElement("map", !m.isEmpty());
+    for (Map.Entry<?, ?> e : m.entrySet()) {
+      Object key = e.getKey();
+      Object value = e.getValue();
       this.xml.openElement("element");
       this.xml.openElement("key");
       serialize(key, "key");
