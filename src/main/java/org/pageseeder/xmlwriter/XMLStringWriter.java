@@ -18,6 +18,8 @@ package org.pageseeder.xmlwriter;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import org.pageseeder.xmlwriter.XML.NamespaceAware;
+
 /**
  * An XML which writes on to a string.
  *
@@ -48,7 +50,10 @@ public final class XMLStringWriter implements XMLWriter {
    * <p>Creates a new XML string writer.
    *
    * @param namespaces Whether this XML writer should use namespaces.
+   *
+   * @deprecated use constructor with enum constant instead
    */
+  @Deprecated
   public XMLStringWriter(boolean namespaces) {
     this(namespaces, false);
   }
@@ -58,10 +63,32 @@ public final class XMLStringWriter implements XMLWriter {
    *
    * @param namespaces Whether this XML writer should use namespaces.
    * @param indent  Set the indentation flag.
+   *
+   * @deprecated use constructor with enum constant instead
    */
+  @Deprecated
   public XMLStringWriter(boolean namespaces, boolean indent) {
+    this(namespaces? NamespaceAware.Yes : NamespaceAware.No, indent);
+  }
+
+  /**
+   * <p>Creates a new XML string writer.
+   *
+   * @param namespaces Whether this XML writer should use namespaces.
+   */
+  public XMLStringWriter(NamespaceAware aware) {
+    this(aware, false);
+  }
+
+  /**
+   * <p>Create a new XML string writer.
+   *
+   * @param namespaces Whether this XML writer should use namespaces.
+   * @param indent  Set the indentation flag.
+   */
+  public XMLStringWriter(NamespaceAware aware, boolean indent) {
     this._writer = new StringWriter();
-    this._xml = namespaces? new XMLWriterNSImpl(this._writer, indent) : new XMLWriterImpl(this._writer, indent);
+    this._xml = aware == NamespaceAware.Yes? new XMLWriterNSImpl(this._writer, indent) : new XMLWriterImpl(this._writer, indent);
   }
 
   // XML Writer methods
