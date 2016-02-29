@@ -1,36 +1,18 @@
-/*
- * Copyright 2010-2015 Allette Systems (Australia)
- * http://www.allette.com.au
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.pageseeder.xmlwriter;
+
+import java.io.IOException;
 
 import org.pageseeder.xmlwriter.esc.XMLEscapeUTF8;
 
 /**
- * A utility class for XML data.
+ * Utility class.
  *
  * @author Christophe Lauret
- *
- * @deprecated
+ * @since 1.0.2
  */
-@Deprecated
-public final class XMLUtils {
+public final class XML {
 
-  /**
-   * Prevents creation of instances.
-   */
-  private XMLUtils() {
+  private XML() {
   }
 
   /**
@@ -101,7 +83,59 @@ public final class XMLUtils {
    * @return A valid element name
    */
   public static String toElementName(String name) {
-    return XML.toElementName(name);
+    if (name == null) return null;
+    char[] elementAsChars = name.toCharArray();
+    if (!Character.isLetter(elementAsChars[0])) {
+      elementAsChars[0] = 'x';
+    } else {
+      elementAsChars[0] = Character.toLowerCase(elementAsChars[0]);
+    }
+    for (int i = 1; i < elementAsChars.length; i++) {
+      if (!Character.isLetter(elementAsChars[i])) {
+        elementAsChars[i] = '-';
+      } else {
+        elementAsChars[i] = Character.toLowerCase(elementAsChars[i]);
+      }
+    }
+    return new String(elementAsChars);
+  }
+
+  /**
+   * A convenience method to serialize an <code>XMLWritable</code> object into
+   * a string.
+   *
+   * @param o The object to serialize as XML.
+   *
+   * @return The element as a string.
+   */
+  public String toString(XMLWritable o) {
+    XMLStringWriter xml = new XMLStringWriter(true);
+    try {
+      o.toXML(xml);
+    } catch (IOException ex) {
+      // Will never happen
+    }
+    xml.flush();
+    return xml.toString();
+  }
+
+  /**
+   * A convenience method to serialize an <code>XMLSerializable</code> object into
+   * a string.
+   *
+   * @param o The object to serialize as XML.
+   *
+   * @return The element as a string.
+   */
+  public String toString(XMLSerializable o) {
+    XMLStringWriter xml = new XMLStringWriter(false);
+    XMLSerializer serializer = new XMLSerializer(xml);
+    try {
+      serializer.serializeObject(o);
+    } catch (IOException ex) {
+      // Will never happen
+    }
+    return xml.toString();
   }
 
 }
