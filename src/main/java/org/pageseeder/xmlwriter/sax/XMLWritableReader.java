@@ -58,7 +58,7 @@ public final class XMLWritableReader implements XMLReader {
   /**
    * The features used by this XML reader implementation.
    */
-  private final Map<String, Boolean> features = new HashMap<String, Boolean>();
+  private final Map<String, Boolean> _features = new HashMap<String, Boolean>();
 
   /**
    * The content reader this XMLReader will use.
@@ -173,7 +173,7 @@ public final class XMLWritableReader implements XMLReader {
   @Override
   public boolean getFeature(java.lang.String name) {
     // TODO: handling of features
-    return this.features.get(name).booleanValue();
+    return this._features.get(name).booleanValue();
   }
 
   /**
@@ -182,7 +182,7 @@ public final class XMLWritableReader implements XMLReader {
   @Override
   public void setFeature(java.lang.String name, boolean value) {
     // TODO: handling of features
-    this.features.put(name, Boolean.valueOf(value));
+    this._features.put(name, Boolean.valueOf(value));
   }
 
   /**

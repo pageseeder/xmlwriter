@@ -29,7 +29,7 @@ public final class UndeclaredNamespaceException extends RuntimeException {
   /**
    * Version number for the serialised class.
    */
-  static final long serialVersionUID = 8080581405972912943L;
+  private static final long serialVersionUID = 8080581405972912943L;
 
   /**
    * Creates a new exception for undeclared namespaces.

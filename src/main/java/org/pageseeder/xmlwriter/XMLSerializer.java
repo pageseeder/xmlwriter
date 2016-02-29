@@ -44,7 +44,7 @@ public final class XMLSerializer {
   /**
    * Formats dates using ISO 8601
    */
-  private final DateFormat iso8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+  private final DateFormat _ISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 
   /**
    * Used to store the xml document of this class.
@@ -52,7 +52,7 @@ public final class XMLSerializer {
    * <p>Classes extending this class should use their constructors to set the size of the
    * <code>XMLStringBuffer</code>.
    */
-  private final XMLWriter xml;
+  private final XMLWriter _xml;
 
   /**
    * Creates a new XML serializer using the specified XML writer.
@@ -60,7 +60,7 @@ public final class XMLSerializer {
    * @param xml The XML string buffer to be used
    */
   public XMLSerializer(XMLWriter xml) {
-    this.xml = xml;
+    this._xml = xml;
   }
 
   /**
@@ -69,7 +69,7 @@ public final class XMLSerializer {
    * @return the xml stringbuffer
    */
   public XMLWriter getXML() {
-    return this.xml;
+    return this._xml;
   }
 
   /**
@@ -95,44 +95,44 @@ public final class XMLSerializer {
       name = name.toLowerCase();
       // numbers
       if (o instanceof Number) {
-        this.xml.openElement(name, false);
-        this.xml.writeText(o.toString());
-        this.xml.closeElement();
+        this._xml.openElement(name, false);
+        this._xml.writeText(o.toString());
+        this._xml.closeElement();
         // strings
       } else if (o instanceof String) {
-        this.xml.openElement(name, false);
-        this.xml.writeText(o.toString());
-        this.xml.closeElement();
+        this._xml.openElement(name, false);
+        this._xml.writeText(o.toString());
+        this._xml.closeElement();
         // characters
       } else if (o instanceof Character) {
-        this.xml.openElement(name, false);
-        this.xml.writeText(((Character)o).charValue());
-        this.xml.closeElement();
+        this._xml.openElement(name, false);
+        this._xml.writeText(((Character)o).charValue());
+        this._xml.closeElement();
         // boolean
       } else if (o instanceof Boolean) {
-        this.xml.openElement(name, false);
-        this.xml.writeText(o.toString());
-        this.xml.closeElement();
+        this._xml.openElement(name, false);
+        this._xml.writeText(o.toString());
+        this._xml.closeElement();
         // dates
       } else if (o instanceof Date) {
-        this.xml.openElement(name, false);
-        this.xml.writeText(this.iso8601.format((Date)o));
-        this.xml.closeElement();
+        this._xml.openElement(name, false);
+        this._xml.writeText(this._ISO8601.format((Date)o));
+        this._xml.closeElement();
         // collection
       } else if (o instanceof Collection<?>) {
-        this.xml.openElement(name, ((Collection<?>)o).size() != 0);
+        this._xml.openElement(name, ((Collection<?>)o).size() != 0);
         serializeCollection((Collection<?>)o);
-        this.xml.closeElement();
+        this._xml.closeElement();
         // hashtable
       } else if (o instanceof Hashtable<?,?>) {
-        this.xml.openElement(name, ((Hashtable<?,?>)o).size() != 0);
+        this._xml.openElement(name, ((Hashtable<?,?>)o).size() != 0);
         serializeHashtable((Hashtable<?,?>)o);
-        this.xml.closeElement();
+        this._xml.closeElement();
         // other objects
       } else {
-        this.xml.openElement(name, true);
+        this._xml.openElement(name, true);
         serializeObject(o);
-        this.xml.closeElement();
+        this._xml.closeElement();
       }
     }
   }
@@ -163,20 +163,20 @@ public final class XMLSerializer {
    * @throws IOException Should an I/O error occur.
    */
   public void serializeHashtable(Map<?, ?> m) throws IOException {
-    this.xml.openElement("map", !m.isEmpty());
+    this._xml.openElement("map", !m.isEmpty());
     for (Map.Entry<?, ?> e : m.entrySet()) {
       Object key = e.getKey();
       Object value = e.getValue();
-      this.xml.openElement("element");
-      this.xml.openElement("key");
+      this._xml.openElement("element");
+      this._xml.openElement("key");
       serialize(key, "key");
-      this.xml.closeElement();
-      this.xml.openElement("value");
+      this._xml.closeElement();
+      this._xml.openElement("value");
       serialize(value, "value");
-      this.xml.closeElement();
-      this.xml.closeElement();
+      this._xml.closeElement();
+      this._xml.closeElement();
     }
-    this.xml.closeElement();
+    this._xml.closeElement();
   }
 
   /**
@@ -210,7 +210,7 @@ public final class XMLSerializer {
         ex.getTargetException().printStackTrace();
       }
     } else if (o instanceof XMLWritable) {
-      ((XMLWritable)o).toXML(this.xml);
+      ((XMLWritable)o).toXML(this._xml);
     }
   }
 

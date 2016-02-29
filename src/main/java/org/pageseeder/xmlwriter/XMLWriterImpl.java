@@ -53,7 +53,7 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
   /**
    * A stack of elements to close the elements automatically.
    */
-  private final List<Element> elements = new ArrayList<Element>();
+  private final List<Element> _elements = new ArrayList<Element>();
 
   // Constructors
   // ----------------------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
    */
   public XMLWriterImpl(Writer writer) throws NullPointerException {
     super(writer, false);
-    this.elements.add(ROOT);
+    this._elements.add(ROOT);
   }
 
   /**
@@ -82,7 +82,7 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
    */
   public XMLWriterImpl(Writer writer, boolean indent) throws NullPointerException {
     super(writer, indent);
-    this.elements.add(ROOT);
+    this._elements.add(ROOT);
   }
 
   // Writing text
@@ -96,9 +96,9 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
   @Override
   void deNude() throws IOException {
     if (this.isNude) {
-      this.writer.write('>');
+      this._writer.write('>');
       if (peekElement().hasChildren && this.indent) {
-        this.writer.write('\n');
+        this._writer.write('\n');
       }
       this.isNude = false;
     }
@@ -142,9 +142,9 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
     if (peekElement().hasChildren) {
       indent();
     }
-    this.elements.add(new Element(name, hasChildren));
-    this.writer.write('<');
-    this.writer.write(name);
+    this._elements.add(new Element(name, hasChildren));
+    this._writer.write('<');
+    this._writer.write(name);
     this.isNude = true;
     this.depth++;
   }
@@ -164,28 +164,28 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
     this.depth--;
     // this is an empty element
     if (this.isNude) {
-      this.writer.write('/');
+      this._writer.write('/');
       this.isNude = false;
       // the element contains text
     } else {
       if (elt.hasChildren) {
         indent();
       }
-      this.writer.write('<');
-      this.writer.write('/');
+      this._writer.write('<');
+      this._writer.write('/');
       int x = elt.name.indexOf(' ');
       if (x < 0) {
-        this.writer.write(elt.name);
+        this._writer.write(elt.name);
       } else {
-        this.writer.write(elt.name.substring(0, x));
+        this._writer.write(elt.name.substring(0, x));
       }
     }
-    this.writer.write('>');
+    this._writer.write('>');
     // take care of the new line if the indentation is on
     if (super.indent) {
       Element parent = peekElement();
       if (parent.hasChildren && parent != ROOT) {
-        this.writer.write('\n');
+        this._writer.write('\n');
       }
     }
   }
@@ -209,14 +209,14 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
   public void emptyElement(String element) throws IOException {
     deNude();
     indent();
-    this.writer.write('<');
-    this.writer.write(element);
-    this.writer.write('/');
-    this.writer.write('>');
+    this._writer.write('<');
+    this._writer.write(element);
+    this._writer.write('/');
+    this._writer.write('>');
     if (this.indent) {
       Element parent = peekElement();
       if (parent.hasChildren && parent != ROOT) {
-        this.writer.write('\n');
+        this._writer.write('\n');
       }
     }
   }
@@ -227,7 +227,7 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
    * @return The current element.
    */
   private Element peekElement() {
-    return this.elements.get(this.elements.size() - 1);
+    return this._elements.get(this._elements.size() - 1);
   }
 
   /**
@@ -236,7 +236,7 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
    * @return The current element.
    */
   private Element popElement() {
-    return this.elements.remove(this.elements.size() - 1);
+    return this._elements.remove(this._elements.size() - 1);
   }
 
   // Unsupported operations
@@ -339,7 +339,7 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
     Element open = peekElement();
     if (open != ROOT)
       throw new UnclosedElementException(open.name);
-    this.writer.close();
+    this._writer.close();
   }
 
   // Inner class: Element

@@ -95,7 +95,7 @@ public final class XMLWriterSAX implements XMLWriter {
   /**
    * Where the XML data goes.
    */
-  private final ContentHandler handler;
+  private final ContentHandler _handler;
 
   /**
    * Indicates whether the xml should be indented or not.
@@ -160,7 +160,7 @@ public final class XMLWriterSAX implements XMLWriter {
   public XMLWriterSAX(ContentHandler handler) throws NullPointerException {
     if (handler == null)
       throw new NullPointerException("XMLWriter cannot use a null content handler.");
-    this.handler = handler;
+    this._handler = handler;
     this.elements.add(ROOT);
     this.prefixMapping.put("", "");
   }
@@ -203,7 +203,7 @@ public final class XMLWriterSAX implements XMLWriter {
     if (text == null) return;
     try {
       deNude();
-      this.handler.characters(text.toCharArray(), 0, text.length());
+      this._handler.characters(text.toCharArray(), 0, text.length());
     } catch (SAXException ex) {
       handleEx(ex);
     }
@@ -216,7 +216,7 @@ public final class XMLWriterSAX implements XMLWriter {
   public void writeText(char[] text, int off, int len) throws IOException {
     try {
       deNude();
-      this.handler.characters(text, off, len);
+      this._handler.characters(text, off, len);
     } catch (SAXException ex) {
       handleEx(ex);
     }
@@ -229,7 +229,7 @@ public final class XMLWriterSAX implements XMLWriter {
   public void writeText(char c) throws IOException {
     try {
       deNude();
-      this.handler.characters(new char[] {c}, 0, 1);
+      this._handler.characters(new char[] {c}, 0, 1);
     } catch (SAXException ex) {
       handleEx(ex);
     }
@@ -260,7 +260,7 @@ public final class XMLWriterSAX implements XMLWriter {
     if (data == null) return;
     try {
       deNude();
-      this.handler.characters(data.toCharArray(), 0, data.length());
+      this._handler.characters(data.toCharArray(), 0, data.length());
     } catch (SAXException ex) {
       handleEx(ex);
     }
@@ -307,7 +307,7 @@ public final class XMLWriterSAX implements XMLWriter {
   public void writePI(String target, String data) throws IOException {
     try {
       deNude();
-      this.handler.processingInstruction(target, data);
+      this._handler.processingInstruction(target, data);
       if (this.indent) {
         newLine();
       }
@@ -389,10 +389,10 @@ public final class XMLWriterSAX implements XMLWriter {
       if (elt.mappings != null) {
         for (int i = 0; i < elt.mappings.size(); i++) {
           PrefixMapping pm = elt.mappings.get(i);
-          this.handler.startPrefixMapping(pm.prefix, pm.uri);
+          this._handler.startPrefixMapping(pm.prefix, pm.uri);
         }
       }
-      this.handler.startElement(elt.uri, elt.name, getQName(elt.uri, elt.name), this.attributes);
+      this._handler.startElement(elt.uri, elt.name, getQName(elt.uri, elt.name), this.attributes);
       this.attributes = new AttributesImpl();
       if (this.indent && elt.hasChildren) {
         newLine();
@@ -515,7 +515,7 @@ public final class XMLWriterSAX implements XMLWriter {
           ch[i * this.indentChars.length + j] = this.indentChars[j];
         }
       }
-      this.handler.ignorableWhitespace(ch, 0, ch.length);
+      this._handler.ignorableWhitespace(ch, 0, ch.length);
     }
   }
 
@@ -543,12 +543,12 @@ public final class XMLWriterSAX implements XMLWriter {
       if (elt.hasChildren) {
         indent();
       }
-      this.handler.endElement(elt.uri, elt.name, getQName(elt.uri, elt.name));
+      this._handler.endElement(elt.uri, elt.name, getQName(elt.uri, elt.name));
       // restore previous mapping if necessary
       if (elt.mappings != null) {
         for (int i = 0; i < elt.mappings.size(); i++) {
           PrefixMapping pm = elt.mappings.get(i);
-          this.handler.endPrefixMapping(pm.prefix);
+          this._handler.endPrefixMapping(pm.prefix);
         }
       }
       restorePrefixMapping(elt);
@@ -597,8 +597,8 @@ public final class XMLWriterSAX implements XMLWriter {
     try {
       deNude();
       indent();
-      this.handler.startElement(uri, element, "", new AttributesImpl());
-      this.handler.endElement(uri, element, "");
+      this._handler.startElement(uri, element, "", new AttributesImpl());
+      this._handler.endElement(uri, element, "");
       this.tempMapping = null;
       newLine();
     } catch (SAXException ex) {
@@ -750,7 +750,7 @@ public final class XMLWriterSAX implements XMLWriter {
    * @throws SAXException If thrown by the handler.
    */
   private void newLine() throws SAXException {
-    this.handler.characters(NEW_LINE, 0, 1);
+    this._handler.characters(NEW_LINE, 0, 1);
   }
 
   /**

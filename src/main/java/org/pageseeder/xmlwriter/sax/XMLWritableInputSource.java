@@ -43,7 +43,7 @@ public final class XMLWritableInputSource extends InputSource {
   /**
    * The wrapped XML writable object.
    */
-  private final XMLWritable source;
+  private final XMLWritable _source;
 
   /**
    * Creates an XML Writable object.
@@ -51,7 +51,7 @@ public final class XMLWritableInputSource extends InputSource {
    * @param object The XMLWritable object to wrap.
    */
   public XMLWritableInputSource(XMLWritable object) {
-    this.source = object;
+    this._source = object;
   }
 
   /**
@@ -60,7 +60,7 @@ public final class XMLWritableInputSource extends InputSource {
    * @return The XMLWritable object
    */
   public XMLWritable getXMLWritable() {
-    return this.source;
+    return this._source;
   }
 
 }

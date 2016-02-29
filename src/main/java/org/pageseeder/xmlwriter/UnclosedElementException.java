@@ -29,7 +29,7 @@ public final class UnclosedElementException extends IllegalStateException {
   /**
    * Version number for the serialised class.
    */
-  static final long serialVersionUID = -186657976801720211L;
+  private static final long serialVersionUID = -186657976801720211L;
 
   /**
    * Create a new unclosed element exception.

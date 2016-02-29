@@ -45,12 +45,12 @@ public final class DOMWriterImpl implements DOMWriter {
   /**
    * The DOM document on which we write.
    */
-  private final Document document;
+  private final Document _document;
 
   /**
    * The new line used.
    */
-  private final Node newline;
+  private final Node _newline;
 
   /**
    * Indicates whether the xml should be indented or not.
@@ -74,12 +74,12 @@ public final class DOMWriterImpl implements DOMWriter {
    *
    * <p>This attribute changes depending on the state of the instance.
    */
-  private transient int depth;
+  private int depth;
 
   /**
    * Flag to indicate that the element open tag is not finished yet.
    */
-  private transient boolean isNude;
+  private boolean isNude;
 
   /**
    * The current node being written onto.
@@ -87,12 +87,12 @@ public final class DOMWriterImpl implements DOMWriter {
    * <p>This node should always be an element except before and after writing where it
    * is the document node itself.
    */
-  private transient Node currentElement;
+  private Node currentElement;
 
   /**
    * An array to indicate which elements have children.
    */
-  private transient List<Boolean> childrenFlags = new ArrayList<Boolean>();
+  private List<Boolean> childrenFlags = new ArrayList<Boolean>();
 
   // Constructors
   // ----------------------------------------------------------------------------------------------
@@ -124,9 +124,9 @@ public final class DOMWriterImpl implements DOMWriter {
   public DOMWriterImpl(Document document) {
     if (document == null)
       throw new NullPointerException("The XMLWriter requires a DOM Document to write on.");
-    this.document = document;
+    this._document = document;
     this.currentElement = document;
-    this.newline = document.createTextNode("\n");
+    this._newline = document.createTextNode("\n");
   }
 
   // Setup methods
@@ -170,7 +170,7 @@ public final class DOMWriterImpl implements DOMWriter {
   public void writeText(String text) {
     if (text == null) return;
     deNude();
-    Text textNode = this.document.createTextNode(text);
+    Text textNode = this._document.createTextNode(text);
     this.currentElement.appendChild(textNode);
   }
 
@@ -227,7 +227,7 @@ public final class DOMWriterImpl implements DOMWriter {
   @Override
   public void writeCDATA(String data) {
     if (data == null) return;
-    this.document.createCDATASection(data);
+    this._document.createCDATASection(data);
   }
 
   // Write xml methods are not supported
@@ -267,7 +267,7 @@ public final class DOMWriterImpl implements DOMWriter {
     if (comment.indexOf("--") >= 0)
       throw new IllegalArgumentException("A comment must not contain '--'.");
     deNude();
-    Node node = this.document.createComment(comment);
+    Node node = this._document.createComment(comment);
     this.currentElement.appendChild(node);
     if (this.indent) {
       newLine();
@@ -282,7 +282,7 @@ public final class DOMWriterImpl implements DOMWriter {
   @Override
   public void writePI(String target, String data) throws DOMException {
     deNude();
-    Node node = this.document.createProcessingInstruction(target, data);
+    Node node = this._document.createProcessingInstruction(target, data);
     this.currentElement.appendChild(node);
     if (this.indent) {
       newLine();
@@ -301,7 +301,7 @@ public final class DOMWriterImpl implements DOMWriter {
   public void attribute(String name, String value) throws DOMException {
     if (!this.isNude)
       throw new IllegalArgumentException("Cannot write attribute: too late!");
-    Attr att = this.document.createAttribute(name);
+    Attr att = this._document.createAttribute(name);
     att.setValue(value);
     this.currentElement.appendChild(att);
   }
@@ -354,7 +354,7 @@ public final class DOMWriterImpl implements DOMWriter {
     deNude();
     indent();
     this.childrenFlags.add(Boolean.valueOf(hasChildren));
-    Element element = this.document.createElement(name);
+    Element element = this._document.createElement(name);
     this.currentElement.appendChild(element);
     this.currentElement = element;
     this.isNude = true;
@@ -406,7 +406,7 @@ public final class DOMWriterImpl implements DOMWriter {
    */
   @Override
   public void emptyElement(String name) throws DOMException {
-    Element element = this.document.createElement(name);
+    Element element = this._document.createElement(name);
     this.currentElement.appendChild(element);
   }
 
@@ -437,7 +437,7 @@ public final class DOMWriterImpl implements DOMWriter {
    */
   @Override
   public Document getDocument() {
-    return this.document;
+    return this._document;
   }
 
   // unsupported operations -------------------------------------------------------------------
@@ -539,7 +539,7 @@ public final class DOMWriterImpl implements DOMWriter {
       for (int i = 0; i < this.depth; i++) {
         out.append(this.indentChars);
       }
-      Node node = this.document.createTextNode(out.toString());
+      Node node = this._document.createTextNode(out.toString());
       this.currentElement.appendChild(node);
     }
   }
@@ -562,7 +562,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws DOMException If thrown by method invoked on the underlying DOM document
    */
   private void newLine() {
-    this.currentElement.appendChild(this.newline.cloneNode(false));
+    this.currentElement.appendChild(this._newline.cloneNode(false));
   }
 
   /**

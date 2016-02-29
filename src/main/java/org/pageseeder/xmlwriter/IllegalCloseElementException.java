@@ -26,7 +26,7 @@ public final class IllegalCloseElementException extends IllegalStateException {
   /**
    * Version number for the serialised class.
    */
-  static final long serialVersionUID = 7264175736386596167L;
+  private static final long serialVersionUID = 7264175736386596167L;
 
   /**
    * Creates a new illegal close element exception.

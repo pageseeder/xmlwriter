@@ -37,12 +37,12 @@ public final class XMLStringWriter implements XMLWriter {
   /**
    * Wraps an XML Writer
    */
-  private final StringWriter writer;
+  private final StringWriter _writer;
 
   /**
    * Wraps an XML Writer
    */
-  private final XMLWriter xml;
+  private final XMLWriter _xml;
 
   /**
    * <p>Creates a new XML string writer.
@@ -60,8 +60,8 @@ public final class XMLStringWriter implements XMLWriter {
    * @param indent  Set the indentation flag.
    */
   public XMLStringWriter(boolean namespaces, boolean indent) {
-    this.writer = new StringWriter();
-    this.xml = namespaces? new XMLWriterNSImpl(this.writer, indent) : new XMLWriterImpl(this.writer, indent);
+    this._writer = new StringWriter();
+    this._xml = namespaces? new XMLWriterNSImpl(this._writer, indent) : new XMLWriterImpl(this._writer, indent);
   }
 
   // XML Writer methods
@@ -70,7 +70,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void xmlDecl() {
     try {
-      this.xml.xmlDecl();
+      this._xml.xmlDecl();
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -79,13 +79,13 @@ public final class XMLStringWriter implements XMLWriter {
 
   @Override
   public void setIndentChars(String spaces) {
-    this.xml.setIndentChars(spaces);
+    this._xml.setIndentChars(spaces);
   }
 
   @Override
   public void writeText(char c) {
     try {
-      this.xml.writeText(c);
+      this._xml.writeText(c);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -95,7 +95,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void writeText(String text) {
     try {
-      this.xml.writeText(text);
+      this._xml.writeText(text);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -105,7 +105,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void writeText(char[] text, int off, int len) {
     try {
-      this.xml.writeText(text, off, len);
+      this._xml.writeText(text, off, len);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -115,7 +115,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void writeCDATA(String cdata) {
     try {
-      this.xml.writeCDATA(cdata);
+      this._xml.writeCDATA(cdata);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -125,7 +125,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void writeXML(String text) {
     try {
-      this.xml.writeXML(text);
+      this._xml.writeXML(text);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -135,7 +135,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void writeXML(char[] text, int off, int len) {
     try {
-      this.xml.writeXML(text, off, len);
+      this._xml.writeXML(text, off, len);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -145,7 +145,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void writeComment(String comment) {
     try {
-      this.xml.writeComment(comment);
+      this._xml.writeComment(comment);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -155,7 +155,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void writePI(String target, String data) {
     try {
-      this.xml.writePI(target, data);
+      this._xml.writePI(target, data);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -165,7 +165,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void openElement(String name) {
     try {
-      this.xml.openElement(name);
+      this._xml.openElement(name);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -175,7 +175,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void openElement(String name, boolean hasChildren) {
     try {
-      this.xml.openElement(name, hasChildren);
+      this._xml.openElement(name, hasChildren);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -185,7 +185,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void openElement(String uri, String name, boolean hasChildren) {
     try {
-      this.xml.openElement(uri, name, hasChildren);
+      this._xml.openElement(uri, name, hasChildren);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -195,7 +195,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void closeElement() {
     try {
-      this.xml.closeElement();
+      this._xml.closeElement();
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -205,7 +205,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void element(String name, String text) {
     try {
-      this.xml.element(name, text);
+      this._xml.element(name, text);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -215,7 +215,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void emptyElement(String element) {
     try {
-      this.xml.emptyElement(element);
+      this._xml.emptyElement(element);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -225,7 +225,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void emptyElement(String uri, String element) {
     try {
-      this.xml.emptyElement(element);
+      this._xml.emptyElement(element);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -235,7 +235,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void attribute(String name, String value) {
     try {
-      this.xml.attribute(name, value);
+      this._xml.attribute(name, value);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -245,7 +245,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void attribute(String name, int value) {
     try {
-      this.xml.attribute(name, value);
+      this._xml.attribute(name, value);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -255,7 +255,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void attribute(String uri, String name, String value) {
     try {
-      this.xml.attribute(uri, name, value);
+      this._xml.attribute(uri, name, value);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -265,7 +265,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void attribute(String uri, String name, int value) {
     try {
-      this.xml.attribute(uri, name, value);
+      this._xml.attribute(uri, name, value);
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -274,13 +274,13 @@ public final class XMLStringWriter implements XMLWriter {
 
   @Override
   public void setPrefixMapping(String uri, String prefix) {
-    this.xml.setPrefixMapping(uri, prefix);
+    this._xml.setPrefixMapping(uri, prefix);
   }
 
   @Override
   public void flush() {
     try {
-      this.xml.flush();
+      this._xml.flush();
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -290,7 +290,7 @@ public final class XMLStringWriter implements XMLWriter {
   @Override
   public void close() throws UnclosedElementException {
     try {
-      this.xml.close();
+      this._xml.close();
     } catch (IOException ex) {
       // Will not occur
       doNothing();
@@ -304,7 +304,7 @@ public final class XMLStringWriter implements XMLWriter {
    */
   @Override
   public String toString() {
-    return this.writer.toString();
+    return this._writer.toString();
   }
 
   /**

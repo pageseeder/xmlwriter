@@ -43,7 +43,7 @@ abstract class XMLWriterBase implements XMLWriter {
   /**
    * Where the XML data goes.
    */
-  final Writer writer;
+  final Writer _writer;
 
   /**
    * Encoding of the output xml.
@@ -94,7 +94,7 @@ abstract class XMLWriterBase implements XMLWriter {
   public XMLWriterBase(Writer writer, boolean indent) throws NullPointerException {
     if (writer == null)
       throw new NullPointerException("XMLWriter cannot use a null writer.");
-    this.writer = writer;
+    this._writer = writer;
     this.writerEscape = new XMLEscapeWriterUTF8(writer);
     this.indent = indent;
     if (indent) {
@@ -106,9 +106,9 @@ abstract class XMLWriterBase implements XMLWriter {
 
   @Override
   public final void xmlDecl() throws IOException {
-    this.writer.write("<?xml version=\"1.0\" encoding=\""+this.encoding+"\"?>");
+    this._writer.write("<?xml version=\"1.0\" encoding=\""+this.encoding+"\"?>");
     if (this.indent) {
-      this.writer.write('\n');
+      this._writer.write('\n');
     }
   }
 
@@ -194,13 +194,13 @@ abstract class XMLWriterBase implements XMLWriter {
   public final void writeXML(String text) throws IOException {
     if (text == null) return;
     deNude();
-    this.writer.write(text);
+    this._writer.write(text);
   }
 
   @Override
   public final void writeXML(char[] text, int off, int len) throws IOException {
     deNude();
-    this.writer.write(text, off, len);
+    this._writer.write(text, off, len);
   }
 
   // Processing Instructions, CDATA sections and comments
@@ -213,24 +213,24 @@ abstract class XMLWriterBase implements XMLWriter {
     if (comment.indexOf("--") >= 0)
       throw new IllegalArgumentException("A comment must not contain '--'.");
     deNude();
-    this.writer.write("<!-- ");
-    this.writer.write(comment);
-    this.writer.write(" -->");
+    this._writer.write("<!-- ");
+    this._writer.write(comment);
+    this._writer.write(" -->");
     if (this.indent) {
-      this.writer.write('\n');
+      this._writer.write('\n');
     }
   }
 
   @Override
   public final void writePI(String target, String data) throws IOException {
     deNude();
-    this.writer.write("<?");
-    this.writer.write(target);
-    this.writer.write(' ');
-    this.writer.write(data);
-    this.writer.write("?>");
+    this._writer.write("<?");
+    this._writer.write(target);
+    this._writer.write(' ');
+    this._writer.write(data);
+    this._writer.write("?>");
     if (this.indent) {
-      this.writer.write('\n');
+      this._writer.write('\n');
     }
   }
 
@@ -241,9 +241,9 @@ abstract class XMLWriterBase implements XMLWriter {
     if (data.indexOf(end) >= 0)
       throw new IllegalArgumentException("CDATA sections must not contain \']]>\'");
     deNude();
-    this.writer.write("<![CDATA[");
-    this.writer.write(data);
-    this.writer.write(end);
+    this._writer.write("<![CDATA[");
+    this._writer.write(data);
+    this._writer.write(end);
   }
 
   // Attribute methods
@@ -252,23 +252,23 @@ abstract class XMLWriterBase implements XMLWriter {
   @Override
   public final void attribute(String name, String value) throws IOException {
     if (!this.isNude) throw new IllegalStateException("Cannot write attribute: too late!");
-    this.writer.write(' ');
-    this.writer.write(name);
-    this.writer.write('=');
-    this.writer.write('"');
+    this._writer.write(' ');
+    this._writer.write(name);
+    this._writer.write('=');
+    this._writer.write('"');
     this.writerEscape.writeAttValue(value);
-    this.writer.write('"');
+    this._writer.write('"');
   }
 
   @Override
   public final void attribute(String name, int value) throws IOException {
     if (!this.isNude) throw new IllegalStateException("Cannot write attribute: too late!");
-    this.writer.write(' ');
-    this.writer.write(name);
-    this.writer.write('=');
-    this.writer.write('"');
-    this.writer.write(Integer.toString(value));
-    this.writer.write('"');
+    this._writer.write(' ');
+    this._writer.write(name);
+    this._writer.write('=');
+    this._writer.write('"');
+    this._writer.write(Integer.toString(value));
+    this._writer.write('"');
   }
 
   // Open/close specific elements
@@ -286,7 +286,7 @@ abstract class XMLWriterBase implements XMLWriter {
 
   @Override
   public final void flush() throws IOException {
-    this.writer.flush();
+    this._writer.flush();
   }
 
   // Base class and convenience methods
@@ -311,7 +311,7 @@ abstract class XMLWriterBase implements XMLWriter {
   void indent() throws IOException {
     if (this.indent) {
       for (int i = 0; i < this.depth; i++) {
-        this.writer.write(this.indentChars);
+        this._writer.write(this.indentChars);
       }
     }
   }

@@ -54,11 +54,11 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
   /**
    * The root node.
    */
-  private static final Element ROOT;
+  private static final NSElement ROOT;
   static {
     List<PrefixMapping> mps = new ArrayList<PrefixMapping>();
     mps.add(DEFAULT_NS);
-    ROOT = new Element("", true, mps);
+    ROOT = new NSElement("", true, mps);
   }
 
   /**
@@ -74,7 +74,7 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
   /**
    * A stack of elements to close the elements automatically.
    */
-  private final List<Element> elements = new ArrayList<Element>();
+  private final List<NSElement> _elements = new ArrayList<NSElement>();
 
   // Constructors
   // ----------------------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
    */
   public XMLWriterNSImpl(Writer writer, boolean indent) throws NullPointerException {
     super(writer, indent);
-    this.elements.add(ROOT);
+    this._elements.add(ROOT);
     this.prefixMapping.put(XMLConstants.NULL_NS_URI, XMLConstants.DEFAULT_NS_PREFIX);
     this.prefixMapping.put(XMLConstants.XML_NS_URI, XMLConstants.XML_NS_PREFIX);
   }
@@ -115,9 +115,9 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
   @Override
   void deNude() throws IOException {
     if (this.isNude) {
-      this.writer.write('>');
+      this._writer.write('>');
       if (super.indent && peekElement().hasChildren) {
-        this.writer.write('\n');
+        this._writer.write('\n');
       }
       this.isNude = false;
     }
@@ -199,9 +199,9 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
       indent();
     }
     String qName = getQName(uri, name);
-    this.elements.add(new Element(qName, hasChildren, this.tempMapping));
-    this.writer.write('<');
-    this.writer.write(qName);
+    this._elements.add(new NSElement(qName, hasChildren, this.tempMapping));
+    this._writer.write('<');
+    this._writer.write(qName);
     handleNamespaceDeclaration();
     this.isNude = true;
     this.depth++;
@@ -214,37 +214,37 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
    */
   @Override
   public void closeElement() throws IOException {
-    Element elt = popElement();
+    NSElement elt = popElement();
     // reaching the end of the document
     if (elt == ROOT)
       throw new IllegalCloseElementException();
     this.depth--;
     // this is an empty element
     if (this.isNude) {
-      this.writer.write('/');
+      this._writer.write('/');
       this.isNude = false;
       // the element contains text
     } else {
       if (elt.hasChildren) {
         indent();
       }
-      this.writer.write('<');
-      this.writer.write('/');
-      int x = elt.qName.indexOf(' ');
+      this._writer.write('<');
+      this._writer.write('/');
+      int x = elt._qName.indexOf(' ');
       if (x < 0) {
-        this.writer.write(elt.qName);
+        this._writer.write(elt._qName);
       } else {
-        this.writer.write(elt.qName.substring(0, x));
+        this._writer.write(elt._qName.substring(0, x));
       }
     }
     // restore previous mapping if necessary
     restorePrefixMapping(elt);
-    this.writer.write('>');
+    this._writer.write('>');
     // take care of the new line if the indentation is on
     if (super.indent) {
-      Element parent = peekElement();
+      NSElement parent = peekElement();
       if (parent.hasChildren && parent != ROOT) {
-        this.writer.write('\n');
+        this._writer.write('\n');
       }
     }
   }
@@ -281,13 +281,13 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
   public void emptyElement(String uri, String element) throws IOException {
     deNude();
     indent();
-    this.writer.write('<');
-    this.writer.write(getQName(uri, element));
+    this._writer.write('<');
+    this._writer.write(getQName(uri, element));
     handleNamespaceDeclaration();
-    this.writer.write('/');
-    this.writer.write('>');
+    this._writer.write('/');
+    this._writer.write('>');
     if (super.indent) {
-      this.writer.write('\n');
+      this._writer.write('\n');
     }
   }
 
@@ -296,8 +296,8 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
    *
    * @return The current element.
    */
-  private Element peekElement() {
-    return this.elements.get(this.elements.size() - 1);
+  private NSElement peekElement() {
+    return this._elements.get(this._elements.size() - 1);
   }
 
   /**
@@ -305,8 +305,8 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
    *
    * @return The current element.
    */
-  private Element popElement() {
-    return this.elements.remove(this.elements.size() - 1);
+  private NSElement popElement() {
+    return this._elements.remove(this._elements.size() - 1);
   }
 
   /**
@@ -323,11 +323,11 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
   public void attribute(String uri, String name, String value)
       throws IOException, IllegalStateException {
     if (!this.isNude) throw new IllegalArgumentException("Cannot write attribute: too late!");
-    this.writer.write(' ');
-    this.writer.write(getQName(uri, name));
-    this.writer.write("=\"");
+    this._writer.write(' ');
+    this._writer.write(getQName(uri, name));
+    this._writer.write("=\"");
     this.writerEscape.writeAttValue(value);
-    this.writer.write('"');
+    this._writer.write('"');
     handleNamespaceDeclaration();
   }
 
@@ -347,11 +347,11 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
   public void attribute(String uri, String name, int value)
       throws IOException, IllegalStateException {
     if (!this.isNude) throw new IllegalArgumentException("Cannot write attribute: too late!");
-    this.writer.write(' ');
-    this.writer.write(getQName(uri, name));
-    this.writer.write("=\"");
-    this.writer.write(Integer.toString(value));
-    this.writer.write('"');
+    this._writer.write(' ');
+    this._writer.write(getQName(uri, name));
+    this._writer.write("=\"");
+    this._writer.write(Integer.toString(value));
+    this._writer.write('"');
     handleNamespaceDeclaration();
   }
 
@@ -418,15 +418,15 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
       for (int i = 0; i < this.tempMapping.size(); i++) {
         pm = this.tempMapping.get(i);
         if (!XMLConstants.XML_NS_PREFIX.equals(pm.prefix)) {
-          this.writer.write(" xmlns");
+          this._writer.write(" xmlns");
           // specify a prefix if different from ""
           if (!"".equals(pm.prefix)) {
-            this.writer.write(':');
-            this.writer.write(pm.prefix);
+            this._writer.write(':');
+            this._writer.write(pm.prefix);
           }
-          this.writer.write("=\"");
-          this.writer.write(pm.uri);
-          this.writer.write("\"");
+          this._writer.write("=\"");
+          this._writer.write(pm.uri);
+          this._writer.write("\"");
         }
       }
       this.tempMapping = null;
@@ -442,16 +442,16 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
    *
    * @param elt The element that had some new mappings.
    */
-  private void restorePrefixMapping(Element elt) {
-    if (elt.mappings != null) {
+  private void restorePrefixMapping(NSElement elt) {
+    if (elt._mappings != null) {
       // for each mapping of this element
-      for (int i = 0; i < elt.mappings.size(); i++) {
-        PrefixMapping mpi = elt.mappings.get(i);
+      for (int i = 0; i < elt._mappings.size(); i++) {
+        PrefixMapping mpi = elt._mappings.get(i);
         // find the first previous namespace mapping amongst the parents
         // that defines namespace mappings
-        for (int j = this.elements.size() - 1; j > 0; j--) {
-          if (this.elements.get(j).mappings != null) {
-            List<PrefixMapping> mps = this.elements.get(j).mappings;
+        for (int j = this._elements.size() - 1; j > 0; j--) {
+          if (this._elements.get(j)._mappings != null) {
+            List<PrefixMapping> mps = this._elements.get(j)._mappings;
             // iterate through the define namespace mappings of the parent
             for (int k = 0; k < mps.size(); k++) {
               PrefixMapping mpk = mps.get(k);
@@ -497,10 +497,10 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
    */
   @Override
   public void close() throws IOException, UnclosedElementException {
-    Element open = peekElement();
+    NSElement open = peekElement();
     if (open != XMLWriterNSImpl.ROOT)
-      throw new UnclosedElementException(open.qName);
-    this.writer.close();
+      throw new UnclosedElementException(open._qName);
+    this._writer.close();
   }
 
   // Inner class: Element
@@ -509,22 +509,21 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
   /**
    * A light object to keep track of the elements
    *
-   * @author Christophe Lauret (Allette Systems)
-   * @version 31 August 2004
+   * @author Christophe Lauret
    */
-  private static final class Element {
+  private static final class NSElement {
 
     /**
      * The fully qualified name of the element.
      */
-    private final String qName;
+    private final String _qName;
 
     /**
      * A list of prefix mappings for this element.
      *
      * <p>Can be <code>null</code>.
      */
-    private final List<PrefixMapping> mappings;
+    private final List<PrefixMapping> _mappings;
 
     /**
      * Indicates whether the element has children.
@@ -538,10 +537,10 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
      * @param hasChildren Whether the element has children.
      * @param mappings    The list of prefix mapping if any.
      */
-    public Element(String qName, boolean hasChildren, List<PrefixMapping> mappings) {
-      this.qName = qName;
+    public NSElement(String qName, boolean hasChildren, List<PrefixMapping> mappings) {
+      this._qName = qName;
+      this._mappings = mappings;
       this.hasChildren = hasChildren;
-      this.mappings = mappings;
     }
   }
 
