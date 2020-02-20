@@ -446,6 +446,7 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
     if (elt._mappings != null) {
       // for each mapping of this element
       for (int i = 0; i < elt._mappings.size(); i++) {
+        boolean found = false;
         PrefixMapping mpi = elt._mappings.get(i);
         // find the first previous namespace mapping amongst the parents
         // that defines namespace mappings
@@ -457,6 +458,7 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
               PrefixMapping mpk = mps.get(k);
               // if we found a namespace prefix for the namespace
               if (mpk.prefix.equals(mpi.prefix)) {
+                found = true;
                 removeIfNeeded(mpk.prefix);
                 this.prefixMapping.put(mpk.uri, mpk.prefix);
                 j = 0; // exit from the previous loop
@@ -464,6 +466,11 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
               }
             }
           }
+        }
+        // if not declared in ancestors remove it now so the declaration
+        // will be output again later if required
+        if (!found) {
+          removeIfNeeded(mpi.prefix);
         }
       }
     }

@@ -160,4 +160,35 @@ public final class XMLWriterNSImplTest extends BaseXMLWriterTest {
     assertEquivalent(expected, getXMLString());
   }
 
+  /**
+   * Tests that the namespace can change for the different prefixes.
+   *
+   * @throws IOException Should an I/O error occur.
+   */
+  public void testNamespaceSwitch2() throws IOException {
+    this.xml.openElement(null, "test", true);
+    // switch once
+    this.xml.setPrefixMapping(URI_TEST_1, "xx");
+    this.xml.openElement(URI_TEST_1, "empty", false);
+    this.xml.closeElement();
+    // intermediary elemnt to test
+    this.xml.emptyElement(null, "empty");
+    // switch twice
+    this.xml.setPrefixMapping(URI_TEST_1, "xx");
+    this.xml.openElement(URI_TEST_1, "empty", false);
+    this.xml.closeElement();
+    // final element
+    this.xml.emptyElement(null, "empty");
+    this.xml.closeElement();
+    this.xml.flush();
+    // expected
+    String expected = "<test>" +
+            "<xx:empty xmlns:xx='"+URI_TEST_1+"'/>" +
+            "<empty/>" +
+            "<xx:empty xmlns:xx='"+URI_TEST_1+"'/>" +
+            "<empty/>" +
+            "</test>";
+    assertEquivalent(expected, getXMLString());
+  }
+
 }
