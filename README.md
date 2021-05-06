@@ -1,4 +1,4 @@
-[ ![Download](https://api.bintray.com/packages/pageseeder/maven/xmlwriter/images/download.svg) ](https://bintray.com/pageseeder/maven/xmlwriter/_latestVersion)
+[![Maven Central](https://img.shields.io/maven-central/v/org.pageseeder.xmlwriter/pso-xmlwriter.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22org.pageseeder.xmlwriter%22%20AND%20a:%22pso-xmlwriter%22)
 
 # XML Writer
 

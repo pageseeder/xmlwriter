@@ -1,32 +1,41 @@
+plugins {
+  id 'java-library'
+  id 'maven-publish'
+  id 'io.codearte.nexus-staging' version '0.30.0'
+}
+
 group       = 'org.pageseeder.xmlwriter'
 version     = file('version.txt').text
 description = "$title"
 
-apply plugin: 'java'
-apply plugin: 'maven-publish'
 apply from: 'gradle/publish-mavencentral.gradle'
 
-buildscript {
-  repositories {
-    maven { url "https://plugins.gradle.org/m2/" }
-  }
-  dependencies {
-    classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.30.0'
-  }
+//buildscript {
+//  repositories {
+//    maven { url "https://plugins.gradle.org/m2/" }
+//  }
+//  dependencies {
+//    classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.30.0'
+//  }
+//}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+tasks.withType(JavaCompile) {
+  options.encoding = 'UTF-8'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 repositories {
-  maven { url 'http://dl.bintray.com/pageseeder/maven' }
-  jcenter()
+  mavenCentral {
+    url = uri("https://maven-central.storage.googleapis.com/maven2")
+  }
 }
 
 dependencies {
 
-  testCompile'junit:junit:4.12'
-  testCompile(group: 'org.pageseeder.diffx', name: 'pso-diffx', version:'0.8.0') {
+  testImplementation('junit:junit:4.12')
+  testImplementation(group: 'org.pageseeder.diffx', name: 'pso-diffx', version:'0.8.1') {
     exclude(module: 'pso-xmlwriter')
   }
 
