@@ -23,6 +23,9 @@ package org.pageseeder.xmlwriter;
  * writer is closed before the remaining open elements are closed.
  *
  * @author Christophe Lauret
+ *
+ * @since 1.0.0
+ * @version 1.0.0
  */
 public final class UnclosedElementException extends IllegalStateException {
 

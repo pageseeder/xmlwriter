@@ -20,6 +20,9 @@ package org.pageseeder.xmlwriter;
  * corresponding open element.
  *
  * @author Christophe Lauret
+ *
+ * @since 1.0.0
+ * @version 1.0.0
  */
 public final class IllegalCloseElementException extends IllegalStateException {
 

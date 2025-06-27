@@ -18,11 +18,14 @@ package org.pageseeder.xmlwriter;
 /**
  * Class of exceptions thrown when a namespace is being used without being declared.
  *
- * <p>To avoid this exception being thrown, the namespace URI must be explicitely associated
- * with a prefix before a node belonging to this namespace is serialiased. Namespaces can be
+ * <p>To avoid this exception being thrown, the namespace URI must be explicitly associated
+ * with a prefix before a node belonging to this namespace is serialized. Namespaces can be
  * declared using the {@link XMLWriter#setPrefixMapping(String, String)} method.
  *
  * @author Christophe Lauret
+ *
+ * @since 1.0.0
+ * @version 1.0.0
  */
 public final class UndeclaredNamespaceException extends RuntimeException {
 
