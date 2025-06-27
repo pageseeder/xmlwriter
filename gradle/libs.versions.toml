@@ -1,0 +1,10 @@
+[versions]
+junit = "4.12"
+
+[libraries]
+jetbrains-annotations = { module = "org.jetbrains:annotations", version = "26.0.2" }
+junit = { module = "junit:junit", version.ref = "junit" }
+diffx = { module = "org.pageseeder.diffx:pso-diffx", version = "1.2.1" }
+
+[plugins]
+jreleaser = { id = "org.jreleaser", version = "1.18.0" }

@@ -1,0 +1,36 @@
+[project]
+name = "xmlwriter"
+description = "XML Writer API for Java"
+tags = ["xml", "java"]
+authors = ["Alberto Santos", "Christophe Lauret", "Philip Rutherford", "Valerie Ku"]
+license = "Apache-2.0"
+inceptionYear = "2007"
+vendor = "Allette Systems"
+
+# Organization info
+[project.links]
+homepage = "https://github.com/pageseeder/diffx"
+license = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+
+# Java-specific configuration
+[project.languages.java]
+groupId = "org.pageseeder.xmlwriter"
+
+# Git configuration
+[release.github]
+owner = "pageseeder"
+name = "xmlwriter"
+username = "pageseeder"
+branch = "master"
+
+# Signing configuration
+[signing]
+active = "ALWAYS"
+armored = true
+mode = "FILE"
+
+# Maven deployment configuration
+[deploy.maven.mavenCentral.sonatype]
+active = "ALWAYS"
+url = "https://central.sonatype.com/api/v1/publisher"
+stagingRepositories = ["build/staging-deploy"]
