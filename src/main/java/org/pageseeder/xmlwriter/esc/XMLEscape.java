@@ -15,22 +15,24 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * An interface to escape XML character data.
  *
- * <p>This interface assumes that the values to be escapes do not orignate from
+ * <p>This interface assumes that the values to be escapes do not originate from
  * XML text, in order words, there should not be already any entity or markup
  * in the document. If it is the case the methods in this class should also
- * escapes them. Thus "&amp;amp;" would be represented as "&amp;amp;amp;".
+ * escape them. Thus, "&amp;amp;" would be represented as "&amp;amp;amp;".
  *
- * <p>Also the method will not try to escape characters that cannot be escaped.
- *
- * <p>This class is mostly concerned about producing well formed XML and
- * not does attempt to produce valid data.
+ * <p>Also, the method will not try to escape characters that cannot be escaped.
  *
  * @see <a href="http://www.w3.org/TR/xml/">Extensible Markup Language (XML) 1.0</a>
  *
  * @author Christophe Lauret
+ *
+ * @since 1.0.0
+ * @version 1.0.0
  */
 public interface XMLEscape {
 
@@ -63,7 +65,7 @@ public interface XMLEscape {
    *
    * @return A well-formed value for the attribute.
    */
-  String toAttributeValue(char[] ch, int off, int len);
+  @NotNull String toAttributeValue(char @NotNull [] ch, int off, int len);
 
   /**
    * Returns a well-formed attribute value.
@@ -106,7 +108,7 @@ public interface XMLEscape {
    *
    * @return A well-formed value for the text node.
    */
-  String toElementText(char[] ch, int off, int len);
+  @NotNull String toElementText(char @NotNull [] ch, int off, int len);
 
   /**
    * Returns a well-formed text value for the element.
@@ -117,11 +119,11 @@ public interface XMLEscape {
    * <p>This method should return <code>null</code> if the given
    * value is <code>null</code>.
    *
-   * @param value The value that needs to be text-escaped.
+   * @param text The text that needs to be escaped.
    *
    * @return A well-formed value for the text node.
    */
-  String toElementText(String value);
+  String toElementText(String text);
 
   /**
    * Returns the encoding used by the implementing class.

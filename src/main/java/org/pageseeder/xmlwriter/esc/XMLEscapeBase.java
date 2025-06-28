@@ -19,6 +19,9 @@ package org.pageseeder.xmlwriter.esc;
  * A base implementation for the XML escape classes.
  *
  * @author Christophe Lauret
+ *
+ * @since 1.0.0
+ * @version 1.0.0
  */
 abstract class XMLEscapeBase implements XMLEscape {
 
@@ -39,30 +42,29 @@ abstract class XMLEscapeBase implements XMLEscape {
   /**
    * Default implementation calling the {@link XMLEscape#toAttributeValue(char[], int, int)}.
    *
-   * {@inheritDoc}
+   * @param value The value that needs to be attribute-escaped.
+   *
+   * @return A well-formed value for the attribute.
    */
   @Override
   public final String toAttributeValue(String value) {
-    if (value == null || "".equals(value)) return value;
+    if (value == null || value.isEmpty()) return value;
     return toAttributeValue(value.toCharArray(), 0, value.length());
   }
 
   /**
-   * Default implementation calling the {@link XMLEscape#toAttributeValue(char[], int, int)}.
+   * Default implementation calling the {@link XMLEscape#toElementText(char[], int, int)}.
    *
-   * {@inheritDoc}
+   * @param text The text that needs to be escaped.
+   *
+   * @return A well-formed value for the text node.
    */
   @Override
-  public final String toElementText(String value) {
-    if (value == null || "".equals(value)) return value;
-    return toElementText(value.toCharArray(), 0, value.length());
+  public final String toElementText(String text) {
+    if (text == null || text.isEmpty()) return text;
+    return toElementText(text.toCharArray(), 0, text.length());
   }
 
-  /**
-   * Returns the encoding used.
-   *
-   * {@inheritDoc}
-   */
   @Override
   public final String getEncoding() {
     return this.encoding;

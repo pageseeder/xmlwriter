@@ -15,6 +15,8 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * A utility class for escaping XML data when using the UTF-8 encoding.
  *
@@ -22,11 +24,14 @@ package org.pageseeder.xmlwriter.esc;
  * Transformation Format should support all Unicode code points.
  *
  * <p>Escape methods in this class will escape non-BMP character for better
- * compatibility with storage mechanism which do not support them, for example
- * some databases.
+ * compatibility with storage mechanisms that do not support them, for
+ * example, some databases.
  *
  * @author Christophe Lauret
  * @author Philip Rutherford
+ *
+ * @since 1.0.0
+ * @version 1.0.0
  */
 public final class XMLEscapeUTF8 extends XMLEscapeBase implements XMLEscape {
 
@@ -48,7 +53,7 @@ public final class XMLEscapeUTF8 extends XMLEscapeBase implements XMLEscape {
   }
 
   @Override
-  public String toAttributeValue(char[] ch, int off, int len) {
+  public @NotNull String toAttributeValue(char @NotNull [] ch, int off, int len) {
     StringBuilder out = new StringBuilder();
     char c;
     for (int i = off; i < off+len; i++) {
@@ -78,8 +83,8 @@ public final class XMLEscapeUTF8 extends XMLEscapeBase implements XMLEscape {
   }
 
   @Override
-  public String toElementText(char[] ch, int off, int len) {
-    StringBuffer out = new StringBuffer(len + len / 10);
+  public @NotNull String toElementText(char @NotNull [] ch, int off, int len) {
+    StringBuilder out = new StringBuilder(len + len / 10);
     char c;
     for (int i = off; i < off+len; i++) {
       c = ch[i];
@@ -112,6 +117,7 @@ public final class XMLEscapeUTF8 extends XMLEscapeBase implements XMLEscape {
    * in certain conditions.
    */
   private static void doNothing() {
+    // Ignored on purpose
   }
 
 }

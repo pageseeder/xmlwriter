@@ -15,6 +15,8 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.io.Writer;
 
@@ -25,11 +27,14 @@ import java.io.Writer;
  * Transformation Format should support all Unicode code points.
  *
  * <p>Escape methods in this class will escape non-BMP character for better
- * compatibility with storage mechanism which do not support them, for example
+ * compatibility with storage mechanisms that do not support them, for example,
  * some databases.
  *
  * @author Christophe Lauret
  * @author Philip Rutherford
+ *
+ * @since 1.0.0
+ * @version 1.0.0
  */
 public final class XMLEscapeWriterUTF8 extends XMLEscapeWriterBase implements XMLEscapeWriter {
 
@@ -52,7 +57,7 @@ public final class XMLEscapeWriterUTF8 extends XMLEscapeWriterBase implements XM
   }
 
   @Override
-  public void writeAttValue(char[] ch, int off, int len) throws IOException {
+  public void writeAttValue(char @NotNull [] ch, int off, int len) throws IOException {
     char c;
     for (int i = off; i < off+len; i++) {
       c = ch[i];
@@ -82,9 +87,9 @@ public final class XMLEscapeWriterUTF8 extends XMLEscapeWriterBase implements XM
   }
 
   @Override
-  public void writeText(char[] ch, int off, int len) throws IOException {
+  public void writeText(char @NotNull[] ch, int off, int len) throws IOException {
     // process the rest
-    char c = ' ';
+    char c;
     for (int i = off; i < off+len; i++) {
       c = ch[i];
       // '<' always replace with '&lt;'
@@ -135,6 +140,7 @@ public final class XMLEscapeWriterUTF8 extends XMLEscapeWriterBase implements XM
    * in certain conditions.
    */
   private static void doNothing() {
+    // Ignore on purpose
   }
 
 }

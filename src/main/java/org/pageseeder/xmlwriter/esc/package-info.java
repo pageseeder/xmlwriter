@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * A set classes and interfaces for escaping XML text.
+ * Utility classes and interfaces for escaping XML text.
  */
 package org.pageseeder.xmlwriter.esc;

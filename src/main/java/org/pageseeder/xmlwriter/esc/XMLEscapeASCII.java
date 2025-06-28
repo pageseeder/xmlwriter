@@ -15,6 +15,8 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * A singleton for escaping XML data when using the 'ASCII' encoding.
  *
@@ -22,6 +24,9 @@ package org.pageseeder.xmlwriter.esc;
  * by a character entity.
  *
  * @author Christophe Lauret
+ *
+ * @since 1.0.0
+ * @version 1.0.0
  */
 public final class XMLEscapeASCII extends XMLEscapeBase implements XMLEscape {
 
@@ -43,9 +48,8 @@ public final class XMLEscapeASCII extends XMLEscapeBase implements XMLEscape {
   }
 
   @Override
-  public String toAttributeValue(char[] ch, int off, int len) {
-    // process the rest
-    StringBuffer out = new StringBuffer(len + len / 10);
+  public @NotNull String toAttributeValue(char @NotNull [] ch, int off, int len) {
+    StringBuilder out = new StringBuilder(len + len / 10);
     for (int i = off; i < off+len; i++) {
       // 0x00 to 0x1F
       if (ch[i] < 0x20) {
@@ -70,8 +74,8 @@ public final class XMLEscapeASCII extends XMLEscapeBase implements XMLEscape {
           case '\'' :
             out.append("&#x27;");
             break;
-            // output by default
           default:
+            // output by default
             out.append(ch[i]);
         }
       }
@@ -94,14 +98,13 @@ public final class XMLEscapeASCII extends XMLEscapeBase implements XMLEscape {
   }
 
   @Override
-  public String toElementText(char[] ch, int off, int len) {
-    // process the rest
-    StringBuffer out = new StringBuffer(len + len / 10);
+  public @NotNull String toElementText(char @NotNull[] ch, int off, int len) {
+    StringBuilder out = new StringBuilder(len + len / 10);
     char c;
     for (int i = off; i < off+len; i++) {
       c = ch[i];
       // '<' always replace with '&lt;'
-      if      (c == '<') {
+      if (c == '<') {
         out.append("&lt;");
       } else if (c == '&') {
         out.append("&amp;");
@@ -130,6 +133,7 @@ public final class XMLEscapeASCII extends XMLEscapeBase implements XMLEscape {
    * Does nothing.
    */
   private void doNothing() {
+    // Ignore on purpose
   }
 
 }

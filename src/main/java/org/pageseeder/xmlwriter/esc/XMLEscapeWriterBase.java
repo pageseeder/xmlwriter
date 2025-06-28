@@ -17,12 +17,16 @@ package org.pageseeder.xmlwriter.esc;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Objects;
 
 /**
  * A base implementation for the XML writer escape classes.
  *
  * @author Christophe Lauret
  * @author Philip Rutherford
+ *
+ * @since 1.0.0
+ * @version 1.0.0
  */
 abstract class XMLEscapeWriterBase implements XMLEscapeWriter {
 
@@ -45,38 +49,40 @@ abstract class XMLEscapeWriterBase implements XMLEscapeWriter {
    * @throws NullPointerException If the specified writer is <code>null</code>.
    */
   XMLEscapeWriterBase(Writer writer, String encoding) {
-    if (writer == null)
-      throw new NullPointerException("Cannot construct XML escape for null writer.");
-    this.w = writer;
+    this.w = Objects.requireNonNull(writer, "Cannot construct XML escape for null writer.");
     this.encoding = encoding;
   }
 
   /**
    * Default implementation calling the {@link XMLEscapeWriter#writeAttValue(char[], int, int)}.
    *
-   * {@inheritDoc}
+   * @param value The value that needs to be attribute-escaped.
+   *
+   * @throws IOException If thrown by the underlying writer.
    */
   @Override
   public final void writeAttValue(String value) throws IOException {
-    if (value == null || "".equals(value)) return;
+    if (value == null || value.isEmpty()) return;
     writeAttValue(value.toCharArray(), 0, value.length());
   }
 
   /**
-   * Default implementation calling the {@link XMLEscapeWriter#writeAttValue(char[], int, int)}.
+   * Default implementation calling the {@link XMLEscapeWriter#writeText(char[], int, int)}.
    *
-   * {@inheritDoc}
+   * @param text The text that needs to be text-escaped.
+   *
+   * @throws IOException If thrown by the underlying writer.
    */
   @Override
-  public final void writeText(String value) throws IOException {
-    if (value == null || "".equals(value)) return;
-    writeText(value.toCharArray(), 0, value.length());
+  public final void writeText(String text) throws IOException {
+    if (text == null || text.isEmpty()) return;
+    writeText(text.toCharArray(), 0, text.length());
   }
 
   /**
-   * Returns the encoding for this writer.
+   * Retrieves the character encoding used by this writer implementation.
    *
-   * {@inheritDoc}
+   * @return The character encoding as a {@code String}.
    */
   @Override
   public final String getEncoding() {

@@ -15,6 +15,8 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.io.Writer;
 
@@ -32,6 +34,9 @@ import java.io.Writer;
  *
  * @author Christophe Lauret
  * @author Philip Rutherford
+ *
+ * @since 1.0.0
+ * @version 1.0.0
  */
 public interface XMLEscapeWriter {
 
@@ -56,7 +61,7 @@ public interface XMLEscapeWriter {
    * except for line feed (#x0A), carriage return (#x0D) and tab (#x09).
    *
    * @see <a href="http://www.w3.org/TR/xml/#NT-AttValue">Extensible Markup
-   * Language (XML) 1.0 - 2.3 Common Syntactic Constructs</a>
+   * Language (XML) 1.0 – 2.3 Common Syntactic Constructs</a>
    *
    * @param ch  The value that needs to be attribute-escaped.
    * @param off The start (offset) of the characters.
@@ -64,7 +69,7 @@ public interface XMLEscapeWriter {
    *
    * @throws IOException If thrown by the underlying writer.
    */
-  void writeAttValue(char[] ch, int off, int len) throws IOException;
+  void writeAttValue(char @NotNull [] ch, int off, int len) throws IOException;
 
   /**
    * Writes a well-formed attribute value.
@@ -104,7 +109,7 @@ public interface XMLEscapeWriter {
    *
    * @throws IOException If thrown by the underlying writer.
    */
-  void writeText(char[] ch, int off, int len) throws IOException;
+  void writeText(char @NotNull [] ch, int off, int len) throws IOException;
 
   /**
    * Writes the text string so that the text value for the element remains
@@ -125,10 +130,10 @@ public interface XMLEscapeWriter {
    * Writes the character so that the text value for the element remains
    * well-formed.
    *
-   * <p>Some implementations may unable to deal with java characters outside
-   * the Basic Multilingual Plane (BMP). As a result, java characters which
-   * correspond to UTF-16 surrogate pairs (#xD800 - 0xDFFF) in  may be not be
-   * handled appropriately.
+   * <p>Some implementations may be unable to deal with java characters
+   * outside the Basic Multilingual Plane (BMP). As a result, java characters
+   * which correspond to UTF-16 surrogate pairs (#xD800 - 0xDFFF) in might not
+   * be handled appropriately.
    *
    * <p>Unicode Transformation Format (UTF) implementation should copy the
    * java character verbatim.

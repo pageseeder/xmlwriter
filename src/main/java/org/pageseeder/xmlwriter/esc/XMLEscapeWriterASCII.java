@@ -15,16 +15,21 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.io.Writer;
 
 /**
  * A utility class for escaping XML data when the intended encoding is ASCII or ASCII compatible.
  *
- * <p>Any unicode code point greater then (#x7E) will be encoded using the numeric character entity.
+ * <p>Any Unicode code point greater than (#x7E) will be encoded using the numeric character entity.
  *
  * @author Christophe Lauret
  * @author Philip Rutherford
+ *
+ * @since 1.0.0
+ * @version 1.0.0
  */
 public final class XMLEscapeWriterASCII extends XMLEscapeWriterBase implements XMLEscapeWriter {
 
@@ -45,7 +50,7 @@ public final class XMLEscapeWriterASCII extends XMLEscapeWriterBase implements X
   }
 
   @Override
-  public void writeAttValue(char[] ch, int off, int len) throws IOException {
+  public void writeAttValue(char @NotNull [] ch, int off, int len) throws IOException {
     char c;
     for (int i = off; i < off+len; i++) {
       c = ch[i];
@@ -61,19 +66,20 @@ public final class XMLEscapeWriterASCII extends XMLEscapeWriterBase implements X
       } else if (c == '\n' || c == '\r' || c == '\t') {
         super.w.write(c);
       } else if (c < 0x20 || c >= 0x7F && c < 0xA0) {
+        // Ignore control characters
         doNothing();
       } else if (c >= 0xD800 && c <= 0xDFFF) {
         int codePoint = Character.codePointAt(ch, i, len);
         i += Character.charCount(codePoint) - 1;
         super.w.write("&#x");
         super.w.write(Integer.toHexString(codePoint));
-        super.w.write(";");
+        super.w.write(';');
       }
       // characters outside the ASCII range
       else if (c > 0x9F) {
         super.w.write("&#x");
         super.w.write(Integer.toHexString(c));
-        super.w.write(";");
+        super.w.write(';');
       } else {
         super.w.write(c);
       }
@@ -81,7 +87,7 @@ public final class XMLEscapeWriterASCII extends XMLEscapeWriterBase implements X
   }
 
   @Override
-  public void writeText(char[] ch, int off, int len) throws IOException {
+  public void writeText(char @NotNull [] ch, int off, int len) throws IOException {
     char c;
     for (int i = off; i < off+len; i++) {
       c = ch[i];
@@ -93,16 +99,15 @@ public final class XMLEscapeWriterASCII extends XMLEscapeWriterBase implements X
         super.w.write("&amp;");
       } else if (c == '\n' || c == '\r' || c == '\t') {
         super.w.write(c);
-      } else if (c < 0x20) {
-        doNothing();
-      } else if (c >= 0x7F && c < 0xA0) {
+      } else if (c < 0x20 || c >= 0x7F && c < 0xA0) {
+        // Ignore control characters
         doNothing();
       } else if (c >= 0xD800 && c <= 0xDFFF) {
         int codePoint = Character.codePointAt(ch, i, len);
         i += Character.charCount(codePoint) - 1;
         super.w.write("&#x");
         super.w.write(Integer.toHexString(codePoint));
-        super.w.write(";");
+        super.w.write(';');
       }
       // characters outside the ASCII range
       else if (c > 0x9F) {
@@ -121,15 +126,13 @@ public final class XMLEscapeWriterASCII extends XMLEscapeWriterBase implements X
    *
    * <p>these characters are:<br>
    * <ul>
-   *  <li>'&amp' by the ampersand entity "&amp;amp"</li>
+   *  <li>'&amp;' by the ampersand entity "&amp;amp;"</li>
    *  <li>'&lt;' by the entity "&amp;lt;"</li>
-   * </p>
+   * </ul>
    *
    * <p>Note: this function assumes that there are no entities in
    * the given String. If there are existing entities, then the
-   * ampersand character will be escaped by the ampersand entity.
-   *
-   * {@inheritDoc}
+   * ampersand entity will escape the ampersand character.
    */
   @Override
   public void writeText(char c) throws IOException {
@@ -143,6 +146,7 @@ public final class XMLEscapeWriterASCII extends XMLEscapeWriterBase implements X
     } else if (c == '\n' || c == '\r' || c == '\t') {
       super.w.write(c);
     } else if (c < 0x20 || c >= 0x7F && c < 0xA0) {
+      // Ignore control characters
       doNothing();
     } else if (c >= 0xD800 && c <= 0xDFFF) throw new IOException("Unable to handle character #x"+Integer.toHexString(c));
     else if (c > 0xBF) {
@@ -161,7 +165,7 @@ public final class XMLEscapeWriterASCII extends XMLEscapeWriterBase implements X
    * in certain conditions.
    */
   private static void doNothing() {
-    return;
+    // Does nothing on purpose
   }
 
 }
