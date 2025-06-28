@@ -9,7 +9,9 @@ import org.pageseeder.xmlwriter.esc.XMLEscapeUTF8;
  * Utility class.
  *
  * @author Christophe Lauret
+ *
  * @since 1.0.2
+ * @version 1.1.0
  */
 public final class XML {
 
@@ -39,9 +41,9 @@ public final class XML {
    *
    * <p>these characters are:<br>
    * <ul>
-   *  <li>'&amp' by the ampersand entity "&amp;amp"</li>
+   *  <li>'&amp;' by the ampersand entity "&amp;amp;"</li>
    *  <li>'&lt;' by the entity "&amp;lt;"</li>
-   * </p>
+   * </ul>
    *
    * <p>Empty strings or <code>null</code> return respectively "" and <code>null</code>.
    *
@@ -68,11 +70,11 @@ public final class XML {
    *
    * <p>these characters are:<br>
    * <ul>
-   *  <li>'&amp' by the ampersand entity "&amp;amp"</li>
+   *  <li>'&amp;' by the ampersand entity "&amp;amp;"</li>
    *  <li>'&lt;' by the entity "&amp;lt;"</li>
-   *  <li>'&apos;' by the entity "&amp;apos;"</li>
-   *  <li>'&quot;' by the entity "&amp;quot;"</li>
-   * </p>
+   *  <li>''' by the entity "&amp;apos;"</li>
+   *  <li>'"' by the entity "&amp;quot;"</li>
+   * </ul>
    *
    * <p>Empty strings or <code>null</code> return respectively
    * "" and <code>null</code>.
@@ -127,7 +129,7 @@ public final class XML {
    * @return The element as a string.
    */
   public String toString(XMLWritable o) {
-    XMLStringWriter xml = new XMLStringWriter(true);
+    XMLStringWriter xml = new XMLStringWriter(NamespaceAware.Yes);
     try {
       o.toXML(xml);
     } catch (IOException ex) {
@@ -146,7 +148,7 @@ public final class XML {
    * @return The element as a string.
    */
   public String toString(XMLSerializable o) {
-    XMLStringWriter xml = new XMLStringWriter(false);
+    XMLStringWriter xml = new XMLStringWriter(NamespaceAware.No);
     XMLSerializer serializer = new XMLSerializer(xml);
     try {
       serializer.serializeObject(o);

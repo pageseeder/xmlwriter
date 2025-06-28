@@ -29,22 +29,25 @@ import org.pageseeder.xmlwriter.XML.NamespaceAware;
  *
  * <p>The write methods do not throw any {@link IOException}.
  *
- * <p>If the write is not set to support namespaces, the method which require a namespace URI will
+ * <p>If the writer is not set to support namespaces, the method which require a namespace URI will
  * throw an {@link UnsupportedOperationException}.
  *
  * @author Christophe Lauret
+ *
+ * @since 1.0.0
+ * @version 1.1.0
  */
 public final class XMLStringWriter implements XMLWriter {
 
   /**
    * Wraps an XML Writer
    */
-  private final StringWriter _writer;
+  private final StringWriter writer;
 
   /**
    * Wraps an XML Writer
    */
-  private final XMLWriter _xml;
+  private final XMLWriter xml;
 
   /**
    * <p>Creates a new XML string writer.
@@ -74,7 +77,7 @@ public final class XMLStringWriter implements XMLWriter {
   /**
    * <p>Creates a new XML string writer.
    *
-   * @param namespaces Whether this XML writer should use namespaces.
+   * @param aware Whether this XML writer should use namespaces.
    */
   public XMLStringWriter(NamespaceAware aware) {
     this(aware, false);
@@ -83,244 +86,219 @@ public final class XMLStringWriter implements XMLWriter {
   /**
    * <p>Create a new XML string writer.
    *
-   * @param namespaces Whether this XML writer should use namespaces.
+   * @param aware Whether this XML writer should use namespaces.
    * @param indent  Set the indentation flag.
    */
   public XMLStringWriter(NamespaceAware aware, boolean indent) {
-    this._writer = new StringWriter();
-    this._xml = aware == NamespaceAware.Yes? new XMLWriterNSImpl(this._writer, indent) : new XMLWriterImpl(this._writer, indent);
+    this.writer = new StringWriter();
+    this.xml = aware == NamespaceAware.Yes? new XMLWriterNSImpl(this.writer, indent) : new XMLWriterImpl(this.writer, indent);
   }
-
-  // XML Writer methods
-  // ----------------------------------------------------------------------------------------------
 
   @Override
   public void xmlDecl() {
     try {
-      this._xml.xmlDecl();
+      this.xml.xmlDecl();
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void setIndentChars(String spaces) {
-    this._xml.setIndentChars(spaces);
+    this.xml.setIndentChars(spaces);
   }
 
   @Override
   public void writeText(char c) {
     try {
-      this._xml.writeText(c);
+      this.xml.writeText(c);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void writeText(String text) {
     try {
-      this._xml.writeText(text);
+      this.xml.writeText(text);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void writeText(char[] text, int off, int len) {
     try {
-      this._xml.writeText(text, off, len);
+      this.xml.writeText(text, off, len);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void writeCDATA(String cdata) {
     try {
-      this._xml.writeCDATA(cdata);
+      this.xml.writeCDATA(cdata);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void writeXML(String text) {
     try {
-      this._xml.writeXML(text);
+      this.xml.writeXML(text);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void writeXML(char[] text, int off, int len) {
     try {
-      this._xml.writeXML(text, off, len);
+      this.xml.writeXML(text, off, len);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void writeComment(String comment) {
     try {
-      this._xml.writeComment(comment);
+      this.xml.writeComment(comment);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void writePI(String target, String data) {
     try {
-      this._xml.writePI(target, data);
+      this.xml.writePI(target, data);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void openElement(String name) {
     try {
-      this._xml.openElement(name);
+      this.xml.openElement(name);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void openElement(String name, boolean hasChildren) {
     try {
-      this._xml.openElement(name, hasChildren);
+      this.xml.openElement(name, hasChildren);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void openElement(String uri, String name, boolean hasChildren) {
     try {
-      this._xml.openElement(uri, name, hasChildren);
+      this.xml.openElement(uri, name, hasChildren);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void closeElement() {
     try {
-      this._xml.closeElement();
+      this.xml.closeElement();
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void element(String name, String text) {
     try {
-      this._xml.element(name, text);
+      this.xml.element(name, text);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void emptyElement(String element) {
     try {
-      this._xml.emptyElement(element);
+      this.xml.emptyElement(element);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void emptyElement(String uri, String element) {
     try {
-      this._xml.emptyElement(element);
+      this.xml.emptyElement(element);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void attribute(String name, String value) {
     try {
-      this._xml.attribute(name, value);
+      this.xml.attribute(name, value);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void attribute(String name, int value) {
     try {
-      this._xml.attribute(name, value);
+      this.xml.attribute(name, value);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void attribute(String uri, String name, String value) {
     try {
-      this._xml.attribute(uri, name, value);
+      this.xml.attribute(uri, name, value);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void attribute(String uri, String name, int value) {
     try {
-      this._xml.attribute(uri, name, value);
+      this.xml.attribute(uri, name, value);
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void setPrefixMapping(String uri, String prefix) {
-    this._xml.setPrefixMapping(uri, prefix);
+    this.xml.setPrefixMapping(uri, prefix);
   }
 
   @Override
   public void flush() {
     try {
-      this._xml.flush();
+      this.xml.flush();
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
   @Override
   public void close() throws UnclosedElementException {
     try {
-      this._xml.close();
+      this.xml.close();
     } catch (IOException ex) {
-      // Will not occur
-      doNothing();
+      // We can safely ignore, it will never occur
     }
   }
 
@@ -331,13 +309,7 @@ public final class XMLStringWriter implements XMLWriter {
    */
   @Override
   public String toString() {
-    return this._writer.toString();
-  }
-
-  /**
-   * Do nothing
-   */
-  private static void doNothing(){
+    return this.writer.toString();
   }
 
 }
