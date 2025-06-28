@@ -21,11 +21,13 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.jetbrains.annotations.NotNull;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -43,46 +45,29 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public final class XMLIndenter extends DefaultHandler implements ContentHandler {
 
+  private enum IndentState { EMPTY, HAS_TEXT, HAS_CHILDREN }
+
   /**
    * The writer where the XML goes.
    */
   private final PrintWriter writer;
 
-  // state attributes ---------------------------------------------------------------------------
+  /**
+   * The stack of states
+   */
+  private final Deque<IndentState> states = new ArrayDeque<>();
 
   /**
    * The indentation level.
    */
-  private transient int indentLevel = 0;
-
-  /**
-   * The stack of states
-   */
-  private transient Stack<Integer> states = new Stack<Integer>();
-
-  /**
-   * Element has neither text, nor children.
-   */
-  private static final Integer EMPTY = new Integer(0);
-
-  /**
-   * Element has text.
-   */
-  private static final Integer HAS_TEXT = new Integer(1);
-
-  /**
-   * Element has children.
-   */
-  private static final Integer HAS_CHILDREN = new Integer(2);
-
-  /* ----------------------------------------- constructor --------------------------------------- */
+  private int indentLevel = 0;
 
   /**
    * Creates a new XML Indenter.
    *
    * @param w The writer to use.
    */
-  private XMLIndenter(Writer w) {
+  private XMLIndenter(@NotNull Writer w) {
     if (w instanceof PrintWriter) {
       this.writer = (PrintWriter) w;
     } else {
@@ -90,19 +75,14 @@ public final class XMLIndenter extends DefaultHandler implements ContentHandler 
     }
   }
 
-  /* -------------------------------------- handler's methods ------------------------------------ */
-
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void startElement(String uri, String localName, String qName, Attributes atts) {
     // update the state of previous element
-    if (!this.states.empty()) {
-      if (this.states.pop().equals(EMPTY)) {
+    if (!this.states.isEmpty()) {
+      if (this.states.pop().equals(IndentState.EMPTY)) {
         this.writer.println('>');
       }
-      this.states.push(HAS_CHILDREN);
+      this.states.push(IndentState.HAS_CHILDREN);
     }
     // always indent
     for (int i = 0; i < this.indentLevel; i++) {
@@ -115,21 +95,18 @@ public final class XMLIndenter extends DefaultHandler implements ContentHandler 
     }
     // update attributes
     this.indentLevel++;
-    this.states.push(EMPTY);
+    this.states.push(IndentState.EMPTY);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void endElement(String uri, String localName, String qName) {
     this.indentLevel--;
-    Object state = this.states.pop();
-    if (EMPTY.equals(state)) {
+    IndentState state = this.states.pop();
+    if (IndentState.EMPTY == state) {
       this.writer.println("/>");
-    } else if (HAS_TEXT.equals(state)) {
+    } else if (state == IndentState.HAS_TEXT) {
       this.writer.println("</" + qName + '>');
-    } else if (HAS_CHILDREN.equals(state)) {
+    } else if (state == IndentState.HAS_CHILDREN) {
       for (int i = 0; i < this.indentLevel; i++) {
         this.writer.print("  ");
       }
@@ -137,32 +114,20 @@ public final class XMLIndenter extends DefaultHandler implements ContentHandler 
     }
   }
 
-  /**
-   * Prints the characters.
-   *
-   * {@inheritDoc}
-   */
   @Override
   public void characters(char[] ch, int position, int offset) {
-    if (this.states.peek().equals(EMPTY)) {
+    if (this.states.peek() == IndentState.EMPTY) {
       this.states.pop();
       this.writer.print('>');
-      this.states.push(HAS_TEXT);
+      this.states.push(IndentState.HAS_TEXT);
     }
     this.writer.print(new String(ch, position, offset));
   }
 
-  /**
-   * Does nothing.
-   *
-   * {@inheritDoc}
-   */
   @Override
   public void ignorableWhitespace(char[] ch, int position, int offset) {
     // do nothing.
   }
-
-  /* ---------------------------------------- static methods ------------------------------------- */
 
   /**
    * Indents the given XML String.
