@@ -15,11 +15,12 @@
  */
 package org.pageseeder.xmlwriter.sax;
 
+import org.jetbrains.annotations.NotNull;
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.xml.sax.InputSource;
 
 /**
- * An XML input source implementation wrapping a XML writable object.
+ * An XML input source implementation wrapping an XML writable object.
  *
  * <p>This class allows a SAX application to encapsulate information
  * about an input source in a single object.</p>
@@ -37,21 +38,24 @@ import org.xml.sax.InputSource;
  * @see org.pageseeder.xmlwriter.sax.XMLWritableReader
  *
  * @author Christophe Lauret
+ *
+ * @since 1.0.0
+ * @version 1.1.0
  */
 public final class XMLWritableInputSource extends InputSource {
 
   /**
    * The wrapped XML writable object.
    */
-  private final XMLWritable _source;
+  private final @NotNull XMLWritable source;
 
   /**
-   * Creates an XML Writable object.
+   * Creates an XML writable object.
    *
    * @param object The XMLWritable object to wrap.
    */
-  public XMLWritableInputSource(XMLWritable object) {
-    this._source = object;
+  public XMLWritableInputSource(@NotNull XMLWritable object) {
+    this.source = object;
   }
 
   /**
@@ -59,8 +63,8 @@ public final class XMLWritableInputSource extends InputSource {
    *
    * @return The XMLWritable object
    */
-  public XMLWritable getXMLWritable() {
-    return this._source;
+  public @NotNull XMLWritable getXMLWritable() {
+    return this.source;
   }
 
 }

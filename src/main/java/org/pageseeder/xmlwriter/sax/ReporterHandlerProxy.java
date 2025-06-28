@@ -16,7 +16,9 @@
 package org.pageseeder.xmlwriter.sax;
 
 import java.io.PrintStream;
+import java.util.Objects;
 
+import org.jetbrains.annotations.NotNull;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -27,27 +29,30 @@ import org.xml.sax.SAXException;
  * what methods are being called.
  *
  * @author Christophe Lauret
+ *
+ * @since 1.0.0
+ * @version 1.1.0
  */
 public final class ReporterHandlerProxy implements ContentHandler {
 
   /**
    * The handler that will receive events.
    */
-  private final ContentHandler _handler;
+  private final @NotNull ContentHandler handler;
 
   /**
    * Where events should be reported.
    */
-  private final PrintStream _report;
+  private final @NotNull PrintStream report;
 
   /**
    * Creates a new handler proxy reporting events to <code>System.err</code>.
    *
    * @param handler The handler that will receive events.
    */
-  public ReporterHandlerProxy(ContentHandler handler) {
-    this._handler = handler;
-    this._report = System.err;
+  public ReporterHandlerProxy(@NotNull ContentHandler handler) {
+    this.handler = Objects.requireNonNull(handler);
+    this.report = System.err;
   }
 
   /**
@@ -56,75 +61,75 @@ public final class ReporterHandlerProxy implements ContentHandler {
    * @param handler The handler that will receive events.
    * @param report  The print stream where errors should be reported.
    */
-  public ReporterHandlerProxy(ContentHandler handler, PrintStream report) {
-    this._handler = handler;
-    this._report = report;
+  public ReporterHandlerProxy(@NotNull ContentHandler handler, @NotNull PrintStream report) {
+    this.handler = Objects.requireNonNull(handler);
+    this.report = report;
   }
 
   @Override
   public void characters(char[] ch, int start, int length) throws SAXException {
-    this._report.println("characters(\"" + new String(ch, start, length) + "\");");
-    this._handler.characters(ch, start, length);
+    this.report.println("characters(\"" + new String(ch, start, length) + "\");");
+    this.handler.characters(ch, start, length);
   }
 
   @Override
   public void startElement(String uri, String local, String qName, Attributes atts)
       throws SAXException {
-    this._report.println("startElement(\""+uri+"\", \""+local+"\", \""+qName+"\");");
-    this._handler.startElement(uri, local, qName, atts);
+    this.report.println("startElement(\""+uri+"\", \""+local+"\", \""+qName+"\");");
+    this.handler.startElement(uri, local, qName, atts);
   }
 
   @Override
   public void endElement(String uri, String local, String qName) throws SAXException {
-    this._report.println("endElement(\""+uri+"\", \""+local+"\", \""+qName+"\");");
-    this._handler.endElement(uri, local, qName);
+    this.report.println("endElement(\""+uri+"\", \""+local+"\", \""+qName+"\");");
+    this.handler.endElement(uri, local, qName);
   }
 
   @Override
   public void startPrefixMapping(String prefix, String uri) throws SAXException {
-    this._report.println("startPrefixMapping(\"" + prefix + "\", \"" + uri + "\");");
-    this._handler.startPrefixMapping(prefix, uri);
+    this.report.println("startPrefixMapping(\"" + prefix + "\", \"" + uri + "\");");
+    this.handler.startPrefixMapping(prefix, uri);
   }
 
   @Override
   public void endPrefixMapping(String prefix) throws SAXException {
-    this._report.println("endPrefixMapping(\"" + prefix + "\");");
-    this._handler.endPrefixMapping(prefix);
+    this.report.println("endPrefixMapping(\"" + prefix + "\");");
+    this.handler.endPrefixMapping(prefix);
   }
 
   @Override
   public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-    this._report.println("ignorableWhitespace(\""+new String(ch, start, length)+"\");");
-    this._handler.ignorableWhitespace(ch, start, length);
+    this.report.println("ignorableWhitespace(\""+new String(ch, start, length)+"\");");
+    this.handler.ignorableWhitespace(ch, start, length);
   }
 
   @Override
   public void processingInstruction(String target, String data) throws SAXException {
-    this._report.println("processingInstruction(\"" + target + "\", \"" + data + "\");");
-    this._handler.processingInstruction(target, data);
+    this.report.println("processingInstruction(\"" + target + "\", \"" + data + "\");");
+    this.handler.processingInstruction(target, data);
   }
 
   @Override
   public void skippedEntity(String name) throws SAXException {
-    this._report.println("skippedEntity(\""+name+"\");");
-    this._handler.skippedEntity(name);
+    this.report.println("skippedEntity(\""+name+"\");");
+    this.handler.skippedEntity(name);
   }
 
   @Override
   public void setDocumentLocator(Locator locator) {
-    this._handler.setDocumentLocator(locator);
+    this.handler.setDocumentLocator(locator);
   }
 
   @Override
   public void startDocument() throws SAXException {
-    this._report.println("startDocument();");
-    this._handler.startDocument();
+    this.report.println("startDocument();");
+    this.handler.startDocument();
   }
 
   @Override
   public void endDocument() throws SAXException {
-    this._report.println("endDocument();");
-    this._handler.endDocument();
+    this.report.println("endDocument();");
+    this.handler.endDocument();
   }
 
   /**
@@ -132,8 +137,8 @@ public final class ReporterHandlerProxy implements ContentHandler {
    *
    * @return the wrapped content handler.
    */
-  public ContentHandler getContentHandler() {
-    return this._handler;
+  public @NotNull ContentHandler getContentHandler() {
+    return this.handler;
   }
 
 }

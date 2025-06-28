@@ -18,6 +18,7 @@ package org.pageseeder.xmlwriter.sax;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
@@ -146,6 +147,7 @@ public final class XMLWritableReader implements XMLReader {
    */
   @Override
   public void setEntityResolver(EntityResolver resolver) {
+    // Ignored by default
   }
 
   /**
@@ -154,7 +156,7 @@ public final class XMLWritableReader implements XMLReader {
    * {@inheritDoc}
    */
   @Override
-  public Object getProperty(java.lang.String name) {
+  public Object getProperty(String name) {
     return null;
   }
 
@@ -164,30 +166,22 @@ public final class XMLWritableReader implements XMLReader {
    * {@inheritDoc}
    */
   @Override
-  public void setProperty(java.lang.String name, java.lang.Object value) {
+  public void setProperty(String name, Object value) {
+    // Ignored by default
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public boolean getFeature(java.lang.String name) {
+  public boolean getFeature(String name) {
     // TODO: handling of features
     return this._features.get(name).booleanValue();
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void setFeature(java.lang.String name, boolean value) {
+  public void setFeature(String name, boolean value) {
     // TODO: handling of features
     this._features.put(name, Boolean.valueOf(value));
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void parse(String systemId) throws IOException, SAXException {
     throw new SAXException(
@@ -195,9 +189,6 @@ public final class XMLWritableReader implements XMLReader {
         + " cannot be used with system identifiers (URIs)");
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void parse(InputSource input) throws IOException, SAXException {
     if (input instanceof XMLWritableInputSource) {
@@ -206,19 +197,12 @@ public final class XMLWritableReader implements XMLReader {
       throw new SAXException("Unsupported InputSource specified. Must be a XMLWritableInputSource");
   }
 
-  /**
-   * {@inheritDoc}
-   */
   public void parse(XMLWritableInputSource input) throws IOException, SAXException {
     parse(input.getXMLWritable());
   }
 
-  /**
-   * {@inheritDoc}
-   */
   public void parse(XMLWritable xml) throws IOException, SAXException {
-    if (xml == null)
-      throw new NullPointerException("Parameter projectTeam must not be null");
+    Objects.requireNonNull(xml, "Parameter xml must not be null");
     if (this.handler == null)
       throw new IllegalStateException("ContentHandler not set");
     // start handling the document
