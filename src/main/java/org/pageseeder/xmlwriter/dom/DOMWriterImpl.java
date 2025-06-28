@@ -15,13 +15,13 @@
  */
 package org.pageseeder.xmlwriter.dom;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.jetbrains.annotations.NotNull;
 import org.pageseeder.xmlwriter.IllegalCloseElementException;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
@@ -36,21 +36,21 @@ import org.w3c.dom.Text;
  * <p>Provides methods to generate well-formed XML data easily via DOM.
  *
  * @author Christophe Lauret
+ *
+ * @since 1.0.0
+ * @version 1.1.0
  */
 public final class DOMWriterImpl implements DOMWriter {
-
-  // Class attributes
-  // ----------------------------------------------------------------------------------------------
 
   /**
    * The DOM document on which we write.
    */
-  private final Document _document;
+  private final Document document;
 
   /**
    * The new line used.
    */
-  private final Node _newline;
+  private final Node newline;
 
   /**
    * Indicates whether the xml should be indented or not.
@@ -66,20 +66,15 @@ public final class DOMWriterImpl implements DOMWriter {
    */
   private String indentChars;
 
-  // state variables
-  // ----------------------------------------------------------------------------------------------
-
   /**
-   * Level of the depth of the xml document currently produced.
-   *
-   * <p>This attribute changes depending on the state of the instance.
+   * State variable indicating the depth level the current XML context in the document.
    */
   private int depth;
 
   /**
-   * Flag to indicate that the element open tag is not finished yet.
+   * Flag to indicate when the element open tag is complete.
    */
-  private boolean isNude;
+  private boolean isOpenTagComplete = true;
 
   /**
    * The current node being written onto.
@@ -92,10 +87,7 @@ public final class DOMWriterImpl implements DOMWriter {
   /**
    * An array to indicate which elements have children.
    */
-  private List<Boolean> childrenFlags = new ArrayList<Boolean>();
-
-  // Constructors
-  // ----------------------------------------------------------------------------------------------
+  private final Deque<Boolean> childrenFlags = new ArrayDeque<>();
 
   /**
    * <p>Creates a new XML writer for DOM using the default implementation on
@@ -121,27 +113,20 @@ public final class DOMWriterImpl implements DOMWriter {
    *
    * @throws NullPointerException If the handler is <code>null</code>.
    */
-  public DOMWriterImpl(Document document) {
-    if (document == null)
-      throw new NullPointerException("The XMLWriter requires a DOM Document to write on.");
-    this._document = document;
+  public DOMWriterImpl(@NotNull Document document) {
+    this.document = Objects.requireNonNull(document, "The XMLWriter requires a DOM Document to write on.");
     this.currentElement = document;
-    this._newline = document.createTextNode("\n");
+    this.newline = document.createTextNode("\n");
   }
-
-  // Setup methods
-  // ----------------------------------------------------------------------------------------------
 
   /**
    * Does nothing.
    */
   @Override
   public void xmlDecl() {
+    // Does nothing for DOM
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void setIndentChars(String spaces)  {
     if (this.depth != 0)
@@ -158,42 +143,37 @@ public final class DOMWriterImpl implements DOMWriter {
     this.indent = spaces != null;
   }
 
-  // Write text methods
-  // ----------------------------------------------------------------------------------------------
-
   /**
    * {@inheritDoc}
    *
-   * @throws DOMException If thrown by method invoked on the underlying DOM document
+   * @throws DOMException If thrown by the method invoked on the underlying DOM document
    */
   @Override
   public void writeText(String text) {
     if (text == null) return;
-    deNude();
-    Text textNode = this._document.createTextNode(text);
+    completeOpenTag();
+    Text textNode = this.document.createTextNode(text);
     this.currentElement.appendChild(textNode);
   }
 
   /**
    * {@inheritDoc}
    *
-   * @throws DOMException If thrown by method invoked on the underlying DOM document
+   * @throws DOMException If thrown by the method invoked on the underlying DOM document
    */
   @Override
-  public void writeText(char[] text, int off, int len) {
+  public void writeText(char @NotNull[] text, int off, int len) {
     this.writeText(new String(text, off, len));
   }
 
   /**
    * This method is expensive as the character has to be converted to a String for DOM.
    *
-   * {@inheritDoc}
-   *
    * @throws DOMException If thrown by method invoked on the underlying DOM document
    */
   @Override
   public void writeText(char c) {
-    this.writeText(new String(new char[]{c}));
+    this.writeText(String.valueOf(c));
   }
 
   /**
@@ -205,11 +185,9 @@ public final class DOMWriterImpl implements DOMWriter {
    *
    * @param o The object that should be written as text.
    *
-   * @throws DOMException If thrown by method invoked on the underlying DOM document
+   * @throws DOMException If thrown by the method invoked on the underlying DOM document
    */
   public void writeText(Object o) {
-    // TODO: what about an XML serializable ???
-    // TODO: Add to interface ???
     if (o != null) {
       this.writeText(o.toString());
     }
@@ -227,7 +205,7 @@ public final class DOMWriterImpl implements DOMWriter {
   @Override
   public void writeCDATA(String data) {
     if (data == null) return;
-    this._document.createCDATASection(data);
+    this.document.createCDATASection(data);
   }
 
   // Write xml methods are not supported
@@ -249,7 +227,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws UnsupportedOperationException XML cannot be written to the DOM
    */
   @Override
-  public void writeXML(char[] text, int off, int len)
+  public void writeXML(char @NotNull [] text, int off, int len)
       throws UnsupportedOperationException {
     throw new UnsupportedOperationException("Cannot use unparsed XML as DOM node.");
   }
@@ -263,11 +241,11 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws DOMException If thrown by method invoked on the underlying DOM document
    */
   @Override
-  public void writeComment(String comment) throws DOMException {
-    if (comment.indexOf("--") >= 0)
+  public void writeComment(@NotNull String comment) throws DOMException {
+    if (comment.contains("--"))
       throw new IllegalArgumentException("A comment must not contain '--'.");
-    deNude();
-    Node node = this._document.createComment(comment);
+    completeOpenTag();
+    Node node = this.document.createComment(comment);
     this.currentElement.appendChild(node);
     if (this.indent) {
       newLine();
@@ -281,8 +259,8 @@ public final class DOMWriterImpl implements DOMWriter {
    */
   @Override
   public void writePI(String target, String data) throws DOMException {
-    deNude();
-    Node node = this._document.createProcessingInstruction(target, data);
+    completeOpenTag();
+    Node node = this.document.createProcessingInstruction(target, data);
     this.currentElement.appendChild(node);
     if (this.indent) {
       newLine();
@@ -298,10 +276,10 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws DOMException If thrown by method invoked on the underlying DOM document
    */
   @Override
-  public void attribute(String name, String value) throws DOMException {
-    if (!this.isNude)
+  public void attribute(@NotNull String name, @NotNull String value) throws DOMException {
+    if (this.isOpenTagComplete)
       throw new IllegalArgumentException("Cannot write attribute: too late!");
-    Attr att = this._document.createAttribute(name);
+    Attr att = this.document.createAttribute(name);
     att.setValue(value);
     this.currentElement.appendChild(att);
   }
@@ -312,7 +290,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws DOMException If thrown by method invoked on the underlying DOM document
    */
   @Override
-  public void attribute(String name, int value) throws DOMException {
+  public void attribute(@NotNull String name, int value) throws DOMException {
     attribute(name, Integer.toString(value));
   }
 
@@ -331,7 +309,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws DOMException If thrown by method invoked on the underlying DOM document
    */
   @Override
-  public void openElement(String name) throws DOMException {
+  public void openElement(@NotNull String name) throws DOMException {
     openElement(name, false);
   }
 
@@ -347,24 +325,24 @@ public final class DOMWriterImpl implements DOMWriter {
    * @param name        The name of the element.
    * @param hasChildren <code>true</code> if this element has children.
    *
-   * @throws DOMException If thrown by method invoked on the underlying DOM document
+   * @throws DOMException If thrown by the method invoked on the underlying DOM document
    */
   @Override
-  public void openElement(String name, boolean hasChildren) throws DOMException {
-    deNude();
+  public void openElement(@NotNull String name, boolean hasChildren) throws DOMException {
+    completeOpenTag();
     indent();
-    this.childrenFlags.add(Boolean.valueOf(hasChildren));
-    Element element = this._document.createElement(name);
+    this.childrenFlags.push(hasChildren);
+    Element element = this.document.createElement(name);
     this.currentElement.appendChild(element);
     this.currentElement = element;
-    this.isNude = true;
+    this.isOpenTagComplete = false;
     this.depth++;
   }
 
   /**
    * {@inheritDoc}
    *
-   * @throws DOMException If thrown by method invoked on the underlying DOM document
+   * @throws DOMException If thrown by the method invoked on the underlying DOM document
    */
   @Override
   public void element(String name, String text) throws DOMException {
@@ -383,39 +361,32 @@ public final class DOMWriterImpl implements DOMWriter {
     if (this.currentElement.getNodeType() == Node.DOCUMENT_NODE)
       throw new IllegalCloseElementException();
     this.depth--;
-    this.isNude = false;
-    Boolean hasChildren = this.childrenFlags.remove(this.childrenFlags.size() - 1);
-    if (hasChildren.booleanValue()) {
+    this.isOpenTagComplete = true;
+    boolean hasChildren = this.childrenFlags.pop();
+    if (hasChildren) {
       indent();
     }
     this.currentElement.normalize();
     this.currentElement = this.currentElement.getParentNode();
     // new line if parent has children
-    if (this.indent) {
-      Boolean b = this.childrenFlags.get(this.childrenFlags.size() - 1);
-      if (b.booleanValue()) {
-        newLine();
-      }
+    if (this.indent && Boolean.TRUE.equals(this.childrenFlags.peek())) {
+      newLine();
     }
   }
 
   /**
    * {@inheritDoc}
    *
-   * @throws DOMException If thrown by method invoked on the underlying DOM document
+   * @throws DOMException If thrown by the method invoked on the underlying DOM document
    */
   @Override
   public void emptyElement(String name) throws DOMException {
-    Element element = this._document.createElement(name);
+    Element element = this.document.createElement(name);
     this.currentElement.appendChild(element);
   }
 
-  // direct access to the writer ----------------------------------------------------------
-
   /**
    * Does nothing.
-   *
-   * {@inheritDoc}
    */
   @Override
   public void close() {
@@ -430,28 +401,9 @@ public final class DOMWriterImpl implements DOMWriter {
     this.currentElement.normalize();
   }
 
-  // DOM Writer methods -------------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public Document getDocument() {
-    return this._document;
-  }
-
-  // unsupported operations -------------------------------------------------------------------
-
-  /**
-   * Not supported.
-   *
-   * @param uri  This parameter is ignored.
-   * @param name This parameter is ignored.
-   *
-   * @throws UnsupportedOperationException This class does not handle namespaces.
-   */
-  public void openElement(String uri, String name) throws UnsupportedOperationException {
-    throw new UnsupportedOperationException("This class does not handle namespaces.");
+    return this.document;
   }
 
   /**
@@ -464,7 +416,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws UnsupportedOperationException This class does not handle namespaces.
    */
   @Override
-  public void openElement(String uri, String name, boolean hasChildren)
+  public void openElement(@NotNull String uri, @NotNull String name, boolean hasChildren)
       throws UnsupportedOperationException {
     throw new UnsupportedOperationException("This class does not handle namespaces.");
   }
@@ -478,7 +430,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws UnsupportedOperationException This class does not handle namespaces.
    */
   @Override
-  public void emptyElement(String uri, String element)
+  public void emptyElement(@NotNull String uri, @NotNull String element)
       throws UnsupportedOperationException {
     throw new UnsupportedOperationException("This class does not handle namespaces");
   }
@@ -492,7 +444,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws UnsupportedOperationException This class does not handle namespaces.
    */
   @Override
-  public void setPrefixMapping(String uri, String prefix)
+  public void setPrefixMapping(@NotNull String uri, @NotNull String prefix)
       throws UnsupportedOperationException {
     throw new UnsupportedOperationException("This class does not handle namespaces");
   }
@@ -507,7 +459,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws UnsupportedOperationException This class does not handle namespaces.
    */
   @Override
-  public void attribute(String uri, String name, String value)
+  public void attribute(@NotNull String uri, @NotNull String name, @NotNull String value)
       throws UnsupportedOperationException {
     throw new UnsupportedOperationException("This class does not handle namespaces");
   }
@@ -522,24 +474,18 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws UnsupportedOperationException This class does not handle namespaces.
    */
   @Override
-  public void attribute(String uri, String name, int value)
+  public void attribute(@NotNull String uri, @NotNull String name, int value)
       throws UnsupportedOperationException {
     throw new UnsupportedOperationException("This class does not handle namespaces");
   }
 
-  // private helpers ----------------------------------------------------------------------
-
   /**
-   * Insert the correct amount of space characterss depending on the depth and if
+   * Insert the correct number of space characters depending on the depth and if
    * the <code>indent</code> flag is set to <code>true</code>.
    */
   void indent() {
     if (this.indent) {
-      StringBuffer out = new StringBuffer(this.depth * this.indentChars.length());
-      for (int i = 0; i < this.depth; i++) {
-        out.append(this.indentChars);
-      }
-      Node node = this._document.createTextNode(out.toString());
+      Node node = this.document.createTextNode(this.indentChars.repeat(Math.max(0, this.depth)));
       this.currentElement.appendChild(node);
     }
   }
@@ -547,22 +493,22 @@ public final class DOMWriterImpl implements DOMWriter {
   /**
    * Writes the angle bracket if the element open tag is not finished.
    */
-  private void deNude() {
-    if (this.isNude) {
+  private void completeOpenTag() {
+    if (!this.isOpenTagComplete) {
       if (this.indent) { //TODO: hasChildren
         newLine();
       }
-      this.isNude = false;
+      this.isOpenTagComplete = true;
     }
   }
 
   /**
    * Adds a new line to the DOM.
    *
-   * @throws DOMException If thrown by method invoked on the underlying DOM document
+   * @throws DOMException If thrown by the method invoked on the underlying DOM document
    */
   private void newLine() {
-    this.currentElement.appendChild(this._newline.cloneNode(false));
+    this.currentElement.appendChild(this.newline.cloneNode(false));
   }
 
   /**
