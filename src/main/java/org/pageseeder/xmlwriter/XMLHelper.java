@@ -23,10 +23,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.jetbrains.annotations.NotNull;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -66,6 +68,12 @@ public final class XMLHelper {
   public static XMLReader makeXMLReader(ContentHandler handler)
       throws SAXException, ParserConfigurationException {
     SAXParserFactory factory = SAXParserFactory.newInstance();
+    // Disable XML external entity processing
+    factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+    factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+    factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+    // Enable secure processing
+    factory.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, true);
     factory.setNamespaceAware(false);
     factory.setValidating(false);
     XMLReader reader = factory.newSAXParser().getXMLReader();
@@ -88,15 +96,14 @@ public final class XMLHelper {
    * @throws SAXException          Should an SAX exception occur
    * @throws IOException           Should an I/O exception occur
    */
-  public static void parse(XMLReader xmlreader, File file)
-      throws FileNotFoundException, SAXException, IOException {
-    // create the input source
-    InputStream bin = new BufferedInputStream(new FileInputStream(file));
-    Reader reader = new InputStreamReader(bin, "utf-8");
-    InputSource source = new InputSource(reader);
-    // parse the file
-    xmlreader.parse(source);
-    reader.close();
+  public static void parse(@NotNull XMLReader xmlreader, @NotNull File file)
+      throws SAXException, IOException {
+    try (InputStream fileStream = new FileInputStream(file);
+         InputStream bufferedStream = new BufferedInputStream(fileStream);
+         Reader reader = new InputStreamReader(bufferedStream, StandardCharsets.UTF_8)) {
+      InputSource source = new InputSource(reader);
+      xmlreader.parse(source);
+    }
   }
 
 }
