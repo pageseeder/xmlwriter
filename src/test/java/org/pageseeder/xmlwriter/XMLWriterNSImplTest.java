@@ -45,7 +45,7 @@ public final class XMLWriterNSImplTest extends BaseXMLWriterTest {
   }
 
   /**
-   * @see com.topologi.diffx.xml.BaseXMLWriterTest#makeXMLWriter(java.io.Writer)
+   * @see org.pageseeder.xmlwriter.BaseXMLWriterTest#makeXMLWriter(java.io.Writer)
    */
   @Override
   public XMLWriter makeXMLWriter(Writer writer) {
@@ -80,7 +80,7 @@ public final class XMLWriterNSImplTest extends BaseXMLWriterTest {
     this.xml.setPrefixMapping(URI_TEST_1, "");
     this.xml.openElement(URI_TEST_1, "test", false);
     this.xml.closeElement();
-    assertEquivalent("<test xmlns='"+URI_TEST_1+"'/>", getXMLString());
+    assertEquivalent("<test xmlns='" + URI_TEST_1 + "'/>", getXMLString());
   }
 
   /**
@@ -120,9 +120,9 @@ public final class XMLWriterNSImplTest extends BaseXMLWriterTest {
     this.xml.closeElement();
     this.xml.closeElement();
     this.xml.flush();
-    String expected = "<test xmlns='"+URI_TEST_1+"'>" +
-                      "<empty xmlns=''/>" +
-                      "</test>";
+    String expected = "<test xmlns='" + URI_TEST_1 + "'>" +
+        "<empty xmlns=''/>" +
+        "</test>";
     assertEquivalent(expected, getXMLString());
   }
 
@@ -151,12 +151,12 @@ public final class XMLWriterNSImplTest extends BaseXMLWriterTest {
     this.xml.closeElement();
     this.xml.flush();
     // expected
-    String expected = "<test xmlns='"+URI_TEST_1+"'>" +
-                      "<xx:empty xmlns='' xmlns:xx='"+URI_TEST_1+"'/>" +
-                      "<empty/>" +
-                      "<xx:empty xmlns='' xmlns:xx='"+URI_TEST_1+"'/>" +
-                      "<empty/>" +
-                      "</test>";
+    String expected = "<test xmlns='" + URI_TEST_1 + "'>" +
+        "<xx:empty xmlns='' xmlns:xx='" + URI_TEST_1 + "'/>" +
+        "<empty/>" +
+        "<xx:empty xmlns='' xmlns:xx='" + URI_TEST_1 + "'/>" +
+        "<empty/>" +
+        "</test>";
     assertEquivalent(expected, getXMLString());
   }
 
@@ -183,11 +183,11 @@ public final class XMLWriterNSImplTest extends BaseXMLWriterTest {
     this.xml.flush();
     // expected
     String expected = "<test>" +
-            "<xx:empty xmlns:xx='"+URI_TEST_1+"'/>" +
-            "<empty/>" +
-            "<xx:empty xmlns:xx='"+URI_TEST_1+"'/>" +
-            "<empty/>" +
-            "</test>";
+        "<xx:empty xmlns:xx='" + URI_TEST_1 + "'/>" +
+        "<empty/>" +
+        "<xx:empty xmlns:xx='" + URI_TEST_1 + "'/>" +
+        "<empty/>" +
+        "</test>";
     assertEquivalent(expected, getXMLString());
   }
 

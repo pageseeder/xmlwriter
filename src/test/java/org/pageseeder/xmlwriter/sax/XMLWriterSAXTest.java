@@ -15,27 +15,21 @@
  */
 package org.pageseeder.xmlwriter.sax;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import junit.framework.AssertionFailedError;
+import org.junit.Before;
+import org.junit.Test;
+import org.pageseeder.xmlwriter.IllegalCloseElementException;
+import org.pageseeder.xmlwriter.UnclosedElementException;
+import org.xml.sax.*;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.pageseeder.xmlwriter.IllegalCloseElementException;
-import org.pageseeder.xmlwriter.UnclosedElementException;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
-
-import junit.framework.AssertionFailedError;
+import static org.junit.Assert.*;
 
 /**
  * A class for testing <code>XMLWriterSAX</code>s implementation.
@@ -59,30 +53,28 @@ public final class XMLWriterSAXTest {
    */
   private ContentHandlerChecker handler;
 
-// Setup ------------------------------------------------------------------------------------
-
   /**
    * Sets up the handler for testing.
    */
-  @Before public void setUpHandler() throws SAXException {
+  @Before
+  public void setUpHandler() throws SAXException, ParserConfigurationException {
     this.handler = new ContentHandlerChecker();
     this.xml = new XMLWriterSAX(this.handler);
     if (this.reader == null) {
-      this.reader = XMLReaderFactory.createXMLReader();
+      this.reader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
       this.reader.setFeature("http://xml.org/sax/features/validation", false);
       this.reader.setFeature("http://xml.org/sax/features/namespaces", true);
       this.reader.setFeature("http://xml.org/sax/features/namespace-prefixes", false);
     }
   }
 
-// test: openElement / closeElement -----------------------------------------------------------
-
   /**
    * Checks that the XML is closed properly.
    *
    * @throws IOException If an I/O error occurs.
    */
-  @Test public final void testCloseElementA() throws IOException {
+  @Test
+  public void testCloseElementA() throws IOException {
     this.xml.openElement("test");
     this.xml.closeElement();
     this.xml.close();
@@ -94,7 +86,8 @@ public final class XMLWriterSAXTest {
    *
    * @throws IOException If an I/O error occurs.
    */
-  @Test public final void testCloseElementB() throws IOException {
+  @Test
+  public void testCloseElementB() throws IOException {
     this.xml.openElement("x");
     this.xml.openElement("y");
     this.xml.closeElement();
@@ -108,26 +101,25 @@ public final class XMLWriterSAXTest {
    *
    * @throws IOException If an I/O error occurs.
    */
-  @Test public final void testCloseElementIllegal() throws IOException {
+  @Test
+  public void testCloseElementIllegal() throws IOException {
     this.xml.openElement("test");
     this.xml.closeElement();
     try {
       this.xml.closeElement();
-      System.err.println("The XML writer failed to report an unclosed element.");
-      assertTrue(false);
+      fail("The XML writer failed to report an unclosed element.");
     } catch (IllegalCloseElementException ex) {
       assertTrue(true);
     }
   }
-
-// test: element -----------------------------------------------------------------------
 
   /**
    * Checks that the element method works
    *
    * @throws IOException If an I/O error occurs.
    */
-  @Test public final void testElementWithText() throws IOException {
+  @Test
+  public void testElementWithText() throws IOException {
     this.xml.element("x", "text");
     this.xml.close();
     assertEquivalent("<x>text</x>");
@@ -138,7 +130,8 @@ public final class XMLWriterSAXTest {
    *
    * @throws IOException If an I/O error occurs.
    */
-  @Test public final void testElementNoText() throws IOException {
+  @Test
+  public void testElementNoText() throws IOException {
     this.xml.element("x", "");
     this.xml.close();
     assertEquivalent("<x/>");
@@ -149,33 +142,32 @@ public final class XMLWriterSAXTest {
    *
    * @throws IOException If an I/O error occurs.
    */
-  @Test public final void testElementNullText() throws IOException {
+  @Test
+  public void testElementNullText() throws IOException {
     this.xml.element("x", null);
     this.xml.close();
     assertEquivalent("<x/>");
   }
 
-// test: empty element ------------------------------------------------------------------
-
   /**
    * Checks that the empty element method works.
    *
    * @throws IOException If an I/O error occurs.
    */
-  @Test public final void testEmptyElement() throws IOException {
+  @Test
+  public void testEmptyElement() throws IOException {
     this.xml.emptyElement("x");
     this.xml.close();
     assertEquivalent("<x/>");
   }
 
-// test: attributes ---------------------------------------------------------------------
-
   /**
    * Checks that the empty element method works.
    *
    * @throws IOException If an I/O error occurs.
    */
-  @Test public final void testAttributeA() throws IOException {
+  @Test
+  public void testAttributeA() throws IOException {
     this.xml.openElement("x");
     this.xml.attribute("a", "m");
     this.xml.closeElement();
@@ -188,7 +180,8 @@ public final class XMLWriterSAXTest {
    *
    * @throws IOException If an I/O error occurs.
    */
-  @Test public final void testAttributeB() throws IOException {
+  @Test
+  public void testAttributeB() throws IOException {
     this.xml.openElement("x");
     this.xml.attribute("a", "m");
     this.xml.attribute("b", "n");
@@ -197,14 +190,13 @@ public final class XMLWriterSAXTest {
     assertEquivalent("<x a='m' b='n'/>");
   }
 
-// test: comment ------------------------------------------------------------------------
-
   /**
    * Checks that the empty element method works.
    *
    * @throws IOException If an I/O error occurs.
    */
-  @Test public final void testComment() throws IOException {
+  @Test
+  public void testComment() throws IOException {
     this.xml.openElement("root");
     this.xml.writeComment("comment");
     this.xml.closeElement();
@@ -217,7 +209,8 @@ public final class XMLWriterSAXTest {
    *
    * @throws IOException If an I/O error occurs.
    */
-  @Test public final void testCommentNull() throws IOException {
+  @Test
+  public void testCommentNull() throws IOException {
     this.xml.openElement("root");
     this.xml.writeComment(null);
     this.xml.closeElement();
@@ -225,14 +218,13 @@ public final class XMLWriterSAXTest {
     assertEquivalent("<root></root>");
   }
 
-// test: processing instructions --------------------------------------------------------
-
   /**
    * Checks that the empty element method works.
    *
    * @throws IOException If an I/O error occurs.
    */
-  @Test public final void testProcessingInstructionA() throws IOException {
+  @Test
+  public void testProcessingInstructionA() throws IOException {
     this.xml.openElement("root");
     this.xml.writePI("x", "y");
     this.xml.closeElement();
@@ -240,35 +232,30 @@ public final class XMLWriterSAXTest {
     assertEquivalent("<root><?x y?></root>");
   }
 
-// test: close --------------------------------------------------------------------------
-
   /**
    * Check that the XML writer throws an exception when trying to close it
    * with a remaining open element.
    *
-   * @see UnclosedElementException
-   *
    * @throws IOException If an I/O error occurs.
+   * @see UnclosedElementException
    */
-  @Test public final void testCloseUnclosedException() throws IOException {
+  @Test
+  public void testCloseUnclosedException() throws IOException {
     this.xml.openElement("x");
     try {
       this.xml.close();
-      System.err.println("The XML writer failed to report an unclosed element.");
-      assertTrue(false);
+      fail("The XML writer failed to report an unclosed element.");
     } catch (UnclosedElementException ex) {
       assertTrue(true);
     }
   }
-
-// public methods to test checks --------------------------------------------------------
 
   /**
    * Asserts that the two XML are equivalent.
    *
    * @param exp The expected XML.
    */
-  public final void assertEquivalent(String exp) {
+  public void assertEquivalent(String exp) {
     try {
       this.reader.setContentHandler(this.handler);
       this.reader.parse(new InputSource(new StringReader(exp)));
@@ -280,7 +267,6 @@ public final class XMLWriterSAXTest {
   }
 
   /**
-   *
    * @author Christophe Lauret (Allette Systems)
    * @version 26 May 2005
    */
@@ -289,7 +275,7 @@ public final class XMLWriterSAXTest {
     /**
      * The list of events it should produce.
      */
-    private List<String> events = new ArrayList<String>();
+    private final List<String> events = new ArrayList<String>();
 
     /**
      * The next event to check.
@@ -306,7 +292,7 @@ public final class XMLWriterSAXTest {
      */
     @Override
     public void characters(char[] ch, int start, int length) {
-      String exp = "characters(\""+new String(ch, start, length)+"\");";
+      String exp = "characters(\"" + new String(ch, start, length) + "\");";
       processEvent(exp);
     }
 
@@ -316,7 +302,7 @@ public final class XMLWriterSAXTest {
     @Override
     public void startElement(String uri, String local, String qName, Attributes atts) {
       // ignore the Q name and the attributes for now
-      String exp = "startElement(\""+uri+"\", \""+local+"\");";
+      String exp = "startElement(\"" + uri + "\", \"" + local + "\");";
       processEvent(exp);
     }
 
@@ -326,7 +312,7 @@ public final class XMLWriterSAXTest {
     @Override
     public void endElement(String uri, String local, String qName) {
       // ignore the Q name
-      String exp = "endElement(\""+uri+"\", "+local+"\");";
+      String exp = "endElement(\"" + uri + "\", " + local + "\");";
       processEvent(exp);
     }
 
@@ -335,16 +321,13 @@ public final class XMLWriterSAXTest {
      */
     @Override
     public void startPrefixMapping(String prefix, String uri) {
-      String exp = "startPrefixMapping(\""+prefix+"\", \""+uri+"\");";
+      String exp = "startPrefixMapping(\"" + prefix + "\", \"" + uri + "\");";
       processEvent(exp);
     }
 
-    /**
-     * @see ContentHandler#endPrefixMapping(java.lang.String, java.lang.String)
-     */
     @Override
     public void endPrefixMapping(String prefix) {
-      String exp = "endPrefixMapping(\""+prefix+"\");";
+      String exp = "endPrefixMapping(\"" + prefix + "\");";
       processEvent(exp);
     }
 
@@ -353,7 +336,7 @@ public final class XMLWriterSAXTest {
      */
     @Override
     public void ignorableWhitespace(char[] ch, int start, int length) {
-      String exp = "ignorableWhitespace(\""+new String(ch, start, length)+"\");";
+      String exp = "ignorableWhitespace(\"" + new String(ch, start, length) + "\");";
       processEvent(exp);
     }
 
@@ -362,7 +345,7 @@ public final class XMLWriterSAXTest {
      */
     @Override
     public void processingInstruction(String target, String data) throws SAXException {
-      String exp = "processingInstruction(\""+target+"\", \""+data+"\");";
+      String exp = "processingInstruction(\"" + target + "\", \"" + data + "\");";
       processEvent(exp);
     }
 
@@ -371,7 +354,7 @@ public final class XMLWriterSAXTest {
      */
     @Override
     public void skippedEntity(String name) {
-      assertTrue(false);
+      fail();
     }
 
     /**
@@ -381,6 +364,7 @@ public final class XMLWriterSAXTest {
      */
     @Override
     public void setDocumentLocator(Locator locator) {
+      // Ignore
     }
 
     /**
@@ -388,6 +372,7 @@ public final class XMLWriterSAXTest {
      */
     @Override
     public void startDocument() {
+      // Ignore
     }
 
     /**

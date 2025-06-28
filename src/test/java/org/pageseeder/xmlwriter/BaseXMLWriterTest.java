@@ -15,15 +15,14 @@
  */
 package org.pageseeder.xmlwriter;
 
+import junit.framework.AssertionFailedError;
+import junit.framework.TestCase;
+import org.pageseeder.diffx.load.SAXLoader;
+import org.pageseeder.diffx.xml.Sequence;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-
-import org.pageseeder.diffx.load.SAXRecorder;
-import org.pageseeder.diffx.sequence.EventSequence;
-
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
 
 /**
  * A base class for testing <code>XMLWriter</code>s implementation.
@@ -37,7 +36,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
   /**
    * The loader to use.
    */
-  private SAXRecorder recorder = new SAXRecorder();
+  private final SAXLoader loader = new SAXLoader();
 
   /**
    * The XML Writer being tested.
@@ -81,7 +80,6 @@ public abstract class BaseXMLWriterTest extends TestCase {
    * Generates the XML writer to be tested by this class.
    *
    * @param writer The writer this formatter should use.
-   *
    * @return The XML Diffx Formatter to use.
    */
   public abstract XMLWriter makeXMLWriter(Writer writer);
@@ -272,7 +270,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
    */
   public final void testCommentIllegal() throws IOException {
     try {
-    this.xml.writeComment("--");
+      this.xml.writeComment("--");
       assertTrue(false);
     } catch (IllegalArgumentException ex) {
       assertTrue(true);
@@ -323,14 +321,12 @@ public abstract class BaseXMLWriterTest extends TestCase {
     this.xml.closeElement();
     this.xml.close();
     String expected = "<root>\n"
-                    + "  <a>text</a>\n"
-                    + "</root>";
+        + "  <a>text</a>\n"
+        + "</root>";
     assertEquals(expected, getXMLString());
   }
 
   /**
-   *
-   *
    * @throws IOException If an I/O error occurs.
    */
   public final void testIndentationMultipleElements() throws IOException {
@@ -341,15 +337,13 @@ public abstract class BaseXMLWriterTest extends TestCase {
     this.xml.closeElement();
     this.xml.close();
     String expected = "<root>\n"
-                + "  <a>one</a>\n"
-                + "  <b>two</b>\n"
-                + "</root>";
+        + "  <a>one</a>\n"
+        + "  <b>two</b>\n"
+        + "</root>";
     assertEquals(expected, getXMLString());
   }
 
   /**
-   *
-   *
    * @throws IOException If an I/O error occurs.
    */
   public final void testIndentationMixedContent() throws IOException {
@@ -365,14 +359,12 @@ public abstract class BaseXMLWriterTest extends TestCase {
     this.xml.closeElement();
     this.xml.close();
     String expected = "<root>\n"
-                    + "  <wrap>m<a>i</a>x<b>e</b>d</wrap>\n"
-                    + "</root>";
+        + "  <wrap>m<a>i</a>x<b>e</b>d</wrap>\n"
+        + "</root>";
     assertEquals(expected, getXMLString());
   }
 
   /**
-   *
-   *
    * @throws IOException If an I/O error occurs.
    */
   public final void testIndentationMixedContent2() throws IOException {
@@ -390,8 +382,6 @@ public abstract class BaseXMLWriterTest extends TestCase {
   }
 
   /**
-   *
-   *
    * @throws IOException If an I/O error occurs.
    */
   public final void testIndentationNone() throws IOException {
@@ -412,9 +402,8 @@ public abstract class BaseXMLWriterTest extends TestCase {
    * Check that the XML writer throws an exception when trying to close it
    * with a remaining open element.
    *
-   * @see UnclosedElementException
-   *
    * @throws IOException If an I/O error occurs.
+   * @see UnclosedElementException
    */
   public final void testCloseUnclosedException() throws IOException {
     this.xml.openElement("x");
@@ -439,8 +428,8 @@ public abstract class BaseXMLWriterTest extends TestCase {
   public final void assertEquivalent(String exp, String act) {
     try {
       // process the XML to get the sequence
-      EventSequence exseq = this.recorder.process(exp);
-      EventSequence acseq = this.recorder.process(act);
+      Sequence exseq = this.loader.load(exp);
+      Sequence acseq = this.loader.load(act);
       assertEquals(exseq, acseq);
     } catch (Throwable ex) {
       System.err.println("<!-- expected XML was: -->");
@@ -458,7 +447,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
    */
   public final void assertWellFormed(String actual) {
     try {
-      this.recorder.process(actual);
+      this.loader.load(actual);
     } catch (Throwable ex) {
       assertTrue(false);
     }
@@ -481,7 +470,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
   private static String makeSampleASCIIString() {
     StringBuffer out = new StringBuffer(255);
     for (int i = 0; i < 255; i++) {
-        out.append((char)i);
+      out.append((char) i);
     }
     return out.toString();
   }

@@ -15,12 +15,12 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * A test class for the XML escape tool.
@@ -41,7 +41,8 @@ public final class XMLEscapeWriterASCIITest extends XMLEscapeASCIITestBase {
   /**
    * Test the element escape method for <code>null</code>.
    */
-  @Test public void testToElementText_Null() throws IOException {
+  @Test
+  public void testToElementText_Null() throws IOException {
     String got = escapeText(null);
     assertEquals("", got);
   }

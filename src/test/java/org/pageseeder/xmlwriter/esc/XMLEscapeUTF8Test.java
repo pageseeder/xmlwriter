@@ -15,24 +15,25 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
-import java.io.IOException;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * A test class for the XML escape tool.
  *
  * @author Christophe Lauret
  */
-public final class XMLEscapeUTF8Test extends XMLEscapeUTF8TestBase{
+public final class XMLEscapeUTF8Test extends XMLEscapeUTF8TestBase {
 
   private final XMLEscape esc = XMLEscapeUTF8.UTF8_ESCAPE;
 
   /**
    * Test the attribute escape method for <code>null</code>.
    */
-  @Test public void testToAttributeValue_Null() throws IOException {
+  @Test
+  public void testToAttributeValue_Null() throws IOException {
     String got = escapeAttribute(null);
     Assert.assertNull(got);
   }
@@ -40,7 +41,8 @@ public final class XMLEscapeUTF8Test extends XMLEscapeUTF8TestBase{
   /**
    * Test the element escape method for <code>null</code>.
    */
-  @Test public void testToElementText_Null() throws IOException {
+  @Test
+  public void testToElementText_Null() throws IOException {
     String got = escapeText(null);
     Assert.assertNull(got);
   }
