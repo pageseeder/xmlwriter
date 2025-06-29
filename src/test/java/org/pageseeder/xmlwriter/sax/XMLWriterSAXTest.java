@@ -101,16 +101,11 @@ public final class XMLWriterSAXTest {
    *
    * @throws IOException If an I/O error occurs.
    */
-  @Test
+  @Test(expected = IllegalCloseElementException.class)
   public void testCloseElementIllegal() throws IOException {
     this.xml.openElement("test");
     this.xml.closeElement();
-    try {
-      this.xml.closeElement();
-      fail("The XML writer failed to report an unclosed element.");
-    } catch (IllegalCloseElementException ex) {
-      assertTrue(true);
-    }
+    this.xml.closeElement();
   }
 
   /**
@@ -167,6 +162,22 @@ public final class XMLWriterSAXTest {
    * @throws IOException If an I/O error occurs.
    */
   @Test
+  public void testEmptyNSElement() throws IOException {
+    this.xml.setPrefixMapping("j", "https://example.org");
+    this.xml.setPrefixMapping("k", "https://example.org");
+    this.xml.openElement("j:x");
+    this.xml.emptyElement("k:y");
+    this.xml.closeElement();
+    this.xml.close();
+    assertEquivalent("<j:x xmlns:j='https://example.org' xmlns:k='https://example.org'><k:y/></j:x>");
+  }
+
+  /**
+   * Checks that the empty element method works.
+   *
+   * @throws IOException If an I/O error occurs.
+   */
+  @Test
   public void testAttributeA() throws IOException {
     this.xml.openElement("x");
     this.xml.attribute("a", "m");
@@ -188,6 +199,22 @@ public final class XMLWriterSAXTest {
     this.xml.closeElement();
     this.xml.close();
     assertEquivalent("<x a='m' b='n'/>");
+  }
+
+  /**
+   * Checks that the empty element method works.
+   *
+   * @throws IOException If an I/O error occurs.
+   */
+  @Test
+  public void testAttributeNS() throws IOException {
+    this.xml.setPrefixMapping("j", "https://example.org");
+    this.xml.openElement("x");
+    this.xml.attribute("a", "1");
+    this.xml.attribute("j:b", "2");
+    this.xml.closeElement();
+    this.xml.close();
+    assertEquivalent("<x xmlns:j='https://example.org' a='m' j:b='n'/>");
   }
 
   /**
@@ -239,15 +266,10 @@ public final class XMLWriterSAXTest {
    * @throws IOException If an I/O error occurs.
    * @see UnclosedElementException
    */
-  @Test
+  @Test(expected = UnclosedElementException.class)
   public void testCloseUnclosedException() throws IOException {
     this.xml.openElement("x");
-    try {
-      this.xml.close();
-      fail("The XML writer failed to report an unclosed element.");
-    } catch (UnclosedElementException ex) {
-      assertTrue(true);
-    }
+    this.xml.close();
   }
 
   /**
@@ -259,6 +281,7 @@ public final class XMLWriterSAXTest {
     try {
       this.reader.setContentHandler(this.handler);
       this.reader.parse(new InputSource(new StringReader(exp)));
+
     } catch (Throwable ex) {
       System.err.println("<!-- expected XML was: -->");
       System.err.println(exp);
@@ -275,7 +298,7 @@ public final class XMLWriterSAXTest {
     /**
      * The list of events it should produce.
      */
-    private final List<String> events = new ArrayList<String>();
+    private final List<String> events = new ArrayList<>();
 
     /**
      * The next event to check.
