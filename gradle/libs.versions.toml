@@ -1,10 +1,24 @@
 [versions]
-junit = "4.12"
+junit = "5.13.2"
+junit-platform = "1.13.2"
 
 [libraries]
 jetbrains-annotations = { module = "org.jetbrains:annotations", version = "26.0.2" }
-junit = { module = "junit:junit", version.ref = "junit" }
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit-vintage-engine = { module = "org.junit.vintage:junit-vintage-engine", version.ref = "junit" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform" }
+junit-platform-engine = { module = "org.junit.platform:junit-platform-engine", version.ref = "junit-platform" }
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
 diffx = { module = "org.pageseeder.diffx:pso-diffx", version = "1.2.1" }
+
+[bundles]
+junit-testing = [
+    "junit-jupiter-api",
+    "junit-vintage-engine",
+    "junit-platform-launcher",
+    "junit-platform-engine"
+]
 
 [plugins]
 jreleaser = { id = "org.jreleaser", version = "1.18.0" }

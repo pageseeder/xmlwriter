@@ -29,9 +29,20 @@ java {
 dependencies {
   compileOnly(libs.jetbrains.annotations)
 
-  testImplementation(libs.junit)
+  // JUnit 5 dependencies
+  testImplementation(platform(libs.junit.bom))
+  testImplementation(libs.bundles.junit.testing)
   testImplementation(libs.diffx) {
     exclude(module = "pso-xmlwriter")
+  }
+
+  testRuntimeOnly(libs.junit.jupiter.engine)
+}
+
+tasks.test {
+  useJUnitPlatform()
+  testLogging {
+    events("passed", "skipped", "failed")
   }
 }
 
@@ -103,3 +114,4 @@ publishing {
 jreleaser {
   configFile.set(file("jreleaser.toml"))
 }
+
