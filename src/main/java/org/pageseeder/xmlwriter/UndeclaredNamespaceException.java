@@ -27,12 +27,12 @@ package org.pageseeder.xmlwriter;
  * @since 1.0.0
  * @version 1.0.0
  */
-public final class UndeclaredNamespaceException extends RuntimeException {
+public final class UndeclaredNamespaceException extends IllegalStateException {
 
   /**
-   * Version number for the serialised class.
+   * Version number for the serialized class.
    */
-  private static final long serialVersionUID = 8080581405972912943L;
+  private static final long serialVersionUID = -2972143441369831452L;
 
   /**
    * Creates a new exception for undeclared namespaces.
