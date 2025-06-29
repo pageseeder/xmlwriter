@@ -271,6 +271,17 @@ abstract class XMLWriterBase implements XMLWriter {
     this.writer.write('"');
   }
 
+  @Override
+  public final void attribute(String name, long value) throws IOException {
+    if (this.isOpenTagComplete) throw new IllegalStateException("Cannot write attribute: too late!");
+    this.writer.write(' ');
+    this.writer.write(name);
+    this.writer.write('=');
+    this.writer.write('"');
+    this.writer.write(Long.toString(value));
+    this.writer.write('"');
+  }
+
   // Open/close specific elements
   // ----------------------------------------------------------------------------------------------
 

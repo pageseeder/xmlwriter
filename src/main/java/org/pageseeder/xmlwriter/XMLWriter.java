@@ -329,6 +329,19 @@ public interface XMLWriter {
   /**
    * Writes an attribute.
    *
+   * <p>This method for number does not require escaping.
+   *
+   * @param name  The name of the attribute.
+   * @param value The value of the attribute.
+   *
+   * @throws IOException If thrown by the wrapped writer.
+   * @throws IllegalStateException If there is no open element or text has been written.
+   */
+  void attribute(String name, long value) throws IOException;
+
+  /**
+   * Writes an attribute.
+   *
    * @param uri   The uri of the attribute.
    * @param name  The name of the attribute.
    * @param value The value of the attribute.
@@ -353,6 +366,22 @@ public interface XMLWriter {
    * @throws UnsupportedOperationException If the implementing class does not handle namespace.
    */
   void attribute(String uri, String name, int value) throws IOException;
+
+
+  /**
+   * Writes an attribute.
+   *
+   * <p>This method for number does not require escaping.
+   *
+   * @param uri   The uri of the attribute.
+   * @param name  The name of the attribute.
+   * @param value The value of the attribute.
+   *
+   * @throws IOException If thrown by the wrapped writer.
+   * @throws IllegalStateException If there is no open element or text has been written.
+   * @throws UnsupportedOperationException If the implementing class does not handle namespace.
+   */
+  void attribute(String uri, String name, long value) throws IOException;
 
   // Namespace handling
   // ----------------------------------------------------------------------------------------------

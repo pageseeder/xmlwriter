@@ -262,6 +262,15 @@ public final class XMLStringWriter implements XMLWriter {
   }
 
   @Override
+  public void attribute(String name, long value) {
+    try {
+      this.xml.attribute(name, value);
+    } catch (IOException ex) {
+      // We can safely ignore, it will never occur
+    }
+  }
+
+  @Override
   public void attribute(String uri, String name, String value) {
     try {
       this.xml.attribute(uri, name, value);
@@ -272,6 +281,15 @@ public final class XMLStringWriter implements XMLWriter {
 
   @Override
   public void attribute(String uri, String name, int value) {
+    try {
+      this.xml.attribute(uri, name, value);
+    } catch (IOException ex) {
+      // We can safely ignore, it will never occur
+    }
+  }
+
+  @Override
+  public void attribute(String uri, String name, long value) {
     try {
       this.xml.attribute(uri, name, value);
     } catch (IOException ex) {

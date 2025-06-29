@@ -294,6 +294,16 @@ public final class DOMWriterImpl implements DOMWriter {
     attribute(name, Integer.toString(value));
   }
 
+  /**
+   * {@inheritDoc}
+   *
+   * @throws DOMException If thrown by method invoked on the underlying DOM document
+   */
+  @Override
+  public void attribute(@NotNull String name, long value) throws DOMException {
+    attribute(name, Long.toString(value));
+  }
+
   // Open/close specific elements
   // ----------------------------------------------------------------------------------------------
 
@@ -467,7 +477,7 @@ public final class DOMWriterImpl implements DOMWriter {
   /**
    * Not supported.
    *
-   * @param uri    This parameter is ignored.
+   * @param uri   This parameter is ignored.
    * @param name  The name of the attribute.
    * @param value The value of the attribute.
    *
@@ -475,6 +485,21 @@ public final class DOMWriterImpl implements DOMWriter {
    */
   @Override
   public void attribute(@NotNull String uri, @NotNull String name, int value)
+      throws UnsupportedOperationException {
+    throw new UnsupportedOperationException("This class does not handle namespaces");
+  }
+
+  /**
+   * Not supported.
+   *
+   * @param uri   This parameter is ignored.
+   * @param name  The name of the attribute.
+   * @param value The value of the attribute.
+   *
+   * @throws UnsupportedOperationException This class does not handle namespaces.
+   */
+  @Override
+  public void attribute(@NotNull String uri, @NotNull String name, long value)
       throws UnsupportedOperationException {
     throw new UnsupportedOperationException("This class does not handle namespaces");
   }

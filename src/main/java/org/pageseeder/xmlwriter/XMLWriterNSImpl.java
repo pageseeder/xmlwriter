@@ -361,6 +361,31 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
     handleNamespaceDeclaration();
   }
 
+  /**
+   * Writes an attribute.
+   *
+   * <p>This method for number does not require escaping.
+   *
+   * @param uri   The namespace URI this attribute belongs to.
+   * @param name  The name of the attribute.
+   * @param value The value of the attribute.
+   *
+   * @throws IOException If thrown by the wrapped writer.
+   * @throws IllegalStateException If there is no open element or text has been written.
+   */
+  @Override
+  public void attribute(String uri, String name, long value)
+      throws IOException, IllegalStateException {
+    if (this.isOpenTagComplete) throw new IllegalArgumentException("Cannot write attribute: too late!");
+    this.writer.write(' ');
+    this.writer.write(getQName(uri, name));
+    this.writer.write('=');
+    this.writer.write('"');
+    this.writer.write(Long.toString(value));
+    this.writer.write('"');
+    handleNamespaceDeclaration();
+  }
+
   // Namespace handling
   // ----------------------------------------------------------------------------------------------
 

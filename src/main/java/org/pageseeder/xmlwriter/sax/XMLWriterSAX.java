@@ -302,6 +302,13 @@ public final class XMLWriterSAX implements XMLWriter {
     this.attributes.addAttribute(name, Integer.toString(value));
   }
 
+  @Override
+  public void attribute(String name, long value) throws IOException {
+    if (!this.isOpenTagIncomplete)
+      throw new IllegalStateException("Cannot write attribute: too late!");
+    this.attributes.addAttribute(name, Long.toString(value));
+  }
+
   /**
    * Writes an attribute.
    *
@@ -336,6 +343,26 @@ public final class XMLWriterSAX implements XMLWriter {
     if (!this.isOpenTagIncomplete) throw new IllegalStateException("Cannot write attribute: too late!");
     // TODO: check declared
     this.attributes.addAttribute(uri, name, Integer.toString(value));
+  }
+
+
+  /**
+   * Writes an attribute.
+   *
+   * <p>This method for number does not require escaping.
+   *
+   * @param uri   The namespace URI this attribute belongs to.
+   * @param name  The name of the attribute.
+   * @param value The value of the attribute.
+   *
+   * @throws IOException If thrown by the wrapped writer.
+   * @throws IllegalStateException If there is no open element or text has been written.
+   */
+  @Override
+  public void attribute(String uri, String name, long value) throws IOException {
+    if (!this.isOpenTagIncomplete) throw new IllegalStateException("Cannot write attribute: too late!");
+    // TODO: check declared
+    this.attributes.addAttribute(uri, name, Long.toString(value));
   }
 
   // open/close specific elements ---------------------------------------------------------

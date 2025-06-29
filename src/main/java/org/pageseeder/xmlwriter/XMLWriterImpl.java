@@ -325,6 +325,21 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
   }
 
   /**
+   * Not supported.
+   *
+   * @param uri   This parameter is ignored.
+   * @param name  The name of the attribute.
+   * @param value The value of the attribute.
+   *
+   * @throws UnsupportedOperationException This class does not handle namespaces.
+   */
+  @Override
+  public void attribute(String uri, String name, long value)
+      throws UnsupportedOperationException {
+    throw new UnsupportedOperationException("This class does not handle namespaces");
+  }
+
+  /**
    * Close the writer.
    *
    * @throws IOException If thrown by the wrapped writer.
