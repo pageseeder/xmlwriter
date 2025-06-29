@@ -15,9 +15,10 @@
  */
 package org.pageseeder.xmlwriter;
 
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
+// JUnit 5
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.pageseeder.diffx.load.SAXLoader;
 import org.pageseeder.diffx.xml.Sequence;
@@ -60,7 +61,7 @@ public abstract class BaseXMLWriterTest {
   // constructors and non-test methods
   // --------------------------------------------------------------------------
 
-  @Before
+  @BeforeEach
   public final void setUp() {
     this.w = new StringWriter();
     this.xml = makeXMLWriter(this.w);
@@ -110,12 +111,11 @@ public abstract class BaseXMLWriterTest {
    *
    * @throws IOException If an I/O error occurs.
    */
-  @Test(expected = IllegalCloseElementException.class)
+  @Test
   public final void testCloseElementIllegal() throws IOException {
     this.xml.openElement("test");
     this.xml.closeElement();
-    this.xml.closeElement();
-    fail("The XML writer failed to report an unclosed element.");
+    assertThrows(IllegalCloseElementException.class, () -> this.xml.closeElement());
   }
 
   // test: element
@@ -257,13 +257,13 @@ public abstract class BaseXMLWriterTest {
 
   /**
    * Checks that the comment method throws an illegal argument exception if it contain "--".
-   *
-   * @throws IOException If an I/O error occurs.
    */
-  @Test(expected = IllegalArgumentException.class)
-  public final void testCommentIllegal() throws IOException {
-    this.xml.writeComment("--");
-    fail("Illegal comment should have been rejected.");
+  @Test
+  public final void testCommentIllegal() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      this.xml.writeComment("--");
+      fail("Illegal comment should have been rejected.");
+    });
   }
 
   // test: processing instructions
@@ -397,15 +397,11 @@ public abstract class BaseXMLWriterTest {
   /**
    * Check that the XML writer throws an exception when trying to close it
    * with a remaining open element.
-   *
-   * @throws IOException If an I/O error occurs.
-   * @see UnclosedElementException
    */
-  @Test(expected = UnclosedElementException.class)
+  @Test
   public final void testCloseUnclosedException() throws IOException {
     this.xml.openElement("x");
-    this.xml.close();
-    fail("The XML writer failed to report an unclosed element.");
+    assertThrows(UnclosedElementException.class, () -> this.xml.close());
   }
 
   // public methods to test checks

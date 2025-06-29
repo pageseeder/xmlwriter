@@ -15,11 +15,12 @@
  */
 package org.pageseeder.xmlwriter;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.Writer;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * A test class for the <code>XMLWriterNSImpl</code>
@@ -34,11 +35,6 @@ public final class XMLWriterNSImplTest extends BaseXMLWriterTest {
   public static final String URI_TEST_1 = "http://www.test.net/001";
 
   /**
-   * A namespace uri for testing.
-   */
-  public static final String URI_TEST_2 = "http://www.test.net/002";
-
-  /**
    * @see org.pageseeder.xmlwriter.BaseXMLWriterTest#makeXMLWriter(java.io.Writer)
    */
   @Override
@@ -49,14 +45,10 @@ public final class XMLWriterNSImplTest extends BaseXMLWriterTest {
   /**
    * Tests that the writer throws an exception when attempting to write an element
    * on an undeclared (not prefixed or mapped) namespace.
-   *
-   * @throws IOException Should an I/O error occur.
    */
-  @Test(expected = UndeclaredNamespaceException.class)
-  public void testUndeclaredNamespaces1() throws IOException {
-    this.xml.openElement("http://www.test.com/2004", "test", false);
-    this.xml.closeElement();
-    fail("The XML writer failed to report an undeclared namespace.");
+  @Test
+  void testUndeclaredNamespaces1() {
+    assertThrows(UndeclaredNamespaceException.class, () -> this.xml.openElement("http://www.test.com/2004", "test", false));
   }
 
   /**
@@ -66,7 +58,7 @@ public final class XMLWriterNSImplTest extends BaseXMLWriterTest {
    * @throws IOException Should an I/O error occur.
    */
   @Test
-  public void testUndeclaredNamespaces2() throws IOException {
+  void testUndeclaredNamespaces2() throws IOException {
     this.xml.setPrefixMapping(URI_TEST_1, "");
     this.xml.openElement(URI_TEST_1, "test", false);
     this.xml.closeElement();
@@ -80,7 +72,7 @@ public final class XMLWriterNSImplTest extends BaseXMLWriterTest {
    * @throws IOException Should an I/O error occur.
    */
   @Test
-  public void testUndeclaredNamespaces3() throws IOException {
+  void testUndeclaredNamespaces3() throws IOException {
     this.xml.openElement("", "test", false);
     this.xml.closeElement();
     assertEquivalent("<test/>", getXMLString());
@@ -93,7 +85,7 @@ public final class XMLWriterNSImplTest extends BaseXMLWriterTest {
    * @throws IOException Should an I/O error occur.
    */
   @Test
-  public void testUndeclaredNamespaces4() throws IOException {
+  void testUndeclaredNamespaces4() throws IOException {
     this.xml.openElement(null, "test", false);
     this.xml.closeElement();
     assertEquivalent("<test/>", getXMLString());
@@ -105,7 +97,7 @@ public final class XMLWriterNSImplTest extends BaseXMLWriterTest {
    * @throws IOException Should an I/O error occur.
    */
   @Test
-  public void testNamespaceSwitch0() throws IOException {
+  void testNamespaceSwitch0() throws IOException {
     this.xml.setPrefixMapping(URI_TEST_1, "");
     this.xml.openElement(URI_TEST_1, "test", true);
     this.xml.setPrefixMapping("", "");
@@ -125,7 +117,7 @@ public final class XMLWriterNSImplTest extends BaseXMLWriterTest {
    * @throws IOException Should an I/O error occur.
    */
   @Test
-  public void testNamespaceSwitch1() throws IOException {
+  void testNamespaceSwitch1() throws IOException {
     this.xml.setPrefixMapping(URI_TEST_1, "");
     this.xml.openElement(URI_TEST_1, "test", true);
     // switch once
@@ -160,7 +152,7 @@ public final class XMLWriterNSImplTest extends BaseXMLWriterTest {
    * @throws IOException Should an I/O error occur.
    */
   @Test
-  public void testNamespaceSwitch2() throws IOException {
+  void testNamespaceSwitch2() throws IOException {
     this.xml.openElement(null, "test", true);
     // switch once
     this.xml.setPrefixMapping(URI_TEST_1, "xx");
