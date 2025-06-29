@@ -15,6 +15,8 @@
  */
 package org.pageseeder.xmlwriter;
 
+import org.junit.Test;
+import static org.junit.Assert.*;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -26,15 +28,6 @@ import java.io.Writer;
 public final class XMLWriterImplTest extends BaseXMLWriterTest {
 
   /**
-   * Default constructor.
-   *
-   * @param name Name of the test suite.
-   */
-  public XMLWriterImplTest(String name) {
-    super(name);
-  }
-
-  /**
    * @see org.pageseeder.xmlwriter.BaseXMLWriterTest#makeXMLWriter(java.io.Writer)
    */
   @Override
@@ -42,86 +35,66 @@ public final class XMLWriterImplTest extends BaseXMLWriterTest {
     return new XMLWriterImpl(writer);
   }
 
-// test: unsupported methods ------------------------------------------------------------
-
   /**
-   * Tests that the namesspace aware open element method throws an
+   * Tests that the namespace-aware open element method throws an
    * unsupported open element exception.
    *
    * @throws IOException Should an IO error occur.
    * @see XMLWriterImpl#openElement(String, String, boolean)
    */
+  @Test(expected = UnsupportedOperationException.class)
   public void testUnsupportedOpenElement() throws IOException {
-    try {
-      this.xml.openElement("", "x", true);
-      fail("The XML writer failed to report an unsupported operation.");
-    } catch (UnsupportedOperationException ex) {
-      assertTrue(true);
-    }
+    this.xml.openElement("", "x", true);
+    fail("The XML writer failed to report an unsupported operation.");
   }
 
   /**
-   * Tests that the namesspace aware empty element method throws an
+   * Tests that the namespace-aware empty element method throws an
    * unsupported open element exception.
    *
    * @throws IOException Should an IO error occur.
    * @see XMLWriterImpl#emptyElement(String, String)
    */
+  @Test(expected = UnsupportedOperationException.class)
   public void testUnsupportedEmptyElement() throws IOException {
-    try {
-      this.xml.openElement("", "x", true);
-      fail("The XML writer failed to report an unsupported operation.");
-    } catch (UnsupportedOperationException ex) {
-      assertTrue(true);
-    }
+    this.xml.openElement("", "x", true);
+    fail("The XML writer failed to report an unsupported operation.");
   }
 
   /**
-   * Tests that the namesspace aware set prefix mapping method throws an
+   * Tests that the namespace-aware set prefix mapping method throws an
    * unsupported open element exception.
-   *
-   * @throws IOException Should an IO error occur.
-   * @see XMLWriterImpl#setPrefixMapping(String, String)
    */
+  @Test(expected = UnsupportedOperationException.class)
   public void testUnsupportedPrefixMapping() {
-    try {
-      this.xml.setPrefixMapping("", "x");
-      fail("The XML writer failed to report an unsupported operation.");
-    } catch (UnsupportedOperationException ex) {
-      assertTrue(true);
-    }
+    this.xml.setPrefixMapping("", "x");
+    fail("The XML writer failed to report an unsupported operation.");
   }
 
   /**
-   * Tests that the namesspace aware attribute method throws an
+   * Tests that the namespace-aware attribute method throws an
    * unsupported open element exception.
    *
    * @throws IOException Should an IO error occur.
    * @see XMLWriterImpl#attribute(String, String, String)
    */
+  @Test(expected = UnsupportedOperationException.class)
   public void testUnsupportedAttributeA() throws IOException {
-    try {
-      this.xml.attribute("", "x", "m");
-      fail("The XML writer failed to report an unsupported operation.");
-    } catch (UnsupportedOperationException ex) {
-      assertTrue(true);
-    }
+    this.xml.attribute("", "x", "m");
+    fail("The XML writer failed to report an unsupported operation.");
   }
 
   /**
-   * Tests that the namesspace aware attribute method throws an
+   * Tests that the namespace-aware attribute method throws an
    * unsupported open element exception.
    *
    * @throws IOException Should an IO error occur.
    * @see XMLWriterImpl#attribute(String, String, int)
    */
+  @Test(expected = UnsupportedOperationException.class)
   public void testUnsupportedAttributeB() throws IOException {
-    try {
-      this.xml.attribute("", "x", 0);
-      fail("The XML writer failed to report an unsupported operation.");
-    } catch (UnsupportedOperationException ex) {
-      assertTrue(true);
-    }
+    this.xml.attribute("", "x", 0);
+    fail("The XML writer failed to report an unsupported operation.");
   }
 
 }

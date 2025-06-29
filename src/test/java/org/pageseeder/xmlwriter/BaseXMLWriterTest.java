@@ -15,8 +15,10 @@
  */
 package org.pageseeder.xmlwriter;
 
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
 import org.pageseeder.diffx.load.SAXLoader;
 import org.pageseeder.diffx.xml.Sequence;
 
@@ -31,7 +33,7 @@ import java.io.Writer;
  *
  * @author Christophe Lauret
  */
-public abstract class BaseXMLWriterTest extends TestCase {
+public abstract class BaseXMLWriterTest {
 
   /**
    * The loader to use.
@@ -58,20 +60,8 @@ public abstract class BaseXMLWriterTest extends TestCase {
   // constructors and non-test methods
   // --------------------------------------------------------------------------
 
-  /**
-   * Default constructor.
-   *
-   * @param name Name of the test suite.
-   */
-  public BaseXMLWriterTest(String name) {
-    super(name);
-  }
-
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected final void setUp() throws Exception {
+  @Before
+  public final void setUp() {
     this.w = new StringWriter();
     this.xml = makeXMLWriter(this.w);
   }
@@ -92,6 +82,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
    *
    * @throws IOException If an I/O error occurs.
    */
+  @Test
   public final void testCloseElementA() throws IOException {
     this.xml.openElement("test");
     this.xml.closeElement();
@@ -104,6 +95,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
    *
    * @throws IOException If an I/O error occurs.
    */
+  @Test
   public final void testCloseElementB() throws IOException {
     this.xml.openElement("x");
     this.xml.openElement("y");
@@ -118,16 +110,12 @@ public abstract class BaseXMLWriterTest extends TestCase {
    *
    * @throws IOException If an I/O error occurs.
    */
+  @Test(expected = IllegalCloseElementException.class)
   public final void testCloseElementIllegal() throws IOException {
     this.xml.openElement("test");
     this.xml.closeElement();
-    try {
-      this.xml.closeElement();
-      System.err.println("The XML writer failed to report an unclosed element.");
-      assertTrue(false);
-    } catch (IllegalCloseElementException ex) {
-      assertTrue(true);
-    }
+    this.xml.closeElement();
+    fail("The XML writer failed to report an unclosed element.");
   }
 
   // test: element
@@ -138,6 +126,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
    *
    * @throws IOException If an I/O error occurs.
    */
+  @Test
   public final void testElementWithText() throws IOException {
     this.xml.element("x", "text");
     this.xml.close();
@@ -149,6 +138,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
    *
    * @throws IOException If an I/O error occurs.
    */
+  @Test
   public final void testElementNoText() throws IOException {
     this.xml.element("x", "");
     this.xml.close();
@@ -160,6 +150,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
    *
    * @throws IOException If an I/O error occurs.
    */
+  @Test
   public final void testElementNullText() throws IOException {
     this.xml.element("x", null);
     this.xml.close();
@@ -174,6 +165,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
    *
    * @throws IOException If an I/O error occurs.
    */
+  @Test
   public final void testEmptyElement() throws IOException {
     this.xml.emptyElement("x");
     this.xml.close();
@@ -188,6 +180,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
    *
    * @throws IOException If an I/O error occurs.
    */
+  @Test
   public final void testAttributeA() throws IOException {
     this.xml.openElement("x");
     this.xml.attribute("a", "m");
@@ -201,6 +194,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
    *
    * @throws IOException If an I/O error occurs.
    */
+  @Test
   public final void testAttributeB() throws IOException {
     this.xml.openElement("x");
     this.xml.attribute("a", "m");
@@ -213,18 +207,14 @@ public abstract class BaseXMLWriterTest extends TestCase {
   // test: escape
   // -------------------------------------------------------------------------
 
-  /**
-   *
-   */
+  @Test
   public final void testEscapeTextASCII() throws IOException {
     this.xml.element("x", SAMPLE_ASCII_STRING);
     this.xml.close();
     assertWellFormed(getXMLString());
   }
 
-  /**
-   *
-   */
+  @Test
   public final void testEscapeAttributeASCII() throws IOException {
     this.xml.openElement("root");
     this.xml.attribute("x", SAMPLE_ASCII_STRING);
@@ -241,6 +231,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
    *
    * @throws IOException If an I/O error occurs.
    */
+  @Test
   public final void testComment() throws IOException {
     this.xml.openElement("root");
     this.xml.writeComment("comment");
@@ -255,6 +246,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
    *
    * @throws IOException If an I/O error occurs.
    */
+  @Test
   public final void testCommentNull() throws IOException {
     this.xml.openElement("root");
     this.xml.writeComment(null);
@@ -268,13 +260,10 @@ public abstract class BaseXMLWriterTest extends TestCase {
    *
    * @throws IOException If an I/O error occurs.
    */
+  @Test(expected = IllegalArgumentException.class)
   public final void testCommentIllegal() throws IOException {
-    try {
-      this.xml.writeComment("--");
-      assertTrue(false);
-    } catch (IllegalArgumentException ex) {
-      assertTrue(true);
-    }
+    this.xml.writeComment("--");
+    fail("Illegal comment should have been rejected.");
   }
 
   // test: processing instructions
@@ -285,6 +274,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
    *
    * @throws IOException If an I/O error occurs.
    */
+  @Test
   public final void testProcessingInstructionA() throws IOException {
     this.xml.openElement("root");
     this.xml.writePI("x", "y");
@@ -299,6 +289,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
   /**
    * @throws IOException If an I/O error occurs.
    */
+  @Test
   public final void testIndentationRootWithText() throws IOException {
     this.xml.setIndentChars("  ");
     this.xml.openElement("root", false);
@@ -312,6 +303,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
   /**
    * @throws IOException If an I/O error occurs.
    */
+  @Test
   public final void testIndentationSingleElement() throws IOException {
     this.xml.setIndentChars("  ");
     this.xml.openElement("root", true);
@@ -329,6 +321,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
   /**
    * @throws IOException If an I/O error occurs.
    */
+  @Test
   public final void testIndentationMultipleElements() throws IOException {
     this.xml.setIndentChars("  ");
     this.xml.openElement("root", true);
@@ -346,6 +339,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
   /**
    * @throws IOException If an I/O error occurs.
    */
+  @Test
   public final void testIndentationMixedContent() throws IOException {
     this.xml.setIndentChars("  ");
     this.xml.openElement("root", true);
@@ -367,6 +361,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
   /**
    * @throws IOException If an I/O error occurs.
    */
+  @Test
   public final void testIndentationMixedContent2() throws IOException {
     this.xml.setIndentChars("  ");
     this.xml.openElement("root", false);
@@ -384,6 +379,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
   /**
    * @throws IOException If an I/O error occurs.
    */
+  @Test
   public final void testIndentationNone() throws IOException {
     this.xml.setIndentChars(null);
     this.xml.openElement("root", true);
@@ -405,15 +401,11 @@ public abstract class BaseXMLWriterTest extends TestCase {
    * @throws IOException If an I/O error occurs.
    * @see UnclosedElementException
    */
+  @Test(expected = UnclosedElementException.class)
   public final void testCloseUnclosedException() throws IOException {
     this.xml.openElement("x");
-    try {
-      this.xml.close();
-      System.err.println("The XML writer failed to report an unclosed element.");
-      assertTrue(false);
-    } catch (UnclosedElementException ex) {
-      assertTrue(true);
-    }
+    this.xml.close();
+    fail("The XML writer failed to report an unclosed element.");
   }
 
   // public methods to test checks
@@ -436,7 +428,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
       System.err.println(exp);
       System.err.println("<!-- Actual XML is: -->");
       System.err.println(act);
-      throw new AssertionFailedError(ex.getMessage());
+      fail(ex.getMessage());
     }
   }
 
@@ -449,7 +441,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
     try {
       this.loader.load(actual);
     } catch (Throwable ex) {
-      assertTrue(false);
+      fail("The XML is not well formed: " + ex.getMessage());
     }
   }
 
@@ -468,7 +460,7 @@ public abstract class BaseXMLWriterTest extends TestCase {
    * @return a sample ASCII string.
    */
   private static String makeSampleASCIIString() {
-    StringBuffer out = new StringBuffer(255);
+    StringBuilder out = new StringBuilder(255);
     for (int i = 0; i < 255; i++) {
       out.append((char) i);
     }
