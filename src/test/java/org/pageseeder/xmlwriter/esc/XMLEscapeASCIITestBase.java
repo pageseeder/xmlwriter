@@ -15,11 +15,11 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Christophe Lauret
@@ -30,7 +30,7 @@ public abstract class XMLEscapeASCIITestBase extends XMLEscapeTestBase {
    * Test the attribute escape method for empty string.
    */
   @Test
-  public void testToAttributeValue_EmptyString() throws IOException {
+  void testToAttributeValue_EmptyString() throws IOException {
     String got = escapeAttribute("");
     assertEquals("", got);
   }
@@ -39,7 +39,7 @@ public abstract class XMLEscapeASCIITestBase extends XMLEscapeTestBase {
    * Test the attribute escapes correctly ASCII characters which doe not require escape
    */
   @Test
-  public void testToAttributeValue_ASCII() throws IOException {
+  void testToAttributeValue_ASCII() throws IOException {
     for (int i = 0x20; i < 0x7F; i++) {
       if (i != '<' && i != '&' && i != '"' && i != '\'') {
         String got = escapeAttribute("");
@@ -50,7 +50,7 @@ public abstract class XMLEscapeASCIITestBase extends XMLEscapeTestBase {
   }
 
   /**
-   * Test the attribute escapes correctly characters which must be escaped.
+   * Test that the attribute escapes correctly characters which must be escaped.
    */
   @Test
   public void testToAttributeValue_Required() throws IOException {

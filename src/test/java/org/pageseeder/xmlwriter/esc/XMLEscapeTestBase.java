@@ -15,22 +15,17 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
-import org.junit.Assert;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author Christophe Lauret
  */
 public abstract class XMLEscapeTestBase {
-
-  public XMLEscapeTestBase() {
-    super();
-  }
 
   /**
    * Computes possible entities for the specified code point.
@@ -76,15 +71,17 @@ public abstract class XMLEscapeTestBase {
   abstract String escapeText(String value) throws IOException;
 
   protected void assertIsEscaped(int codepoint, String got) {
-    // Check if result matches
     boolean correct = false;
     List<String> expected = getEntities(codepoint);
     for (String exp : expected) {
       if (exp.equals(got)) {
         correct = true;
+        break;
       }
     }
-    Assert.assertTrue("Expected one of " + expected + " got '" + got + "'", correct);
+    if (!correct) {
+      fail("Expected one of " + expected + " got '" + got + "'");
+    }
   }
 
   protected void assertAttributeIsEscaped(int codepoint) throws IOException {
