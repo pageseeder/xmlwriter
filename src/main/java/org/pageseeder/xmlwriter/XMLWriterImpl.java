@@ -15,10 +15,13 @@
  */
 package org.pageseeder.xmlwriter;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Objects;
 
 /**
  * A simple writer for XML data that does not support namespaces.
@@ -41,7 +44,7 @@ import java.util.Deque;
  * @author Christophe Lauret
  *
  * @since 1.0.0
- * @version 1.1.0
+ * @version 1.1.1
  */
 public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
 
@@ -222,7 +225,7 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
    *
    * @return The current element.
    */
-  private Element peekElement() {
+  private @Nullable Element peekElement() {
     return this.elements.peek();
   }
 
@@ -348,7 +351,7 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
   @Override
   public void close() throws IOException, UnclosedElementException {
     Element open = peekElement();
-    if (open != ROOT)
+    if (open != ROOT && open != null)
       throw new UnclosedElementException(open.name);
     this.writer.close();
   }
@@ -380,7 +383,7 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
      * @param hasChildren Whether the element has children.
      */
     public Element(String name, boolean hasChildren) {
-      this.name = name;
+      this.name = Objects.requireNonNull(name);
       this.hasChildren = hasChildren;
     }
   }

@@ -15,6 +15,8 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A base implementation for the XML escape classes.
  *
@@ -47,7 +49,7 @@ abstract class XMLEscapeBase implements XMLEscape {
    * @return A well-formed value for the attribute.
    */
   @Override
-  public final String toAttributeValue(String value) {
+  public final @Nullable String toAttributeValue(@Nullable String value) {
     if (value == null || value.isEmpty()) return value;
     return toAttributeValue(value.toCharArray(), 0, value.length());
   }
@@ -60,7 +62,7 @@ abstract class XMLEscapeBase implements XMLEscape {
    * @return A well-formed value for the text node.
    */
   @Override
-  public final String toElementText(String text) {
+  public final @Nullable String toElementText(@Nullable String text) {
     if (text == null || text.isEmpty()) return text;
     return toElementText(text.toCharArray(), 0, text.length());
   }

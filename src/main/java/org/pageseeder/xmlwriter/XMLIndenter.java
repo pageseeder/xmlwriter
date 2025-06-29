@@ -27,7 +27,7 @@ import java.util.Deque;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -36,10 +36,10 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * A class to indent automatically some XML data.
+ * A class to automatically indent some XML data.
  *
- * <p>Note: This implementation is not namespace aware, and will not handle entities other than
- * &amp;amp;, &amp;lt;, &amp;gt; or &amp;quot;.
+ * <p>Note: This implementation is not namespace-aware, and will not handle entities other than
+ * {@code &amp;}, {@code &lt;}, {@code &gt;} or {@code &quot;}.
  *
  * @author Christophe Lauret
  */
@@ -67,7 +67,7 @@ public final class XMLIndenter extends DefaultHandler implements ContentHandler 
    *
    * @param w The writer to use.
    */
-  private XMLIndenter(@NotNull Writer w) {
+  private XMLIndenter(Writer w) {
     if (w instanceof PrintWriter) {
       this.writer = (PrintWriter) w;
     } else {
@@ -77,7 +77,7 @@ public final class XMLIndenter extends DefaultHandler implements ContentHandler 
 
   @Override
   public void startElement(String uri, String localName, String qName, Attributes atts) {
-    // update the state of previous element
+    // update the state of the previous element
     if (!this.states.isEmpty()) {
       if (this.states.pop().equals(IndentState.EMPTY)) {
         this.writer.println('>');
@@ -180,7 +180,7 @@ public final class XMLIndenter extends DefaultHandler implements ContentHandler 
    *
    * @return The indented XML String or <code>null</code> if an error occurred.
    */
-  public static String indentSilent(String xml) {
+  public static @Nullable String indentSilent(String xml) {
     try {
       return indent(xml);
     } catch (Exception ex) {

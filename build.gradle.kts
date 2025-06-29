@@ -27,7 +27,7 @@ java {
 }
 
 dependencies {
-  compileOnly(libs.jetbrains.annotations)
+  compileOnly(libs.jspecify)
 
   // JUnit 5 dependencies
   testImplementation(platform(libs.junit.bom))

@@ -19,4 +19,5 @@
  * <p>This package provides an XML writer that generates a DOM document as
  * well as a document builder for convenience.
  */
+@org.jspecify.annotations.NullMarked
 package org.pageseeder.xmlwriter.dom;

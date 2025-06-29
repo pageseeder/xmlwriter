@@ -28,7 +28,7 @@ import java.nio.charset.StandardCharsets;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -65,7 +65,7 @@ public final class XMLHelper {
    * @throws SAXException Should a SAX exception occur
    * @throws ParserConfigurationException Should a parser config exception occur
    */
-  public static XMLReader makeXMLReader(ContentHandler handler)
+  public static XMLReader makeXMLReader(@Nullable ContentHandler handler)
       throws SAXException, ParserConfigurationException {
     SAXParserFactory factory = SAXParserFactory.newInstance();
     // Disable XML external entity processing
@@ -96,7 +96,7 @@ public final class XMLHelper {
    * @throws SAXException          Should an SAX exception occur
    * @throws IOException           Should an I/O exception occur
    */
-  public static void parse(@NotNull XMLReader xmlreader, @NotNull File file)
+  public static void parse(XMLReader xmlreader, File file)
       throws SAXException, IOException {
     try (InputStream fileStream = new FileInputStream(file);
          InputStream bufferedStream = new BufferedInputStream(fileStream);

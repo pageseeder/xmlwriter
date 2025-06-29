@@ -15,7 +15,7 @@
  */
 package org.pageseeder.xmlwriter;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -74,7 +74,7 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
   /**
    * The list of prefix mappings to be associated with the next element.
    */
-  private List<PrefixMapping> tempMapping;
+  private @Nullable List<PrefixMapping> tempMapping;
 
   /**
    * A stack of elements to close the elements automatically.
@@ -198,7 +198,7 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
    * @throws IOException If thrown by the wrapped writer.
    */
   @Override
-  public void openElement(String uri, String name, boolean hasChildren) throws IOException {
+  public void openElement(@Nullable String uri, String name, boolean hasChildren) throws IOException {
     completeOpenTag();
     if (peekElement().hasChildren) {
       indent();
@@ -263,7 +263,7 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
    */
   @Override
   public void emptyElement(String element) throws IOException {
-    emptyElement(null, element);
+    emptyElement(XMLConstants.NULL_NS_URI, element);
   }
 
   /**
@@ -283,7 +283,7 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
    * @throws IOException If thrown by the wrapped writer.
    */
   @Override
-  public void emptyElement(String uri, String element) throws IOException {
+  public void emptyElement(@Nullable String uri, String element) throws IOException {
     completeOpenTag();
     indent();
     this.writer.write('<');
@@ -426,8 +426,8 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
    *
    * @throws UndeclaredNamespaceException If the uri has not being previously declared.
    */
-  private String getQName(String uri, String name) throws UndeclaredNamespaceException {
-    String prefix = this.prefixMapping.get(uri != null? uri : XMLConstants.NULL_NS_URI);
+  private String getQName(@Nullable String uri, String name) throws UndeclaredNamespaceException {
+    String prefix = this.prefixMapping.get(uri != null ? uri : XMLConstants.NULL_NS_URI);
     if (prefix != null) {
       if (!prefix.isEmpty())
         return this.prefixMapping.get(uri)+":"+name;
@@ -465,9 +465,9 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
   /**
    * Restores the prefix mapping after closing an element.
    *
-   * <p>This costly operation need only to be done if the method
+   * <p>This costly operation only needs to be done if the method
    * {@link XMLWriterNSImpl#setPrefixMapping(String, String)} have been used
-   * immediately before, therefore it should not happen often.
+   * immediately before, therefore, it should not happen often.
    *
    * @param elt The element that had some new mappings.
    */
@@ -520,7 +520,7 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
           break;
         }
       }
-      // we know key should have a value
+      assert remove != null; // we know key should have a value
       this.prefixMapping.remove(remove.getKey());
     }
   }
@@ -559,7 +559,7 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
      *
      * <p>Can be <code>null</code>.
      */
-    private final List<PrefixMapping> mappings;
+    private final @Nullable List<PrefixMapping> mappings;
 
     /**
      * Indicates whether the element has children.
@@ -573,7 +573,7 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
      * @param hasChildren Whether the element has children.
      * @param mappings    The list of prefix mapping if any.
      */
-    public NSElement(String qName, boolean hasChildren, List<PrefixMapping> mappings) {
+    public NSElement(String qName, boolean hasChildren, @Nullable List<PrefixMapping> mappings) {
       this.qName = qName;
       this.mappings = mappings;
       this.hasChildren = hasChildren;
@@ -593,12 +593,12 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
     /**
      * The prefix associated to the URI.
      */
-    private final @NotNull String prefix;
+    private final String prefix;
 
     /**
      * The namespace URI.
      */
-    private final @NotNull String uri;
+    private final String uri;
 
     /**
      * Creates a new prefix mapping.
@@ -606,7 +606,7 @@ public final class XMLWriterNSImpl extends XMLWriterBase implements XMLWriter {
      * @param prefix The prefix for the URI.
      * @param uri    The full namespace URI.
      */
-    public PrefixMapping(String prefix, String uri) {
+    public PrefixMapping(@Nullable String prefix, @Nullable String uri) {
       this.prefix = prefix != null ? prefix : XMLConstants.DEFAULT_NS_PREFIX;
       this.uri = uri != null ? uri : XMLConstants.NULL_NS_URI;
     }

@@ -15,8 +15,6 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.io.Writer;
 
@@ -50,7 +48,7 @@ public final class XMLEscapeWriterASCII extends XMLEscapeWriterBase implements X
   }
 
   @Override
-  public void writeAttValue(char @NotNull [] ch, int off, int len) throws IOException {
+  public void writeAttValue(char[] ch, int off, int len) throws IOException {
     char c;
     for (int i = off; i < off+len; i++) {
       c = ch[i];
@@ -87,7 +85,7 @@ public final class XMLEscapeWriterASCII extends XMLEscapeWriterBase implements X
   }
 
   @Override
-  public void writeText(char @NotNull [] ch, int off, int len) throws IOException {
+  public void writeText(char[] ch, int off, int len) throws IOException {
     char c;
     for (int i = off; i < off+len; i++) {
       c = ch[i];

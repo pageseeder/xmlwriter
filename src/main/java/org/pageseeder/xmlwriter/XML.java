@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Objects;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 import org.pageseeder.xmlwriter.esc.XMLEscapeUTF8;
 
 /**
@@ -20,17 +20,18 @@ public final class XML {
   /**
    * An enumeration for namespace awareness.
    */
+  @SuppressWarnings("java:S115") // Would require API change, leave as is
   public enum NamespaceAware {
 
     /**
-     * The class is namespace aware.
+     * The class is namespace-aware.
      */
     Yes,
 
     /**
-     * The class is not namespace aware.
+     * The class is not namespace-aware.
      */
-    No;
+    No
 
   }
 
@@ -62,7 +63,7 @@ public final class XML {
    *
    * @return a valid string or empty if s is <code>null</code> or empty.
    */
-  public static String escape(String s) {
+  public static @Nullable String escape(@Nullable String s) {
     return XMLEscapeUTF8.UTF8_ESCAPE.toElementText(s);
   }
 
@@ -90,7 +91,7 @@ public final class XML {
    *
    * @return a valid string or empty if s is <code>null</code> or empty.
    */
-  public static String escapeAttr(String s) {
+  public static @Nullable String escapeAttr(@Nullable String s) {
     return XMLEscapeUTF8.UTF8_ESCAPE.toAttributeValue(s);
   }
 
@@ -104,7 +105,7 @@ public final class XML {
    *
    * @return A valid element name
    */
-  public static String toElementName(String name) {
+  public static @Nullable String toElementName(@Nullable String name) {
     if (name == null) return null;
     char[] elementAsChars = name.toCharArray();
     if (!Character.isLetter(elementAsChars[0])) {
@@ -130,7 +131,7 @@ public final class XML {
    *
    * @return The element as a string.
    */
-  public String toString(@NotNull XMLWritable o) {
+  public String toString(XMLWritable o) {
     XMLStringWriter xml = new XMLStringWriter(NamespaceAware.Yes);
     try {
       o.toXML(xml);

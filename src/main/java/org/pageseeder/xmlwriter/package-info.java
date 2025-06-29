@@ -16,4 +16,5 @@
 /**
  * A set classes and interfaces for XML processing.
  */
+@org.jspecify.annotations.NullMarked
 package org.pageseeder.xmlwriter;

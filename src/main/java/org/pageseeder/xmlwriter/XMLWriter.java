@@ -15,6 +15,8 @@
  */
 package org.pageseeder.xmlwriter;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 
 /**
@@ -69,7 +71,7 @@ public interface XMLWriter {
    * @throws IllegalArgumentException If the indent string is not made of spaces.
    * @throws IllegalStateException    If the writer has already been used.
    */
-  void setIndentChars(String spaces);
+  void setIndentChars(@Nullable String spaces);
 
   // Text methods
   // ----------------------------------------------------------------------------------------------
@@ -92,7 +94,7 @@ public interface XMLWriter {
    *
    * @throws IOException If an I/O exception is thrown by the underlying writer.
    */
-  void writeText(String text) throws IOException;
+  void writeText(@Nullable String text) throws IOException;
 
   /**
    * Write the given text correctly for the encoding of this document.
@@ -132,12 +134,12 @@ public interface XMLWriter {
    *
    * @throws IOException If an I/O exception is thrown by the underlying writer.
    */
-  void writeXML(String text) throws IOException;
+  void writeXML(@Nullable String text) throws IOException;
 
   /**
    * Write the given XML data.
    *
-   * <p>The text is appended as is, therefore it should be escaped properly for the
+   * <p>The text is appended as is, therefore, it should be escaped properly for the
    * encoding used by the underlying stream writer.
    *
    * @param text The text to write.

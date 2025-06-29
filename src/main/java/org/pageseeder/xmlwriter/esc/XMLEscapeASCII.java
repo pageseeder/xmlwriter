@@ -15,8 +15,6 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * A singleton for escaping XML data when using the 'ASCII' encoding.
  *
@@ -48,7 +46,7 @@ public final class XMLEscapeASCII extends XMLEscapeBase implements XMLEscape {
   }
 
   @Override
-  public @NotNull String toAttributeValue(char @NotNull [] ch, int off, int len) {
+  public String toAttributeValue(char[] ch, int off, int len) {
     StringBuilder out = new StringBuilder(len + len / 10);
     for (int i = off; i < off+len; i++) {
       // 0x00 to 0x1F
@@ -98,7 +96,7 @@ public final class XMLEscapeASCII extends XMLEscapeBase implements XMLEscape {
   }
 
   @Override
-  public @NotNull String toElementText(char @NotNull[] ch, int off, int len) {
+  public String toElementText(char[] ch, int off, int len) {
     StringBuilder out = new StringBuilder(len + len / 10);
     char c;
     for (int i = off; i < off+len; i++) {

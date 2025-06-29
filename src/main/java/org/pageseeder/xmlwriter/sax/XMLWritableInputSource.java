@@ -15,9 +15,10 @@
  */
 package org.pageseeder.xmlwriter.sax;
 
-import org.jetbrains.annotations.NotNull;
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.xml.sax.InputSource;
+
+import java.util.Objects;
 
 /**
  * An XML input source implementation wrapping an XML writable object.
@@ -47,15 +48,15 @@ public final class XMLWritableInputSource extends InputSource {
   /**
    * The wrapped XML writable object.
    */
-  private final @NotNull XMLWritable source;
+  private final XMLWritable source;
 
   /**
    * Creates an XML writable object.
    *
    * @param object The XMLWritable object to wrap.
    */
-  public XMLWritableInputSource(@NotNull XMLWritable object) {
-    this.source = object;
+  public XMLWritableInputSource(XMLWritable object) {
+    this.source = Objects.requireNonNull(object);
   }
 
   /**
@@ -63,7 +64,7 @@ public final class XMLWritableInputSource extends InputSource {
    *
    * @return The XMLWritable object
    */
-  public @NotNull XMLWritable getXMLWritable() {
+  public XMLWritable getXMLWritable() {
     return this.source;
   }
 

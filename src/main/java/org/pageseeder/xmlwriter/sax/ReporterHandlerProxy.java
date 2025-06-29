@@ -18,7 +18,6 @@ package org.pageseeder.xmlwriter.sax;
 import java.io.PrintStream;
 import java.util.Objects;
 
-import org.jetbrains.annotations.NotNull;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -33,24 +32,26 @@ import org.xml.sax.SAXException;
  * @since 1.0.0
  * @version 1.1.0
  */
+@SuppressWarnings("java:S1192")
 public final class ReporterHandlerProxy implements ContentHandler {
 
   /**
    * The handler that will receive events.
    */
-  private final @NotNull ContentHandler handler;
+  private final ContentHandler handler;
 
   /**
    * Where events should be reported.
    */
-  private final @NotNull PrintStream report;
+  private final PrintStream report;
 
   /**
    * Creates a new handler proxy reporting events to <code>System.err</code>.
    *
    * @param handler The handler that will receive events.
    */
-  public ReporterHandlerProxy(@NotNull ContentHandler handler) {
+  @SuppressWarnings("java:S106") // Deliberate use of System.err
+  public ReporterHandlerProxy(ContentHandler handler) {
     this.handler = Objects.requireNonNull(handler);
     this.report = System.err;
   }
@@ -61,7 +62,7 @@ public final class ReporterHandlerProxy implements ContentHandler {
    * @param handler The handler that will receive events.
    * @param report  The print stream where errors should be reported.
    */
-  public ReporterHandlerProxy(@NotNull ContentHandler handler, @NotNull PrintStream report) {
+  public ReporterHandlerProxy(ContentHandler handler, PrintStream report) {
     this.handler = Objects.requireNonNull(handler);
     this.report = report;
   }
@@ -137,7 +138,7 @@ public final class ReporterHandlerProxy implements ContentHandler {
    *
    * @return the wrapped content handler.
    */
-  public @NotNull ContentHandler getContentHandler() {
+  public ContentHandler getContentHandler() {
     return this.handler;
   }
 

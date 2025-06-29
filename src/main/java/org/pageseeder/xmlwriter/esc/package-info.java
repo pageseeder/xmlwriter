@@ -16,4 +16,5 @@
 /**
  * Utility classes and interfaces for escaping XML text.
  */
+@org.jspecify.annotations.NullMarked
 package org.pageseeder.xmlwriter.esc;

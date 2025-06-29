@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Objects;
 
+import org.jspecify.annotations.Nullable;
 import org.pageseeder.xmlwriter.esc.XMLEscapeWriter;
 import org.pageseeder.xmlwriter.esc.XMLEscapeWriterUTF8;
 
@@ -76,7 +77,7 @@ abstract class XMLWriterBase implements XMLWriter {
   /**
    * The default indentation spaces used.
    */
-  private String indentChars = null;
+  private @Nullable String indentChars = null;
 
   /**
    * Flag to indicate that the element open tag is not finished yet.
@@ -113,7 +114,7 @@ abstract class XMLWriterBase implements XMLWriter {
   }
 
   @Override
-  public final void setIndentChars(String spaces) throws IllegalStateException, IllegalArgumentException {
+  public final void setIndentChars(@Nullable String spaces) throws IllegalStateException, IllegalArgumentException {
     if (this.depth != 0)
       throw new IllegalStateException("Too late to set the indentation characters!");
     // check that this is a valid indentation string
@@ -149,7 +150,7 @@ abstract class XMLWriterBase implements XMLWriter {
   // ----------------------------------------------------------------------------------------------
 
   @Override
-  public final void writeText(String text) throws IOException {
+  public final void writeText(@Nullable String text) throws IOException {
     if (text == null) return;
     completeOpenTag();
     this.writerEscape.writeText(text);
@@ -179,7 +180,7 @@ abstract class XMLWriterBase implements XMLWriter {
    *
    * @throws IOException If thrown by the wrapped writer.
    */
-  public final void writeText(Object o) throws IOException {
+  public final void writeText(@Nullable Object o) throws IOException {
     // TODO: what about an XML serializable ???
     // TODO: Add to interface ???
     if (o != null) {
@@ -191,7 +192,7 @@ abstract class XMLWriterBase implements XMLWriter {
   // ----------------------------------------------------------------------------------------------
 
   @Override
-  public final void writeXML(String text) throws IOException {
+  public final void writeXML(@Nullable String text) throws IOException {
     if (text == null) return;
     completeOpenTag();
     this.writer.write(text);
@@ -207,7 +208,7 @@ abstract class XMLWriterBase implements XMLWriter {
   // ----------------------------------------------------------------------------------------------
 
   @Override
-  public final void writeComment(String comment) throws IOException, IllegalArgumentException {
+  public final void writeComment(@Nullable String comment) throws IOException, IllegalArgumentException {
     if (comment == null)
       return;
     if (comment.contains("--"))
@@ -235,7 +236,7 @@ abstract class XMLWriterBase implements XMLWriter {
   }
 
   @Override
-  public final void writeCDATA(String data) throws IOException {
+  public final void writeCDATA(@Nullable String data) throws IOException {
     if (data == null) return;
     final String end = "]]>";
     if (data.contains(end))

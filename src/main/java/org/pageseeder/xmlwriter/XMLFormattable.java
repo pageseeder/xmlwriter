@@ -38,7 +38,7 @@ public interface XMLFormattable {
    *
    * @throws NullPointerException if the specified character sequence is <code>null</code>.
    */
-  StringBuffer toXML(StringBuffer xml) throws NullPointerException;
+  StringBuffer toXML(StringBuffer xml);
 
   /**
    * <p>Returns a xml representation of the object of the implementing class.

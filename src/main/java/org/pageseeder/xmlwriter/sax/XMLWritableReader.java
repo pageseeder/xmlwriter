@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import org.jspecify.annotations.Nullable;
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.xml.sax.ContentHandler;
@@ -43,6 +44,9 @@ import org.xml.sax.XMLReader;
  * @see org.pageseeder.xmlwriter.sax.XMLWritableInputSource
  *
  * @author Christophe Lauret
+ *
+ * @since 1.0.0
+ * @version 1.1.1
  */
 public final class XMLWritableReader implements XMLReader {
 
@@ -59,12 +63,12 @@ public final class XMLWritableReader implements XMLReader {
   /**
    * The features used by this XML reader implementation.
    */
-  private final Map<String, Boolean> _features = new HashMap<String, Boolean>();
+  private final Map<String, Boolean> features = new HashMap<>();
 
   /**
    * The content reader this XMLReader will use.
    */
-  private ContentHandler handler;
+  private @Nullable ContentHandler handler;
 
   /**
    * Creates a new XML Reader.
@@ -88,8 +92,8 @@ public final class XMLWritableReader implements XMLReader {
    * {@inheritDoc}
    */
   @Override
-  public void setContentHandler(ContentHandler chandler) {
-    this.handler = chandler;
+  public void setContentHandler(ContentHandler handler) {
+    this.handler = handler;
   }
 
   /**
@@ -98,7 +102,7 @@ public final class XMLWritableReader implements XMLReader {
    * {@inheritDoc}
    */
   @Override
-  public ErrorHandler getErrorHandler() {
+  public @Nullable ErrorHandler getErrorHandler() {
     return null;
   }
 
@@ -108,7 +112,8 @@ public final class XMLWritableReader implements XMLReader {
    * {@inheritDoc}
    */
   @Override
-  public void setErrorHandler(ErrorHandler ehandler) {
+  public void setErrorHandler(@Nullable ErrorHandler ehandler) {
+    // Does nothing by default
   }
 
   /**
@@ -117,7 +122,7 @@ public final class XMLWritableReader implements XMLReader {
    * {@inheritDoc}
    */
   @Override
-  public DTDHandler getDTDHandler() {
+  public @Nullable DTDHandler getDTDHandler() {
     return null;
   }
 
@@ -127,7 +132,8 @@ public final class XMLWritableReader implements XMLReader {
    * {@inheritDoc}
    */
   @Override
-  public void setDTDHandler(DTDHandler dhandler) {
+  public void setDTDHandler(@Nullable DTDHandler handler) {
+    // Does nothing by default
   }
 
   /**
@@ -136,7 +142,7 @@ public final class XMLWritableReader implements XMLReader {
    * {@inheritDoc}
    */
   @Override
-  public EntityResolver getEntityResolver() {
+  public @Nullable EntityResolver getEntityResolver() {
     return null;
   }
 
@@ -146,7 +152,7 @@ public final class XMLWritableReader implements XMLReader {
    * {@inheritDoc}
    */
   @Override
-  public void setEntityResolver(EntityResolver resolver) {
+  public void setEntityResolver(@Nullable EntityResolver resolver) {
     // Ignored by default
   }
 
@@ -156,7 +162,7 @@ public final class XMLWritableReader implements XMLReader {
    * {@inheritDoc}
    */
   @Override
-  public Object getProperty(String name) {
+  public @Nullable Object getProperty(String name) {
     return null;
   }
 
@@ -173,13 +179,13 @@ public final class XMLWritableReader implements XMLReader {
   @Override
   public boolean getFeature(String name) {
     // TODO: handling of features
-    return this._features.get(name).booleanValue();
+    return this.features.get(name).booleanValue();
   }
 
   @Override
   public void setFeature(String name, boolean value) {
     // TODO: handling of features
-    this._features.put(name, Boolean.valueOf(value));
+    this.features.put(name, value);
   }
 
   @Override

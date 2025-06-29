@@ -15,7 +15,7 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An interface to escape XML character data.
@@ -65,7 +65,7 @@ public interface XMLEscape {
    *
    * @return A well-formed value for the attribute.
    */
-  @NotNull String toAttributeValue(char @NotNull [] ch, int off, int len);
+  String toAttributeValue(char[] ch, int off, int len);
 
   /**
    * Returns a well-formed attribute value.
@@ -80,7 +80,7 @@ public interface XMLEscape {
    *
    * @return A well-formed value for the attribute.
    */
-  String toAttributeValue(String value);
+  @Nullable String toAttributeValue(@Nullable String value);
 
   /**
    * Writes a well-formed XML literal text value.
@@ -108,7 +108,7 @@ public interface XMLEscape {
    *
    * @return A well-formed value for the text node.
    */
-  @NotNull String toElementText(char @NotNull [] ch, int off, int len);
+  String toElementText(char[] ch, int off, int len);
 
   /**
    * Returns a well-formed text value for the element.
@@ -123,7 +123,7 @@ public interface XMLEscape {
    *
    * @return A well-formed value for the text node.
    */
-  String toElementText(String text);
+  @Nullable String toElementText(@Nullable String text);
 
   /**
    * Returns the encoding used by the implementing class.

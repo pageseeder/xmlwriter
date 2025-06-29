@@ -16,4 +16,5 @@
 /**
  * SAX Extension to the XML tools.
  */
+@org.jspecify.annotations.NullMarked
 package org.pageseeder.xmlwriter.sax;

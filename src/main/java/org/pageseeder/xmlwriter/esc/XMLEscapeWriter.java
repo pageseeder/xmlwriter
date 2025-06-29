@@ -15,7 +15,7 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -69,7 +69,7 @@ public interface XMLEscapeWriter {
    *
    * @throws IOException If thrown by the underlying writer.
    */
-  void writeAttValue(char @NotNull [] ch, int off, int len) throws IOException;
+  void writeAttValue(char[] ch, int off, int len) throws IOException;
 
   /**
    * Writes a well-formed attribute value.
@@ -109,7 +109,7 @@ public interface XMLEscapeWriter {
    *
    * @throws IOException If thrown by the underlying writer.
    */
-  void writeText(char @NotNull [] ch, int off, int len) throws IOException;
+  void writeText(char[] ch, int off, int len) throws IOException;
 
   /**
    * Writes the text string so that the text value for the element remains
@@ -124,7 +124,7 @@ public interface XMLEscapeWriter {
    *
    * @throws IOException If thrown by the underlying writer.
    */
-  void writeText(String text) throws IOException;
+  void writeText(@Nullable String text) throws IOException;
 
   /**
    * Writes the character so that the text value for the element remains

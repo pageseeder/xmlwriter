@@ -18,7 +18,7 @@ package org.pageseeder.xmlwriter.sax;
 import java.io.IOException;
 import java.util.*;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 import org.pageseeder.xmlwriter.IllegalCloseElementException;
 import org.pageseeder.xmlwriter.UnclosedElementException;
 import org.pageseeder.xmlwriter.UndeclaredNamespaceException;
@@ -128,7 +128,7 @@ public final class XMLWriterSAX implements XMLWriter {
   /**
    * The list of prefix mappings to be associated with the next element.
    */
-  private List<PrefixMapping> tempMapping;
+  private @Nullable List<PrefixMapping> tempMapping;
 
   /**
    * A stack of elements to close the elements automatically.
@@ -150,7 +150,7 @@ public final class XMLWriterSAX implements XMLWriter {
    *
    * @throws NullPointerException If the handler is <code>null</code>.
    */
-  public XMLWriterSAX(@NotNull ContentHandler handler) throws NullPointerException {
+  public XMLWriterSAX(ContentHandler handler) {
     this.handler = Objects.requireNonNull(handler, "XMLWriter cannot use a null content handler.");
     this.elements.add(ROOT);
     this.prefixMapping.put(XMLConstants.NULL_NS_URI, XMLConstants.DEFAULT_NS_PREFIX);
@@ -164,8 +164,17 @@ public final class XMLWriterSAX implements XMLWriter {
     // Do nothing
   }
 
+  /**
+   * Sets the characters used for indentation when formatting.
+   * The provided string should only consist of valid whitespace characters.
+   * Must be set before any other operations that modify the state are performed.
+   *
+   * @param spaces the string representing the indentation characters, or null to disable indentation
+   * @throws IllegalStateException if this method is called after the initial state modification
+   * @throws IllegalArgumentException if the provided string contains non-whitespace characters
+   */
   @Override
-  public void setIndentChars(String spaces) throws IllegalStateException, IllegalArgumentException {
+  public void setIndentChars(@Nullable String spaces) {
     if (this.depth != 0)
       throw new IllegalStateException("To late to set the indentation characters!");
     // check that this is a valid indentation string
@@ -181,7 +190,7 @@ public final class XMLWriterSAX implements XMLWriter {
   }
 
   @Override
-  public void writeText(String text) throws IOException {
+  public void writeText(@Nullable String text) throws IOException {
     if (text == null) return;
     try {
       ensureCompleteOpenTag();
@@ -223,7 +232,7 @@ public final class XMLWriterSAX implements XMLWriter {
    *
    * @throws IOException If thrown by the wrapped writer.
    */
-  public void writeText(Object o) throws IOException {
+  public void writeText(@Nullable Object o) throws IOException {
     // TODO: what about an XML serializable ???
     if (o != null) {
       this.writeText(o.toString());
@@ -231,7 +240,7 @@ public final class XMLWriterSAX implements XMLWriter {
   }
 
   @Override
-  public void writeCDATA(String data) throws IOException {
+  public void writeCDATA(@Nullable String data) throws IOException {
     if (data == null) return;
     try {
       ensureCompleteOpenTag();
@@ -758,19 +767,19 @@ public final class XMLWriterSAX implements XMLWriter {
     /**
      * The namespace URI of the element.
      */
-    private final @NotNull String uri;
+    private final String uri;
 
     /**
      * The local name of the element.
      */
-    private final @NotNull String name;
+    private final String name;
 
     /**
      * A list of prefix mappings for this element.
      *
      * <p>Can be <code>null</code>.
      */
-    private final List<PrefixMapping> mappings;
+    private final @Nullable List<PrefixMapping> mappings;
 
     /**
      * Indicates whether the element has children.
@@ -785,7 +794,7 @@ public final class XMLWriterSAX implements XMLWriter {
      * @param hasChildren Whether the element has children.
      * @param mappings    The list of prefix mapping if any.
      */
-    public Element(@NotNull String uri, @NotNull String name, boolean hasChildren, List<PrefixMapping> mappings) {
+    public Element(String uri, String name, boolean hasChildren, List<PrefixMapping> mappings) {
       this.uri = uri;
       this.name = name;
       this.hasChildren = hasChildren;
@@ -805,12 +814,12 @@ public final class XMLWriterSAX implements XMLWriter {
     /**
      * The prefix associated to the URI.
      */
-    private final @NotNull String prefix;
+    private final String prefix;
 
     /**
      * The namespace URI.
      */
-    private final @NotNull String uri;
+    private final String uri;
 
     /**
      * Creates a new prefix mapping.
@@ -818,7 +827,7 @@ public final class XMLWriterSAX implements XMLWriter {
      * @param prefix The prefix for the URI.
      * @param uri    The full namespace URI.
      */
-    public PrefixMapping(String prefix, String uri) {
+    public PrefixMapping(@Nullable String prefix, @Nullable String uri) {
       this.prefix = prefix != null ? prefix : XMLConstants.DEFAULT_NS_PREFIX;
       this.uri = uri != null ? uri : XMLConstants.NULL_NS_URI;
     }
@@ -859,7 +868,7 @@ public final class XMLWriterSAX implements XMLWriter {
      * @param name The attribute name.
      * @param value The attribute value (must not be null).
      */
-    public void addAttribute(@NotNull String name, @NotNull String value) {
+    public void addAttribute(String name, String value) {
       this.uris.add(XMLConstants.NULL_NS_URI);
       this.names.add(name);
       this.values.add(value);
@@ -872,7 +881,7 @@ public final class XMLWriterSAX implements XMLWriter {
      * @param name The attribute name.
      * @param value The attribute value (must not be null).
      */
-    public void addAttribute(@NotNull String uri, @NotNull String name, @NotNull String value) {
+    public void addAttribute(String uri, String name, String value) {
       this.uris.add(uri);
       this.names.add(name);
       this.values.add(value);
@@ -900,7 +909,7 @@ public final class XMLWriterSAX implements XMLWriter {
      * @see org.xml.sax.Attributes#getQName(int)
      */
     @Override
-    public String getQName(int i) {
+    public @Nullable String getQName(int i) {
       if (i < 0) return null;
       try {
         // FIXME: not SAX2 compliant
@@ -920,7 +929,7 @@ public final class XMLWriterSAX implements XMLWriter {
      * @see org.xml.sax.Attributes#getQName(int)
      */
     @Override
-    public String getLocalName(int i) {
+    public @Nullable String getLocalName(int i) {
       if (i < 0) return null;
       try {
         return this.names.get(i);
@@ -939,7 +948,7 @@ public final class XMLWriterSAX implements XMLWriter {
      * @see org.xml.sax.Attributes#getType(int)
      */
     @Override
-    public String getType(int i) {
+    public @Nullable String getType(int i) {
       if (i < 0) return null;
       try {
         return CDATA;
@@ -959,7 +968,7 @@ public final class XMLWriterSAX implements XMLWriter {
      * @see org.xml.sax.Attributes#getValue(int)
      */
     @Override
-    public String getValue(int i) {
+    public @Nullable String getValue(int i) {
       if (i < 0) return null;
       try {
         return this.values.get(i);
@@ -979,7 +988,7 @@ public final class XMLWriterSAX implements XMLWriter {
      * @see org.xml.sax.Attributes#getValue(int)
      */
     @Override
-    public String getURI(int i) {
+    public @Nullable String getURI(int i) {
       if (i < 0) return null;
       try {
         return this.uris.get(i);
@@ -998,7 +1007,7 @@ public final class XMLWriterSAX implements XMLWriter {
      * @see org.xml.sax.Attributes#getType(java.lang.String)
      */
     @Override
-    public String getType(String qName) {
+    public @Nullable String getType(String qName) {
       return null;
     }
 
@@ -1010,7 +1019,7 @@ public final class XMLWriterSAX implements XMLWriter {
      * @see org.xml.sax.Attributes#getValue(java.lang.String)
      */
     @Override
-    public String getValue(String name) {
+    public @Nullable String getValue(String name) {
       return null;
     }
 
@@ -1024,7 +1033,7 @@ public final class XMLWriterSAX implements XMLWriter {
      * @see org.xml.sax.Attributes#getType(java.lang.String)
      */
     @Override
-    public String getType(String uri, String name) {
+    public @Nullable String getType(String uri, String name) {
       return getType(getIndex(uri, name));
     }
 
@@ -1036,7 +1045,7 @@ public final class XMLWriterSAX implements XMLWriter {
      * @see org.xml.sax.AttributeList#getValue(java.lang.String)
      */
     @Override
-    public String getValue(String uri, String name) {
+    public @Nullable String getValue(String uri, String name) {
       return getValue(getIndex(uri, name));
     }
 

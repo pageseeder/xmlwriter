@@ -15,6 +15,8 @@
  */
 package org.pageseeder.xmlwriter;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -81,7 +83,7 @@ public final class XMLSerializer {
    *
    * @throws IOException Should an I/O error occur.
    */
-  public void serialize(Object o, String name) throws IOException {
+  public void serialize(@Nullable Object o, String name) throws IOException {
     if (o != null) {
       // get rid of some nasty symbols from qualified names and inner classes
       if (name.lastIndexOf('.') != -1) {

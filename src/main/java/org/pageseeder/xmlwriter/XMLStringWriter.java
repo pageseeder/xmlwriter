@@ -18,6 +18,7 @@ package org.pageseeder.xmlwriter;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import org.jspecify.annotations.Nullable;
 import org.pageseeder.xmlwriter.XML.NamespaceAware;
 
 /**
@@ -104,7 +105,7 @@ public final class XMLStringWriter implements XMLWriter {
   }
 
   @Override
-  public void setIndentChars(String spaces) {
+  public void setIndentChars(@Nullable String spaces) {
     this.xml.setIndentChars(spaces);
   }
 

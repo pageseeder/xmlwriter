@@ -15,6 +15,8 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Factory for XML escape classes.
  *
@@ -41,7 +43,7 @@ public final class XMLEscapeFactory {
    * @return A <code>XMLEscape</code> instance corresponding to the specified encoding
    *         or <code>null</code>.
    */
-  public static XMLEscape getInstance(String encoding) {
+  public static @Nullable XMLEscape getInstance(String encoding) {
     if ("utf-8".equals(encoding)) return XMLEscapeUTF8.UTF8_ESCAPE;
     if ("UTF-8".equals(encoding)) return XMLEscapeUTF8.UTF8_ESCAPE;
     if ("ASCII".equals(encoding)) return XMLEscapeASCII.ASCII_ESCAPE;

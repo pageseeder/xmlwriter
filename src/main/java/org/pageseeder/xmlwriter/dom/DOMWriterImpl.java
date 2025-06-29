@@ -21,7 +21,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 import org.pageseeder.xmlwriter.IllegalCloseElementException;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
@@ -64,7 +64,7 @@ public final class DOMWriterImpl implements DOMWriter {
   /**
    * The default indentation spaces used.
    */
-  private String indentChars;
+  private @Nullable String indentChars;
 
   /**
    * State variable indicating the depth level the current XML context in the document.
@@ -113,7 +113,7 @@ public final class DOMWriterImpl implements DOMWriter {
    *
    * @throws NullPointerException If the handler is <code>null</code>.
    */
-  public DOMWriterImpl(@NotNull Document document) {
+  public DOMWriterImpl(Document document) {
     this.document = Objects.requireNonNull(document, "The XMLWriter requires a DOM Document to write on.");
     this.currentElement = document;
     this.newline = document.createTextNode("\n");
@@ -128,7 +128,7 @@ public final class DOMWriterImpl implements DOMWriter {
   }
 
   @Override
-  public void setIndentChars(String spaces)  {
+  public void setIndentChars(@Nullable String spaces)  {
     if (this.depth != 0)
       throw new IllegalStateException("To late to set the indentation characters!");
     // check that this is a valid indentation string
@@ -149,7 +149,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws DOMException If thrown by the method invoked on the underlying DOM document
    */
   @Override
-  public void writeText(String text) {
+  public void writeText(@Nullable String text) {
     if (text == null) return;
     completeOpenTag();
     Text textNode = this.document.createTextNode(text);
@@ -162,7 +162,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws DOMException If thrown by the method invoked on the underlying DOM document
    */
   @Override
-  public void writeText(char @NotNull[] text, int off, int len) {
+  public void writeText(char[] text, int off, int len) {
     this.writeText(new String(text, off, len));
   }
 
@@ -187,7 +187,7 @@ public final class DOMWriterImpl implements DOMWriter {
    *
    * @throws DOMException If thrown by the method invoked on the underlying DOM document
    */
-  public void writeText(Object o) {
+  public void writeText(@Nullable Object o) {
     if (o != null) {
       this.writeText(o.toString());
     }
@@ -203,7 +203,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws DOMException If thrown by method invoked on the underlying DOM document
    */
   @Override
-  public void writeCDATA(String data) {
+  public void writeCDATA(@Nullable String data) {
     if (data == null) return;
     this.document.createCDATASection(data);
   }
@@ -217,7 +217,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws UnsupportedOperationException XML cannot be written to the DOM
    */
   @Override
-  public void writeXML(String text) {
+  public void writeXML(@Nullable String text) {
     throw new UnsupportedOperationException("Cannot use unparsed XML as DOM node.");
   }
 
@@ -227,7 +227,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws UnsupportedOperationException XML cannot be written to the DOM
    */
   @Override
-  public void writeXML(char @NotNull [] text, int off, int len)
+  public void writeXML(char[] text, int off, int len)
       throws UnsupportedOperationException {
     throw new UnsupportedOperationException("Cannot use unparsed XML as DOM node.");
   }
@@ -241,7 +241,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws DOMException If thrown by method invoked on the underlying DOM document
    */
   @Override
-  public void writeComment(@NotNull String comment) throws DOMException {
+  public void writeComment(String comment) throws DOMException {
     if (comment.contains("--"))
       throw new IllegalArgumentException("A comment must not contain '--'.");
     completeOpenTag();
@@ -276,7 +276,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws DOMException If thrown by method invoked on the underlying DOM document
    */
   @Override
-  public void attribute(@NotNull String name, @NotNull String value) throws DOMException {
+  public void attribute(String name, String value) throws DOMException {
     if (this.isOpenTagComplete)
       throw new IllegalArgumentException("Cannot write attribute: too late!");
     Attr att = this.document.createAttribute(name);
@@ -290,7 +290,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws DOMException If thrown by method invoked on the underlying DOM document
    */
   @Override
-  public void attribute(@NotNull String name, int value) throws DOMException {
+  public void attribute(String name, int value) throws DOMException {
     attribute(name, Integer.toString(value));
   }
 
@@ -300,7 +300,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws DOMException If thrown by method invoked on the underlying DOM document
    */
   @Override
-  public void attribute(@NotNull String name, long value) throws DOMException {
+  public void attribute(String name, long value) throws DOMException {
     attribute(name, Long.toString(value));
   }
 
@@ -319,7 +319,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws DOMException If thrown by method invoked on the underlying DOM document
    */
   @Override
-  public void openElement(@NotNull String name) throws DOMException {
+  public void openElement(String name) throws DOMException {
     openElement(name, false);
   }
 
@@ -338,7 +338,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws DOMException If thrown by the method invoked on the underlying DOM document
    */
   @Override
-  public void openElement(@NotNull String name, boolean hasChildren) throws DOMException {
+  public void openElement(String name, boolean hasChildren) throws DOMException {
     completeOpenTag();
     indent();
     this.childrenFlags.push(hasChildren);
@@ -426,7 +426,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws UnsupportedOperationException This class does not handle namespaces.
    */
   @Override
-  public void openElement(@NotNull String uri, @NotNull String name, boolean hasChildren)
+  public void openElement(String uri, String name, boolean hasChildren)
       throws UnsupportedOperationException {
     throw new UnsupportedOperationException("This class does not handle namespaces.");
   }
@@ -440,7 +440,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws UnsupportedOperationException This class does not handle namespaces.
    */
   @Override
-  public void emptyElement(@NotNull String uri, @NotNull String element)
+  public void emptyElement(String uri, String element)
       throws UnsupportedOperationException {
     throw new UnsupportedOperationException("This class does not handle namespaces");
   }
@@ -454,7 +454,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws UnsupportedOperationException This class does not handle namespaces.
    */
   @Override
-  public void setPrefixMapping(@NotNull String uri, @NotNull String prefix)
+  public void setPrefixMapping(String uri, String prefix)
       throws UnsupportedOperationException {
     throw new UnsupportedOperationException("This class does not handle namespaces");
   }
@@ -469,7 +469,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws UnsupportedOperationException This class does not handle namespaces.
    */
   @Override
-  public void attribute(@NotNull String uri, @NotNull String name, @NotNull String value)
+  public void attribute(String uri, String name, String value)
       throws UnsupportedOperationException {
     throw new UnsupportedOperationException("This class does not handle namespaces");
   }
@@ -484,7 +484,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws UnsupportedOperationException This class does not handle namespaces.
    */
   @Override
-  public void attribute(@NotNull String uri, @NotNull String name, int value)
+  public void attribute(String uri, String name, int value)
       throws UnsupportedOperationException {
     throw new UnsupportedOperationException("This class does not handle namespaces");
   }
@@ -499,7 +499,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * @throws UnsupportedOperationException This class does not handle namespaces.
    */
   @Override
-  public void attribute(@NotNull String uri, @NotNull String name, long value)
+  public void attribute(String uri, String name, long value)
       throws UnsupportedOperationException {
     throw new UnsupportedOperationException("This class does not handle namespaces");
   }
@@ -509,7 +509,7 @@ public final class DOMWriterImpl implements DOMWriter {
    * the <code>indent</code> flag is set to <code>true</code>.
    */
   void indent() {
-    if (this.indent) {
+    if (this.indent && this.indentChars != null) {
       Node node = this.document.createTextNode(this.indentChars.repeat(Math.max(0, this.depth)));
       this.currentElement.appendChild(node);
     }

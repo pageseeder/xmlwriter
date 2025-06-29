@@ -15,8 +15,6 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * A utility class for escaping XML data when using the UTF-8 encoding.
  *
@@ -53,7 +51,7 @@ public final class XMLEscapeUTF8 extends XMLEscapeBase implements XMLEscape {
   }
 
   @Override
-  public @NotNull String toAttributeValue(char @NotNull [] ch, int off, int len) {
+  public String toAttributeValue(char[] ch, int off, int len) {
     StringBuilder out = new StringBuilder();
     char c;
     for (int i = off; i < off+len; i++) {
@@ -83,7 +81,7 @@ public final class XMLEscapeUTF8 extends XMLEscapeBase implements XMLEscape {
   }
 
   @Override
-  public @NotNull String toElementText(char @NotNull [] ch, int off, int len) {
+  public String toElementText(char[] ch, int off, int len) {
     StringBuilder out = new StringBuilder(len + len / 10);
     char c;
     for (int i = off; i < off+len; i++) {

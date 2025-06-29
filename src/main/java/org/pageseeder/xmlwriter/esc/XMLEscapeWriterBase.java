@@ -15,6 +15,8 @@
  */
 package org.pageseeder.xmlwriter.esc;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Objects;
@@ -61,7 +63,7 @@ abstract class XMLEscapeWriterBase implements XMLEscapeWriter {
    * @throws IOException If thrown by the underlying writer.
    */
   @Override
-  public final void writeAttValue(String value) throws IOException {
+  public final void writeAttValue(@Nullable String value) throws IOException {
     if (value == null || value.isEmpty()) return;
     writeAttValue(value.toCharArray(), 0, value.length());
   }
@@ -74,7 +76,7 @@ abstract class XMLEscapeWriterBase implements XMLEscapeWriter {
    * @throws IOException If thrown by the underlying writer.
    */
   @Override
-  public final void writeText(String text) throws IOException {
+  public final void writeText(@Nullable String text) throws IOException {
     if (text == null || text.isEmpty()) return;
     writeText(text.toCharArray(), 0, text.length());
   }

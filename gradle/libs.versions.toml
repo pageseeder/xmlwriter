@@ -3,7 +3,7 @@ junit = "5.13.2"
 junit-platform = "1.13.2"
 
 [libraries]
-jetbrains-annotations = { module = "org.jetbrains:annotations", version = "26.0.2" }
+jspecify = { module = "org.jspecify:jspecify", version = "1.0.0" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform" }
