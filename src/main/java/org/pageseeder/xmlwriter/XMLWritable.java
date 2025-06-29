@@ -22,6 +22,9 @@ import java.io.IOException;
  * {@link XMLWriter} instance.
  *
  * @author Christophe Lauret
+ *
+ * @since 1.0.0
+ * @version 1.0.0
  */
 public interface XMLWritable {
 
