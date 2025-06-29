@@ -2,7 +2,9 @@ package org.pageseeder.xmlwriter;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Objects;
 
+import org.jetbrains.annotations.NotNull;
 import org.pageseeder.xmlwriter.esc.XMLEscapeUTF8;
 
 /**
@@ -128,7 +130,7 @@ public final class XML {
    *
    * @return The element as a string.
    */
-  public String toString(XMLWritable o) {
+  public String toString(@NotNull XMLWritable o) {
     XMLStringWriter xml = new XMLStringWriter(NamespaceAware.Yes);
     try {
       o.toXML(xml);
@@ -167,14 +169,10 @@ public final class XML {
    * @return A new instance.
    */
   public XMLWriter newXMLWriter(Writer writer, NamespaceAware aware) {
-    switch (aware) {
-      case No:
-        return new XMLWriterImpl(writer);
-      case Yes:
-        return new XMLWriterNSImpl(writer);
-      default:
-        return new XMLWriterNSImpl(writer);
+    if (Objects.requireNonNull(aware) == NamespaceAware.No) {
+      return new XMLWriterImpl(writer);
     }
+    return new XMLWriterNSImpl(writer);
   }
 
 }
