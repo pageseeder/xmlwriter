@@ -17,8 +17,8 @@ package org.pageseeder.xmlwriter;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
  * A simple writer for XML data that does not support namespaces.
@@ -39,6 +39,9 @@ import java.util.List;
  * throw an unsupported operation exception for each call to a method that uses namespaces.
  *
  * @author Christophe Lauret
+ *
+ * @since 1.0.0
+ * @version 1.1.0
  */
 public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
 
@@ -53,10 +56,7 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
   /**
    * A stack of elements to close the elements automatically.
    */
-  private final List<Element> _elements = new ArrayList<Element>();
-
-  // Constructors
-  // ----------------------------------------------------------------------------------------------
+  private final Deque<Element> elements = new ArrayDeque<>();
 
   /**
    * <p>Creates a new XML writer.
@@ -68,8 +68,7 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
    * @throws NullPointerException If the writer is <code>null</code>.
    */
   public XMLWriterImpl(Writer writer) throws NullPointerException {
-    super(writer, false);
-    this._elements.add(ROOT);
+    this(writer, false);
   }
 
   /**
@@ -82,11 +81,8 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
    */
   public XMLWriterImpl(Writer writer, boolean indent) throws NullPointerException {
     super(writer, indent);
-    this._elements.add(ROOT);
+    this.elements.push(ROOT);
   }
-
-  // Writing text
-  // ----------------------------------------------------------------------------------------------
 
   /**
    * Writes the angle bracket if the element open tag is not finished.
@@ -94,13 +90,13 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
    * @throws IOException If thrown by the wrapped writer.
    */
   @Override
-  void deNude() throws IOException {
-    if (this.isNude) {
-      this._writer.write('>');
-      if (peekElement().hasChildren && this.indent) {
-        this._writer.write('\n');
+  void completeOpenTag() throws IOException {
+    if (!this.isOpenTagComplete) {
+      this.writer.write('>');
+      if (peekElement().hasChildren && this.indentEnabled) {
+        this.writer.write('\n');
       }
-      this.isNude = false;
+      this.isOpenTagComplete = true;
     }
   }
 
@@ -138,14 +134,14 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
    */
   @Override
   public void openElement(String name, boolean hasChildren) throws IOException {
-    deNude();
+    completeOpenTag();
     if (peekElement().hasChildren) {
       indent();
     }
-    this._elements.add(new Element(name, hasChildren));
-    this._writer.write('<');
-    this._writer.write(name);
-    this.isNude = true;
+    this.elements.push(new Element(name, hasChildren));
+    this.writer.write('<');
+    this.writer.write(name);
+    this.isOpenTagComplete = false;
     this.depth++;
   }
 
@@ -163,29 +159,29 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
       throw new IllegalCloseElementException();
     this.depth--;
     // this is an empty element
-    if (this.isNude) {
-      this._writer.write('/');
-      this.isNude = false;
+    if (!this.isOpenTagComplete) {
+      this.writer.write('/');
+      this.isOpenTagComplete = true;
       // the element contains text
     } else {
       if (elt.hasChildren) {
         indent();
       }
-      this._writer.write('<');
-      this._writer.write('/');
+      this.writer.write('<');
+      this.writer.write('/');
       int x = elt.name.indexOf(' ');
       if (x < 0) {
-        this._writer.write(elt.name);
+        this.writer.write(elt.name);
       } else {
-        this._writer.write(elt.name.substring(0, x));
+        this.writer.write(elt.name.substring(0, x));
       }
     }
-    this._writer.write('>');
+    this.writer.write('>');
     // take care of the new line if the indentation is on
-    if (super.indent) {
+    if (this.indentEnabled) {
       Element parent = peekElement();
       if (parent.hasChildren && parent != ROOT) {
-        this._writer.write('\n');
+        this.writer.write('\n');
       }
     }
   }
@@ -207,16 +203,16 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
    */
   @Override
   public void emptyElement(String element) throws IOException {
-    deNude();
+    completeOpenTag();
     indent();
-    this._writer.write('<');
-    this._writer.write(element);
-    this._writer.write('/');
-    this._writer.write('>');
-    if (this.indent) {
+    this.writer.write('<');
+    this.writer.write(element);
+    this.writer.write('/');
+    this.writer.write('>');
+    if (this.indentEnabled) {
       Element parent = peekElement();
       if (parent.hasChildren && parent != ROOT) {
-        this._writer.write('\n');
+        this.writer.write('\n');
       }
     }
   }
@@ -227,7 +223,7 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
    * @return The current element.
    */
   private Element peekElement() {
-    return this._elements.get(this._elements.size() - 1);
+    return this.elements.peek();
   }
 
   /**
@@ -236,7 +232,7 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
    * @return The current element.
    */
   private Element popElement() {
-    return this._elements.remove(this._elements.size() - 1);
+    return this.elements.pop();
   }
 
   // Unsupported operations
@@ -339,7 +335,7 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
     Element open = peekElement();
     if (open != ROOT)
       throw new UnclosedElementException(open.name);
-    this._writer.close();
+    this.writer.close();
   }
 
   // Inner class: Element
@@ -349,9 +345,6 @@ public final class XMLWriterImpl extends XMLWriterBase implements XMLWriter {
    * A light object to keep track of the element.
    *
    * <p>This object does not support namespaces.
-   *
-   * @author Christophe Lauret
-   * @version 7 March 2005
    */
   private static final class Element {
 
