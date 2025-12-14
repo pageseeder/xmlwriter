@@ -24,15 +24,12 @@ import java.io.Writer;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.jspecify.annotations.Nullable;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
+import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
@@ -42,6 +39,9 @@ import org.xml.sax.helpers.DefaultHandler;
  * {@code &amp;}, {@code &lt;}, {@code &gt;} or {@code &quot;}.
  *
  * @author Christophe Lauret
+ *
+ * @since 1.0.0
+ * @version 1.1.1
  */
 public final class XMLIndenter extends DefaultHandler implements ContentHandler {
 
@@ -162,13 +162,17 @@ public final class XMLIndenter extends DefaultHandler implements ContentHandler 
       throws SAXException, IOException, ParserConfigurationException {
     // create the indenter
     XMLIndenter indenter = new XMLIndenter(w);
+
     // initialise the SAX framework
     SAXParserFactory factory = SAXParserFactory.newInstance();
+    factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
     factory.setNamespaceAware(false);
     factory.setValidating(false);
-    InputSource source = new InputSource(r);
+
     // parse the XML
+    InputSource source = new InputSource(r);
     XMLReader xmlreader = factory.newSAXParser().getXMLReader();
+    xmlreader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
     xmlreader.setContentHandler(indenter);
     xmlreader.parse(source);
   }
