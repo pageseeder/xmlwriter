@@ -48,6 +48,7 @@ public final class XMLEscapeWriterASCII extends XMLEscapeWriterBase implements X
   }
 
   @Override
+  @SuppressWarnings("java:S127") // We need to adjust loop counter when dealing with surrogate pairs
   public void writeAttValue(char[] ch, int off, int len) throws IOException {
     char c;
     for (int i = off; i < off+len; i++) {
@@ -67,7 +68,7 @@ public final class XMLEscapeWriterASCII extends XMLEscapeWriterBase implements X
         // Ignore control characters
         doNothing();
       } else if (c >= 0xD800 && c <= 0xDFFF) {
-        int codePoint = Character.codePointAt(ch, i, len);
+        int codePoint = Character.codePointAt(ch, i, off+len);
         i += Character.charCount(codePoint) - 1;
         super.w.write("&#x");
         super.w.write(Integer.toHexString(codePoint));
@@ -85,6 +86,7 @@ public final class XMLEscapeWriterASCII extends XMLEscapeWriterBase implements X
   }
 
   @Override
+  @SuppressWarnings("java:S127") // We need to adjust loop counter when dealing with surrogate pairs
   public void writeText(char[] ch, int off, int len) throws IOException {
     char c;
     for (int i = off; i < off+len; i++) {
