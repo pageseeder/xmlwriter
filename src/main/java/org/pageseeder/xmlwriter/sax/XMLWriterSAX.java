@@ -257,7 +257,7 @@ public final class XMLWriterSAX implements XMLWriter {
    * {@inheritDoc}
    */
   @Override
-  public void writeXML(String text) throws UnsupportedOperationException {
+  public void writeXML(@Nullable String text) throws UnsupportedOperationException {
     throw new UnsupportedOperationException("Cannot run unparsed XML as SAX events");
   }
 

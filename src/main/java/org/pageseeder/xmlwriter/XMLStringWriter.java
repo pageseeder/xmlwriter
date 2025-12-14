@@ -119,7 +119,7 @@ public final class XMLStringWriter implements XMLWriter {
   }
 
   @Override
-  public void writeText(String text) {
+  public void writeText(@Nullable String text) {
     try {
       this.xml.writeText(text);
     } catch (IOException ex) {
@@ -146,7 +146,7 @@ public final class XMLStringWriter implements XMLWriter {
   }
 
   @Override
-  public void writeXML(String text) {
+  public void writeXML(@Nullable String text) {
     try {
       this.xml.writeXML(text);
     } catch (IOException ex) {
