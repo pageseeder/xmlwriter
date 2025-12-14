@@ -21,7 +21,7 @@ groupId = "org.pageseeder.xmlwriter"
 owner = "pageseeder"
 name = "xmlwriter"
 username = "pageseeder"
-branch = "master"
+branch = "main"
 
 # Signing configuration
 [signing]
