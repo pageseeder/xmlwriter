@@ -63,4 +63,12 @@ final class XMLEscapeWriterUTF8Test extends XMLEscapeUTF8TestBase {
     return got.toString();
   }
 
+  @Override
+  String escapeText(char[] ch, int off, int len) throws IOException {
+    StringWriter got = new StringWriter();
+    XMLEscapeWriterUTF8 esc = new XMLEscapeWriterUTF8(got);
+    esc.writeText(ch, off, len);
+    return got.toString();
+  }
+
 }

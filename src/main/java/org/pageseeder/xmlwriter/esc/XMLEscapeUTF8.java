@@ -29,7 +29,7 @@ package org.pageseeder.xmlwriter.esc;
  * @author Philip Rutherford
  *
  * @since 1.0.0
- * @version 1.0.0
+ * @version 1.1.1
  */
 public final class XMLEscapeUTF8 extends XMLEscapeBase implements XMLEscape {
 
@@ -51,6 +51,7 @@ public final class XMLEscapeUTF8 extends XMLEscapeBase implements XMLEscape {
   }
 
   @Override
+  @SuppressWarnings("java:S127") // We need to adjust loop counter when dealing with surrogate pairs
   public String toAttributeValue(char[] ch, int off, int len) {
     StringBuilder out = new StringBuilder();
     char c;
@@ -70,7 +71,7 @@ public final class XMLEscapeUTF8 extends XMLEscapeBase implements XMLEscape {
       } else if (c < 0x20 || c >= 0x7F && c < 0xA0) {
         doNothing();
       } else if (c >= 0xD800 && c <= 0xDFFF) {
-        int codePoint = Character.codePointAt(ch, i, len);
+        int codePoint = Character.codePointAt(ch, i, off+len);
         i += Character.charCount(codePoint) - 1;
         out.append("&#x").append(Integer.toHexString(codePoint)).append(";");
       } else {
@@ -81,13 +82,14 @@ public final class XMLEscapeUTF8 extends XMLEscapeBase implements XMLEscape {
   }
 
   @Override
+  @SuppressWarnings("java:S127") // We need to adjust loop counter when dealing with surrogate pairs
   public String toElementText(char[] ch, int off, int len) {
     StringBuilder out = new StringBuilder(len + len / 10);
     char c;
     for (int i = off; i < off+len; i++) {
       c = ch[i];
       // '<' always replace with '&lt;'
-      if      (c == '<') {
+      if (c == '<') {
         out.append("&lt;");
       } else if (c == '&') {
         out.append("&amp;");
@@ -98,7 +100,7 @@ public final class XMLEscapeUTF8 extends XMLEscapeBase implements XMLEscape {
       } else if (c < 0x20 || c >= 0x7F && c < 0xA0) {
         doNothing();
       } else if (c >= 0xD800 && c <= 0xDFFF) {
-        int codePoint = Character.codePointAt(ch, i, len);
+        int codePoint = Character.codePointAt(ch, i, off+len);
         i += Character.charCount(codePoint) - 1;
         out.append("&#x").append(Integer.toHexString(codePoint)).append(";");
       } else {

@@ -27,7 +27,7 @@ import java.io.Writer;
  * @author Philip Rutherford
  *
  * @since 1.0.0
- * @version 1.0.0
+ * @version 1.1.1
  */
 public final class XMLEscapeWriterASCII extends XMLEscapeWriterBase implements XMLEscapeWriter {
 
@@ -101,7 +101,7 @@ public final class XMLEscapeWriterASCII extends XMLEscapeWriterBase implements X
         // Ignore control characters
         doNothing();
       } else if (c >= 0xD800 && c <= 0xDFFF) {
-        int codePoint = Character.codePointAt(ch, i, len);
+        int codePoint = Character.codePointAt(ch, i, off+len);
         i += Character.charCount(codePoint) - 1;
         super.w.write("&#x");
         super.w.write(Integer.toHexString(codePoint));

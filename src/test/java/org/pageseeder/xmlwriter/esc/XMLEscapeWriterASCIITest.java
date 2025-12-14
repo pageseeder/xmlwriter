@@ -64,4 +64,12 @@ final class XMLEscapeWriterASCIITest extends XMLEscapeASCIITestBase {
     return got.toString();
   }
 
+  @Override
+  String escapeText(char[] ch, int off, int len) throws IOException {
+    StringWriter got = new StringWriter();
+    XMLEscapeWriterASCII esc = new XMLEscapeWriterASCII(got);
+    esc.writeText(ch, off, len);
+    return got.toString();
+  }
+
 }

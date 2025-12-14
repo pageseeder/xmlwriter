@@ -159,4 +159,27 @@ public abstract class XMLEscapeASCIITestBase extends XMLEscapeTestBase {
     assertTextIsEscaped(monkey);
   }
 
+  /**
+   * Test the attribute escapes correctly characters outside BMP
+   */
+  @Test
+  public void testToTextValue_OutsideBMP2() throws IOException {
+    String monkey = new String(Character.toChars(0x1f64a));
+    String exp = "hello &#x1f64a;";
+    String got = escapeText("hello "+monkey);
+    assertEquals(exp, got);
+  }
+
+  /**
+   * Test the attribute escapes correctly characters outside BMP
+   */
+  @Test
+  public void testToTextValue_OutsideBMP3() throws IOException {
+    String monkey = new String(Character.toChars(0x1f64a));
+    String exp = "hello &#x1f64a;";
+    char[] raw = ("hello "+monkey).toCharArray();
+    String got = escapeText(raw, 0, raw.length-3) + escapeText(raw, raw.length-3, 3);
+    assertEquals(exp, got);
+  }
+
 }

@@ -21,8 +21,8 @@ import org.jspecify.annotations.Nullable;
  * An interface to escape XML character data.
  *
  * <p>This interface assumes that the values to be escapes do not originate from
- * XML text, in order words, there should not be already any entity or markup
- * in the document. If it is the case the methods in this class should also
+ * XML text; in order words, there should not be already any entity or markup
+ * in the document. If it is the case, the methods in this class should also
  * escape them. Thus, "&amp;amp;" would be represented as "&amp;amp;amp;".
  *
  * <p>Also, the method will not try to escape characters that cannot be escaped.

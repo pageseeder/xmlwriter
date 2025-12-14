@@ -58,4 +58,9 @@ final class XMLEscapeASCIITest extends XMLEscapeASCIITestBase {
     return this.esc.toElementText(value);
   }
 
+  @Override
+  String escapeText(char[] ch, int off, int len) throws IOException {
+    return this.esc.toElementText(ch, off, len);
+  }
+
 }

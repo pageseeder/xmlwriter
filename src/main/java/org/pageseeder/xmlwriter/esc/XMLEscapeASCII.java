@@ -24,7 +24,7 @@ package org.pageseeder.xmlwriter.esc;
  * @author Christophe Lauret
  *
  * @since 1.0.0
- * @version 1.0.0
+ * @version 1.1.1
  */
 public final class XMLEscapeASCII extends XMLEscapeBase implements XMLEscape {
 
@@ -46,6 +46,7 @@ public final class XMLEscapeASCII extends XMLEscapeBase implements XMLEscape {
   }
 
   @Override
+  @SuppressWarnings("java:S127") // We need to adjust loop counter when dealing with surrogate pairs
   public String toAttributeValue(char[] ch, int off, int len) {
     StringBuilder out = new StringBuilder(len + len / 10);
     for (int i = off; i < off+len; i++) {
@@ -54,10 +55,9 @@ public final class XMLEscapeASCII extends XMLEscapeBase implements XMLEscape {
         // tabs, new lines and line feeds: preserve
         if (ch[i] == 0x09 || ch[i] == 0x0A || ch[i] == 0x0D) {
           out.append(ch[i]);
-        } else {
-          doNothing();
-          // 0x20 to 0x7F
         }
+        // other control characters: prune
+      // 0x20 to 0x7F
       } else if (ch[i] < 0x7F) {
         switch (ch[i]) {
           case '&' :
@@ -83,7 +83,7 @@ public final class XMLEscapeASCII extends XMLEscapeBase implements XMLEscape {
       }
       // handle surrogate pairs (for characters outside BMP)
       else if (ch[i] >= 0xD800 && ch[i] <= 0xDFFF) {
-        int codePoint = Character.codePointAt(ch, i, len);
+        int codePoint = Character.codePointAt(ch, i, off+len);
         i += Character.charCount(codePoint) - 1;
         out.append("&#x").append(Integer.toHexString(codePoint)).append(';');
       }
@@ -96,6 +96,7 @@ public final class XMLEscapeASCII extends XMLEscapeBase implements XMLEscape {
   }
 
   @Override
+  @SuppressWarnings("java:S127") // We need to adjust loop counter when dealing with surrogate pairs
   public String toElementText(char[] ch, int off, int len) {
     StringBuilder out = new StringBuilder(len + len / 10);
     char c;
@@ -113,7 +114,7 @@ public final class XMLEscapeASCII extends XMLEscapeBase implements XMLEscape {
       } else if (c < 0x20 || c >= 0x7F && c < 0xA0) {
         doNothing();
       } else if (c >= 0xD800 && c <= 0xDFFF) {
-        int codePoint = Character.codePointAt(ch, i, len);
+        int codePoint = Character.codePointAt(ch, i, off+len);
         i += Character.charCount(codePoint) - 1;
         out.append("&#x").append(Integer.toHexString(codePoint)).append(';');
       }

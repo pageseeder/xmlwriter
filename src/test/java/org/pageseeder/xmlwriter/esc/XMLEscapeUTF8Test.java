@@ -57,4 +57,10 @@ final class XMLEscapeUTF8Test extends XMLEscapeUTF8TestBase {
   String escapeText(String value) throws IOException {
     return this.esc.toElementText(value);
   }
+
+  @Override
+  String escapeText(char[] ch, int off, int len) throws IOException {
+    return this.esc.toElementText(ch, off, len);
+  }
+
 }

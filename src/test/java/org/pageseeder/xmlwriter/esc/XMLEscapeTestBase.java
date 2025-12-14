@@ -70,6 +70,8 @@ public abstract class XMLEscapeTestBase {
 
   abstract String escapeText(String value) throws IOException;
 
+  abstract String escapeText(char[] ch, int off, int len) throws IOException;
+
   protected void assertIsEscaped(int codepoint, String got) {
     boolean correct = false;
     List<String> expected = getEntities(codepoint);
