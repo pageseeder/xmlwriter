@@ -23,6 +23,9 @@ package org.pageseeder.xmlwriter;
  * writers.
  *
  * @author Christophe Lauret
+ *
+ * @since 1.0.0
+ * @version 1.1.1
  */
 public interface XMLFormattable {
 
@@ -41,15 +44,17 @@ public interface XMLFormattable {
   StringBuffer toXML(StringBuffer xml);
 
   /**
-   * <p>Returns a xml representation of the object of the implementing class.
+   * <p>Returns an XML representation of the object of the implementing class.
    *
    * <p>Most implementation should use the following code to ensure consistent data with the
    * other <code>toXML</code> method:
    *
-   * <pre>return this.toXML(new StringBuffer()).toString();</pre>
+   * <pre>return this.toXML(new StringBuilder()).toString();</pre>
    *
    * @return a XML representation of the object of the implementing class.
    */
-  String toXML();
+  default String toXML() {
+    return this.toXML(new StringBuffer()).toString();
+  }
 
 }
