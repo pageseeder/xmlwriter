@@ -1,7 +1,9 @@
 plugins {
   id("java-library")
   id("maven-publish")
+  jacoco
   alias(libs.plugins.jreleaser)
+  alias(libs.plugins.sonar)
 }
 
 val title: String by project
@@ -38,10 +40,33 @@ dependencies {
   testRuntimeOnly(libs.junit.jupiter.engine)
 }
 
+sonar {
+  properties {
+    property("sonar.projectKey", "pageseeder_xmlwriter")
+    property("sonar.organization", "pageseeder")
+    // Tell SonarCloud where the JaCoCo XML report is
+    property(
+      "sonar.coverage.jacoco.xmlReportPaths",
+      layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml").get().asFile.absolutePath
+    )
+  }
+}
+
 tasks.test {
   useJUnitPlatform()
   testLogging {
     events("passed", "skipped", "failed")
+  }
+  // make sure report generation happens after tests when requested
+  finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+  dependsOn(tasks.test)
+  reports {
+    xml.required.set(true)   // Sonar reads this
+    html.required.set(true)  // nice to have for CI artifacts/debugging
+    csv.required.set(false)
   }
 }
 
